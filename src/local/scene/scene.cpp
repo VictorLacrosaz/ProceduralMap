@@ -15,6 +15,37 @@
 
 using namespace cpe;
 
+static cpe::mesh BuildGrid (vec2 Center,int Radius)
+{
+     mesh m;
+     int u = 0,v = 0;
+     int Size  = 2*Radius+1;
+     for (int i = Center.x()-Radius;i <= Center.x()+Radius;i++)
+     {
+       for (int j = Center.y()-Radius;j <= Center.y()+Radius;j++)
+       {
+           m.add_vertex(vec3(i,j,0));
+           if(std::pow(i,2)+std::pow(j,2) < std::pow(Radius,2))
+           {
+               if(u < Size-1 && v < Size-1)
+               {
+
+                   m.add_triangle_index({u+v*Size,u+(v+1)*Size,(u+1)+v*Size});
+                   m.add_triangle_index({u+(v+1)*Size,u+1+(v+1)*Size,(u+1)+v*Size});
+               }
+           }
+           u++;
+       }
+
+       u = 0;
+       v++;
+     }
+
+     m.fill_color(vec3(0.8,0.6,0.6));
+
+    return m;
+}
+
 
 static cpe::mesh build_ground(float const L,float const h)
 {
@@ -46,7 +77,7 @@ void scene::load_scene()
     //*****************************************//
     // Build ground
     //*****************************************//
-    mesh_ground = build_ground(100.0f , -25.0f);
+    mesh_ground = BuildGrid(vec2(0,0) ,200);
     mesh_ground.fill_empty_field_by_default();
     mesh_ground_opengl.fill_vbo(mesh_ground);
 }
