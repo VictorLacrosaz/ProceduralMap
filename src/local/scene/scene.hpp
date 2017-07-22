@@ -1,21 +1,17 @@
-
-/** TP 5ETI - CPE Lyon - 2015/2016 */
-
 #pragma once
 
 #ifndef SCENE_HPP
 #define SCENE_HPP
 
-#include <GL/gl.h>
 #include <GL/glew.h>
-
+#include <GL/gl.h>
 #include <QTime>
 
-#include "../../lib/3d/mat3.hpp"
-#include "../../lib/3d/vec3.hpp"
-#include "../../lib/mesh/mesh.hpp"
-#include "../../lib/opengl/mesh_opengl.hpp"
-#include "../../lib/interface/camera_matrices.hpp"
+#include "mat3.hpp"
+#include "vec3.hpp"
+#include "mesh.hpp"
+#include "mesh_opengl.hpp"
+#include "camera_matrices.hpp"
 
 #include <vector>
 

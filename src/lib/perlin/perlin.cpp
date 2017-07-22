@@ -17,12 +17,12 @@
 */
 
 #include "perlin.hpp"
-#include "../../external/perlin/simplexnoise1234.hpp"
 
-#include "../common/error_handling.hpp"
-#include "../3d/vec2.hpp"
-#include "../3d/vec3.hpp"
-#include "../3d/vec4.hpp"
+#include "error_handling.hpp"
+#include "simplexnoise1234.hpp"
+#include "vec2.hpp"
+#include "vec3.hpp"
+#include "vec4.hpp"
 
 
 #include <cmath>

@@ -3,12 +3,11 @@
 #include "GL/glew.h"
 #include "GL/gl.h"
 
-#include "../../lib/3d/mat4.hpp"
-#include "../../lib/3d/mat3.hpp"
-
-#include "../../lib/opengl/glutils.hpp"
-#include "../../lib/common/error_handling.hpp"
-#include "../../lib/interface/camera_matrices.hpp"
+#include "camera_matrices.hpp"
+#include "error_handling.hpp"
+#include "glutils.hpp"
+#include "mat4.hpp"
+#include "mat3.hpp"
 
 #include <cmath>
 #include <iostream>

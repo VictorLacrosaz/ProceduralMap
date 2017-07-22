@@ -21,7 +21,7 @@
 #ifndef PICKING_DATA_HPP
 #define PICKING_DATA_HPP
 
-#include "../3d/vec3.hpp"
+#include "vec3.hpp"
 #include <map>
 
 namespace cpe

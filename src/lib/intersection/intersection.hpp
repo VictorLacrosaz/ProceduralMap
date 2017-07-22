@@ -16,13 +16,12 @@
 **    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 #pragma once
 
 #ifndef INTERSECTION_HELPER_HPP
 #define INTERSECTION_HELPER_HPP
 
-#include "../3d/vec3.hpp"
+#include "vec3.hpp"
 #include <vector>
 
 namespace cpe

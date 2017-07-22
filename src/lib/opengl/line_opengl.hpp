@@ -21,7 +21,7 @@
 #ifndef LINE_OPENGL_HPP
 #define LINE_OPENGL_HPP
 
-#include "../3d/vec3.hpp"
+#include "vec3.hpp"
 
 #include <GL/glew.h>
 #include <GL/gl.h>

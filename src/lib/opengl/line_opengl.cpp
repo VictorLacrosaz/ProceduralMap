@@ -18,9 +18,8 @@
 
 #include "line_opengl.hpp"
 
+#include "error_handling.hpp"
 #include "glutils.hpp"
-#include "../common/error_handling.hpp"
-
 
 namespace cpe
 {

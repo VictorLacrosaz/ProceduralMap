@@ -16,14 +16,12 @@
 **    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 #include "mesh_io.hpp"
 
-#include "mesh.hpp"
-#include "../common/error_handling.hpp"
-
+#include "error_handling.hpp"
 #include "format/mesh_io_obj.hpp"
 #include "format/mesh_io_off.hpp"
+#include "mesh.hpp"
 
 #include <iostream>
 #include <fstream>

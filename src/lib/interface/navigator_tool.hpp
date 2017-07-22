@@ -16,16 +16,14 @@
 **    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 #pragma once
-
 
 #ifndef NAVIGATOR_TOOL_HPP
 #define NAVIGATOR_TOOL_HPP
 
+#include "mat3.hpp"
 #include "trackball.hpp"
-#include "../3d/vec3.hpp"
-#include "../3d/mat3.hpp"
+#include "vec3.hpp"
 
 #include <vector>
 

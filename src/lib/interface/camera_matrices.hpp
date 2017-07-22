@@ -21,7 +21,7 @@
 #ifndef CAMERA_MATRICES_HPP
 #define CAMERA_MATRICES_HPP
 
-#include "../3d/mat4.hpp"
+#include "mat4.hpp"
 
 namespace cpe
 {

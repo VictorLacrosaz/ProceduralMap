@@ -16,7 +16,7 @@
 **    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
+#include "glutils.hpp"
 
 #include <iostream>
 #include <string>
@@ -27,10 +27,8 @@
 
 #define GLEW_STATIC 1
 #include <GL/glew.h>
-
 #include <GL/gl.h>
 
-#include "glutils.hpp"
 
 /*****************************************************************************\
  * print_opengl_error                                                        *

@@ -18,11 +18,9 @@
 
 #include "mesh_opengl.hpp"
 
-#include "../mesh/mesh_basic.hpp"
+#include "error_handling.hpp"
 #include "glutils.hpp"
-#include "../common/error_handling.hpp"
-
-
+#include "mesh_basic.hpp"
 
 namespace cpe
 {

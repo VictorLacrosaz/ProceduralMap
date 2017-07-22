@@ -21,7 +21,7 @@
 #ifndef SELECTED_INDEX_HPP
 #define SELECTED_INDEX_HPP
 
-#include "../3d/vec3.hpp"
+#include "vec3.hpp"
 #include <list>
 
 

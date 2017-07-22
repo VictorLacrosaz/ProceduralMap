@@ -18,9 +18,10 @@
 
 #include "mesh_basic.hpp"
 
-#include "../common/error_handling.hpp"
-#include "../3d/mat3.hpp"
-#include "../3d/mat4.hpp"
+#include "error_handling.hpp"
+#include "mat3.hpp"
+#include "mat4.hpp"
+
 #include <cmath>
 
 namespace cpe

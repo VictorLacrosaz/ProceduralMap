@@ -16,11 +16,10 @@
 **    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 #include "mat3.hpp"
-#include "vec3.hpp"
 
-#include "../common/error_handling.hpp"
+#include "vec3.hpp"
+#include "error_handling.hpp"
 
 #include <cmath>
 #include <iostream>

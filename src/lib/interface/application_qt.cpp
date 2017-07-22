@@ -16,9 +16,8 @@
 **    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 #include "application_qt.hpp"
-#include "../common/error_handling.hpp"
+#include "error_handling.hpp"
 
 #include <iostream>
 

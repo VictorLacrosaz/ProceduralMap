@@ -17,9 +17,9 @@
 */
 
 
-
 #include "vec4.hpp"
-#include "../common/error_handling.hpp"
+
+#include "error_handling.hpp"
 
 #include <cmath>
 

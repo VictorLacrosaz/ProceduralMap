@@ -1,8 +1,8 @@
 
 #include <QApplication>
 
+#include "application_qt.hpp"
 #include "myWindow.hpp"
-#include "../../lib/interface/application_qt.hpp"
 
 int main(int argc, char *argv[])
 {

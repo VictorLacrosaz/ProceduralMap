@@ -1,7 +1,7 @@
 #include "myWindow.hpp"
 
+#include "error_handling.hpp"
 #include "myWidgetGL.hpp"
-#include "../../lib/common/error_handling.hpp"
 #include "ui_mainwindow.h"
 
 #include <iostream>

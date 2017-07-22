@@ -16,11 +16,9 @@
 **    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 #include "mat1x4.hpp"
 
-#include "../common/error_handling.hpp"
-
+#include "error_handling.hpp"
 #include "mat4x1.hpp"
 #include "mat4.hpp"
 

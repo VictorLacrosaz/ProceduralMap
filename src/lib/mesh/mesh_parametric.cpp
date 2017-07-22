@@ -17,7 +17,8 @@
 */
 
 #include "mesh_parametric.hpp"
-#include "../common/error_handling.hpp"
+
+#include "error_handling.hpp"
 
 namespace cpe
 {

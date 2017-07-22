@@ -16,12 +16,10 @@
 **    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
-
 #include "navigator_tool.hpp"
 
-#include "../3d/mat3.hpp"
-#include "../3d/quaternion.hpp"
+#include "mat3.hpp"
+#include "quaternion.hpp"
 
 #include <cmath>
 #include <iostream>

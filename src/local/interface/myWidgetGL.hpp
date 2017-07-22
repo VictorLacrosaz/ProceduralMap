@@ -9,12 +9,12 @@
 #include <QtOpenGL/QGLWidget>
 #include <QMouseEvent>
 
-#include "../../lib/interface/navigator_tool.hpp"
-#include "../../lib/mesh/mesh.hpp"
-#include "../../lib/opengl/mesh_opengl.hpp"
-#include "../../lib/opengl/axes_helper.hpp"
-#include "../../lib/interface/camera_matrices.hpp"
-#include "../scene/scene.hpp"
+#include "axes_helper.hpp"
+#include "camera_matrices.hpp"
+#include "mesh.hpp"
+#include "mesh_opengl.hpp"
+#include "navigator_tool.hpp"
+#include "scene.hpp"
 
 
 /** Qt Widget to render OpenGL scene */

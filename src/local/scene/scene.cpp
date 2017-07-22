@@ -1,21 +1,17 @@
-
+#include "scene.hpp"
 
 #include <GL/glew.h>
 
-#include "scene.hpp"
-#include "../../lib/opengl/glutils.hpp"
-
-#include "../../lib/perlin/perlin.hpp"
-#include "../../lib/interface/camera_matrices.hpp"
-
-#include "../interface/myWidgetGL.hpp"
+#include "camera_matrices.hpp"
+#include "glutils.hpp"
+#include "mesh_io.hpp"
+#include "myWidgetGL.hpp"
+#include "perlin.hpp"
 
 #include <cmath>
-
-
 #include <string>
 #include <sstream>
-#include "../../lib/mesh/mesh_io.hpp"
+
 
 using namespace cpe;
 

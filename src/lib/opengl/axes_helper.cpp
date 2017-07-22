@@ -18,8 +18,8 @@
 
 #include "axes_helper.hpp"
 
+#include "error_handling.hpp"
 #include "glutils.hpp"
-#include "../common/error_handling.hpp"
 
 namespace cpe
 {

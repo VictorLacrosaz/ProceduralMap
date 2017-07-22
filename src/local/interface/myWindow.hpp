@@ -7,8 +7,6 @@
 #include <QMainWindow>
 
 
-
-
 //forward declaration
 namespace Ui
 {

@@ -16,14 +16,12 @@
 **    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-
 #pragma once
 
 #ifndef   	TRACKBALL_HPP
 # define   	TRACKBALL_HPP
 
-
-#include "../3d/quaternion.hpp"
+#include "quaternion.hpp"
 
 namespace cpe
 {

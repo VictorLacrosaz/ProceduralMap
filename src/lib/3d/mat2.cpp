@@ -34,8 +34,10 @@
 */
 
 #include "mat2.hpp"
+
+#include "error_handling.hpp"
 #include "vec2.hpp"
-#include "../common/error_handling.hpp"
+
 #include <cmath>
 
 
