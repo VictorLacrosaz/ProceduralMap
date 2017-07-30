@@ -32,8 +32,8 @@
 #define PRINT_OPENGL_ERROR() print_opengl_error(__FILE__, __LINE__)
 
 
-/** Draw OpenGL Informations */
-void print_opengl_info();
+/** Draw OpenGL informations about graphics hardware */
+void PrintGLInfo();
 
 /** Print OpenGL Error given the information of the file and the line
  *  Function called by the macro PRINT_OPENGL_ERROR */

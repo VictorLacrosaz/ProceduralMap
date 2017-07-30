@@ -210,7 +210,7 @@ GLuint read_shader(const std::string &vertex_filename,
 /*****************************************************************************\
  * read_shader                                                               *
 \*****************************************************************************/
-GLuint read_shader(const std::string &vertex_filename,
+GLuint ReadShader(const std::string &vertex_filename,
                    const std::string &fragment_filename,
                    const std::vector<std::string> &attributes)
 {
@@ -279,10 +279,13 @@ GLubyte* buffer_offset(int offset)
     return (GLubyte*)NULL+offset;
 }
 
-void print_opengl_info()
+//-------------------------------------------------------
+//  Print GL graphics hardware
+//-------------------------------------------------------
+void PrintGLInfo()
 {
     std::cout << "OpenGl informations: VENDOR:       " << glGetString(GL_VENDOR)<<std::endl;
-    std::cout << "                     RENDERDER:    " << glGetString(GL_RENDERER)<<std::endl;
+    std::cout << "                     RENDERER:     " << glGetString(GL_RENDERER)<<std::endl;
     std::cout << "                     VERSION:      " << glGetString(GL_VERSION)<<std::endl;
     std::cout << "                     GLSL VERSION: " << glGetString(GL_SHADING_LANGUAGE_VERSION)<<std::endl;
 }

@@ -1,7 +1,7 @@
 
 set( APPLICATION_SRC_DIRS
-  "${SRC_DIR}/local/interface"
-  "${SRC_DIR}/local/scene" )
+  "${SRC_DIR}/local/Interface"
+  "${SRC_DIR}/local/Core" )
 
 set( LIB_SRC_DIRS
   "${SRC_DIR}/lib/3d"

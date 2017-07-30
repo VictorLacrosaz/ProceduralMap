@@ -41,8 +41,8 @@ void axes_helper::init()
                        };
 
     //load shaders
-    shader_id_data = read_shader("shader_axes.vert",
-                                 "shader_axes.frag");
+    shader_id_data = read_shader("AxisHelper.vert",
+                                 "AxisHelper.frag");
 
     ASSERT_CPE(vbo_data==0,"VBO should have initial value 0");
     glGenBuffers(1,&vbo_data); PRINT_OPENGL_ERROR();

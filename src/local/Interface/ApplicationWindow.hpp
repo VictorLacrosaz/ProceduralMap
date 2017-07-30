@@ -12,19 +12,17 @@ namespace Ui
 {
 class MainWindow;
 }
-class myWidgetGL;
+class ApplicationWidgetGL;
 
 /** Declaration of the Window class */
-class myWindow: public QMainWindow
+class ApplicationWindow: public QMainWindow
 {
-    Q_OBJECT
+  Q_OBJECT
 
 public:
 
-    myWindow(QWidget *parent=NULL);
-    ~myWindow();
-
-
+    ApplicationWindow(QWidget *parent=NULL);
+    ~ApplicationWindow();
 
 private slots:
 
@@ -40,12 +38,7 @@ private:
     /** Layout for the Window */
     Ui::MainWindow *ui;
     /** The OpenGL Widget */
-    myWidgetGL *glWidget;
-
-
-
-
-
+    ApplicationWidgetGL *glWidget;
 };
 
 #endif

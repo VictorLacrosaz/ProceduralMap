@@ -15,22 +15,27 @@
 **    You should have received a copy of the GNU General Public License
 **    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-
 #pragma once
 
-#ifndef CAMERA_MATRICES_HPP
-#define CAMERA_MATRICES_HPP
+#ifndef APPLICATION_QT_HPP
+#define APPLICATION_QT_HPP
 
-#include "mat4.hpp"
+#include <QtGui/QApplication>
 
-namespace cpe
+
+/**
+ * \brief Application Qt to handle exception cpe
+ */
+class ApplicationQt : public QApplication
 {
-struct camera_matrices
-{
-    mat4 modelview;
-    mat4 projection;
-    mat4 normal;
+  Q_OBJECT
+
+public:
+
+    ApplicationQt(int& argc,char *argv[]);
+    virtual bool notify(QObject * receiver, QEvent * event);
+
 };
-}
 
 #endif
+

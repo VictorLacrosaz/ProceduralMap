@@ -39,10 +39,10 @@ include_directories( ${APPLICATION_SRC_DIRS} ${LIB_SRC_DIRS} ${CMAKE_CURRENT_BIN
 add_definitions( -Wall -Wextra -std=c++11 -Wno-comment -Wno-unused-parameter -Wno-unused-function -Wno-unused-variable -DCORRECTION)
 
 # UI
-set( UI ${SRC_DIR}/local/interface/mainwindow.ui )
-set( MOC ${SRC_DIR}/lib/interface/application_qt.hpp
-         ${SRC_DIR}/local/interface/myWindow.hpp
-         ${SRC_DIR}/local/interface/myWidgetGL.hpp)
+set( UI ${SRC_DIR}/local/Interface/ApplicationWindow.ui )
+set( MOC ${SRC_DIR}/local/Interface/ApplicationQt.hpp
+         ${SRC_DIR}/local/Interface/ApplicationWindow.hpp
+         ${SRC_DIR}/local/Interface/ApplicationWidgetGL.hpp)
 
 QT4_WRAP_CPP( MOC_GENERATED ${MOC} )
 QT4_WRAP_UI( UI_GENERATED ${UI} )

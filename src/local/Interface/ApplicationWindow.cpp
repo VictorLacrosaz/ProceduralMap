@@ -1,12 +1,12 @@
-#include "myWindow.hpp"
+#include "ApplicationWindow.hpp"
 
+#include "ApplicationWidgetGL.hpp"
 #include "error_handling.hpp"
-#include "myWidgetGL.hpp"
 #include "ui_mainwindow.h"
 
 #include <iostream>
 
-myWindow::myWindow(QWidget *parent)
+ApplicationWindow::ApplicationWindow(QWidget *parent)
     :QMainWindow(parent),ui(new Ui::MainWindow)
 {
     try
@@ -19,7 +19,7 @@ myWindow::myWindow(QWidget *parent)
         qglFormat.setVersion(1,2);
 
         //Create OpenGL Widget renderer
-        glWidget=new myWidgetGL(qglFormat);
+        glWidget=new ApplicationWidgetGL(qglFormat);
 
         //Add the OpenGL Widget into the layout
         ui->layout_scene->addWidget(glWidget);
@@ -36,22 +36,22 @@ myWindow::myWindow(QWidget *parent)
 
 }
 
-myWindow::~myWindow()
+ApplicationWindow::~ApplicationWindow()
 {}
 
-void myWindow::action_quit()
+void ApplicationWindow::action_quit()
 {
-    close();
+  close();
 }
 
-void myWindow::action_draw()
+void ApplicationWindow::action_draw()
 {
-    glWidget->change_draw_state();
+  glWidget->ToggleDrawState();
 }
 
-void myWindow::action_wireframe()
+void ApplicationWindow::action_wireframe()
 {
-    bool const state_wireframe=ui->wireframe->isChecked();
-    glWidget->wireframe(state_wireframe);
+  bool const wireframeState = ui->wireframe->isChecked();
+  glWidget->SetWireframe(wireframeState);
 }
 
