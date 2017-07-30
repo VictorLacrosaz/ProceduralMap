@@ -2,7 +2,7 @@
 
 #include "ApplicationWidgetGL.hpp"
 #include "error_handling.hpp"
-#include "ui_mainwindow.h"
+#include "ui_ApplicationWindow.h"
 
 #include <iostream>
 
