@@ -39,7 +39,7 @@ public:
      * octave should be a number >0
      * persistency should be in ]0,1[
     */
-    perlin(int octave_param,float persistency_param);
+    perlin(int octave_param,float persistency_param,float Start,float Step);
 
     /** Perlin noise in 1D */
     float operator()(float p) const;
@@ -54,7 +54,11 @@ private:
     /** The number of octave (the number of sumation) */
     int octave_data;
     /** The attenuation for each octave */
-    float persistency_data;
+    float persistency_data;    
+    /** The frequency for the first octave*/
+    float FrequencyStart;
+    /** The Frequency step between each ocyave*/
+    float FrequencyStep;
 };
 
 }
