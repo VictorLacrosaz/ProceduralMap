@@ -31,16 +31,16 @@ namespace cpe
 {
 
 perlin::perlin()
-    :octave_data(5),persistency_data(0.3f),FrequencyStart(1.0),
+    :OctaveNumber(5),Persistency(0.3f),FrequencyStart(1.0),
       FrequencyStep(2.0)
 {}
-perlin::perlin(int octave_param,float persistency_param,float Start,float Step)
-    :octave_data(octave_param),persistency_data(persistency_param),
+perlin::perlin(int Octave,float PersistencyData,float Start,float Step)
+    :OctaveNumber(Octave),Persistency(PersistencyData),
       FrequencyStart(Start),FrequencyStep(Step)
 {
-    ASSERT_CPE(octave_param>0,"Octave should be >0");
-    ASSERT_CPE(persistency_param>0,"Persistency should be > 0");
-    ASSERT_CPE(persistency_param<1,"Persistency should be < 1");
+    ASSERT_CPE(Octave>0,"Octave should be >0");
+    ASSERT_CPE(PersistencyData>0,"Persistency should be > 0");
+    ASSERT_CPE(PersistencyData<1,"Persistency should be < 1");
     ASSERT_CPE(Start>0,"Frequency start should be > 0");
     ASSERT_CPE(Step>0,"Frequency step should be > 0");
 }
@@ -50,18 +50,19 @@ float perlin::operator()(float const p) const
   float value = 0.0f;
   double frequency = FrequencyStart;
   double persistency = 1.0;
-  //
-  for(int k = 0;k < octave_data;k++)
+
+  //Add the value of snoise1 for each octave
+  for(int k = 0;k < OctaveNumber;k++)
     {
       value += persistency*(snoise1(p*frequency));
       frequency *= FrequencyStep;
-      persistency *= persistency_data;
+      persistency *= Persistency;
     }
 
-  //
-  float Normalisation = ((1-persistency_data)/(1-persistency));
+  //Normalisation parameter for persistency
+  float Normalisation = ((1-Persistency)/(1-persistency));
 
-  //
+  //Return the value if > 0 return 0 otherwise
   return std::max(value*Normalisation,0.0f);
 }
 
@@ -71,18 +72,19 @@ float perlin::operator()(vec2 const& p) const
   double frequency = FrequencyStart;
   double persistency = 1.0;
 
-  for(int k = 0;k < octave_data;k++)
+  //Add the value of snoise1 for each octave
+  for(int k = 0;k < OctaveNumber;k++)
     {
       value += persistency*(snoise2(p.x()*frequency,
                                     p.y()*frequency));
-
       frequency *= FrequencyStep;
-
-      persistency *= persistency_data;
+      persistency *= Persistency;
     }
-  float Normalisation = ((1-persistency_data)/(1-persistency));
 
+  //Normalisation parameter for persistency
+  float Normalisation = ((1-Persistency)/(1-persistency));
 
+  //Return the value if > 0 return 0 otherwise
   return std::max(value*Normalisation,0.0f);
 }
 
@@ -92,16 +94,20 @@ float perlin::operator()(vec3 const& p) const
   double frequency = FrequencyStart;
   double persistency = 1.0;
 
-  for(int k = 0;k < octave_data;k++)
+  //Add the value of snoise1 for each octave
+  for(int k = 0;k < OctaveNumber;k++)
     {
       value += persistency*(snoise3(p.x()*frequency,
                                     p.y()*frequency,
                                     p.z()*frequency));
       frequency *= FrequencyStep;
-      persistency *= persistency_data;
+      persistency *= Persistency;
     }
 
-  float Normalisation = ((1-persistency_data)/(1-persistency));
+  //Normalisation parameter for persistency
+  float Normalisation = ((1-Persistency)/(1-persistency));
+
+  //Return the value if > 0 return 0 otherwise
   return std::max(value*Normalisation,0.0f);
 }
 
@@ -111,18 +117,22 @@ float perlin::operator()(vec4 const& p) const
   double frequency = FrequencyStart;
   double persistency = 1.0;
 
-  for(int k = 0;k < octave_data;k++)
+  //Add the value of snoise1 for each octave
+  for(int k = 0;k < OctaveNumber;k++)
     {
       value += persistency*(snoise4(p.x()*frequency,
                                     p.y()*frequency,
                                     p.z()*frequency,
                                     p.w()*frequency));
       frequency *= FrequencyStep;
-      persistency *= persistency_data;
+      persistency *= Persistency;
     }
-  float Normalisation = ((1-persistency_data)/(1-persistency));
 
-  return value*Normalisation;
+  //Normalisation parameter for persistency
+  float Normalisation = ((1-Persistency)/(1-persistency));
+
+  //Return the value if > 0 return 0 otherwise
+  return std::max(value*Normalisation,0.0f);
 }
 
 
