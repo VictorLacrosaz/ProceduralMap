@@ -19,7 +19,7 @@ Grid::Grid()
 
   Radius = 10;
 
-  SquareSize = 20;
+  SquareSize = 10;
 
 
 }

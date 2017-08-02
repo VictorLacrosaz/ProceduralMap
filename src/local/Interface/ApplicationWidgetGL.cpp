@@ -127,8 +127,14 @@ void ApplicationWidgetGL::initializeGL()
 
     //Init Scene 3D
     renderInteractor.Initialize();
-    GLuint texture = LoadTextureFromFile("white.jpg");
-    renderInteractor.GetRenderManager().SetTextureDefault(texture);
+
+    std::vector <GLuint> Textures;
+    Textures.push_back(LoadTextureFromFile("champ.jpg"));
+    Textures.push_back(LoadTextureFromFile("rock.jpg"));
+    Textures.push_back(LoadTextureFromFile("Grass.jpg"));
+    Textures.push_back(LoadTextureFromFile("Argile.jpeg"));
+
+    renderInteractor.GetRenderManager().SetTextures(Textures);
 
     //Activate depth buffer
     glEnable(GL_DEPTH_TEST); PRINT_OPENGL_ERROR();

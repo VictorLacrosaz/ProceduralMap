@@ -43,7 +43,7 @@ private:
     /** Vector of shaders ID */
     std::vector<GLuint> Shaders;
 
-    /** Default id for the texture (white texture) */
+    /***/
     std::vector<GLuint> Textures;
 
     /** Ground mesh */
