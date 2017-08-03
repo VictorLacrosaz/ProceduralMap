@@ -159,7 +159,7 @@ void Camera::SetAspectRatio(float ratio)
   this->UpdateMatrixProjection();
 }
 
-float Camera::GetAspectRatio()
+float Camera::GetAspectRatio() const
 {
   return this->AspectRatio;
 }
@@ -171,7 +171,7 @@ void Camera::SetOrientation(const cpe::quaternion& ori)
   this->UpdateMatrixModelView();
 }
 
-cpe::quaternion Camera::GetOrientation()
+cpe::quaternion Camera::GetOrientation() const
 {
   return this->Orientation;
 }
@@ -218,10 +218,11 @@ void Camera::SetMatrixModelView(const cpe::mat4& m)
   this->ModelView = m;
 }
 
-cpe::mat4 Camera::GetMatrixModelView()
+cpe::mat4 Camera::GetMatrixModelView() const
 {
   return this->ModelView;
 }
+
 
 //---------------------------------------------------------------------------
 void Camera::SetMatrixModelProjection(const cpe::mat4& m)
@@ -229,7 +230,7 @@ void Camera::SetMatrixModelProjection(const cpe::mat4& m)
   this->Projection = m;
 }
 
-cpe::mat4 Camera::GetMatrixProjection()
+cpe::mat4 Camera::GetMatrixProjection() const
 {
   return this->Projection;
 }

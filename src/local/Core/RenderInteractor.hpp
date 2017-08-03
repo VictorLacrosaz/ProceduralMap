@@ -21,7 +21,7 @@
 #ifndef RENDERINTERACTOR_HPP
 #define RENDERINTERACTOR_HPP
 
-#include "axes_helper.hpp"
+#include "DebugObject.hpp"
 #include "mat3.hpp"
 #include "RenderManager.hpp"
 #include "trackball.hpp"
@@ -67,7 +67,7 @@ public:
    * \return
    * <origin,direction> : std::pair<cpe::vec3,cpe::vec3>
   */
-  std::pair<cpe::vec3,cpe::vec3> GetPickingRay(int x_screen,int y_screen) const;
+  std::pair<cpe::vec3,cpe::vec3> GetPickingRay(int x_screen,int y_screen);
 
   //-------------------------------------------------------
   //  FPS
@@ -154,12 +154,10 @@ private:
   unsigned int frame;
 
   //-------------------------------------------------------
-  //  Axis helper
+  //  Debug helper object
   //-------------------------------------------------------
-  /** Helper class for drawing the 3D axes */
-  cpe::axes_helper AxisHelper;
-  /** Function drawing the world axis on the corner of the screen */
-  void DrawAxis();
+  /** Helper class for Debug rendering */
+  DebugObject Debug;
 
 
   /** All the content of the 3D scene */

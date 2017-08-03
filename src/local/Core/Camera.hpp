@@ -29,19 +29,19 @@ public:
   void SetFarDistance(float farDistance);
   float GetFarDistance();
   void SetAspectRatio(float ratio);
-  float GetAspectRatio();
+  float GetAspectRatio() const;
 
   void SetOrientation(const cpe::quaternion& ori);
-  cpe::quaternion GetOrientation();
+  cpe::quaternion GetOrientation() const;
   void SetPosition(const cpe::vec3& tr);
   cpe::vec3 GetPosition();
   void SetFocalDistance(float d);
   float GetFocalDistance();
 
   void SetMatrixModelView(const cpe::mat4& m);
-  cpe::mat4 GetMatrixModelView();
+  cpe::mat4 GetMatrixModelView() const;
   void SetMatrixModelProjection(const cpe::mat4& m);
-  cpe::mat4 GetMatrixProjection();
+  cpe::mat4 GetMatrixProjection() const;
   cpe::mat4 GetMatrixNormal();
 
 

@@ -44,18 +44,21 @@ RenderInteractor::RenderInteractor()
 
 void RenderInteractor::Render()
 {
+  //Render scene
   _RenderManager.Render();
-  DrawAxis();
+
+  //Eventually render debug objects
+  Debug.Render(_RenderManager.GetCamera());
 }
 
 void RenderInteractor::Initialize()
 {
+  //Initialize scene
   _RenderManager.Initialize();
 
   //Setup camera
   float aspect = static_cast<float>(WindowSize[0]) / WindowSize[1];
   _RenderManager.GetCamera().SetAspectRatio(aspect);
-
   cpe::trackball trackBall;
   _RenderManager.GetCamera().SetOrientation(trackBall.quat());
 
@@ -63,8 +66,8 @@ void RenderInteractor::Initialize()
   MotionFactor =
     0.0001f * (1 + 10 * std::abs(_RenderManager.GetCamera().GetFocalDistance()));
 
-  //Setup axis helper
-  AxisHelper.init();
+  //Toggle drawing of world axis
+  Debug.DrawAxis();
 }
 
 //-------------------------------------------------------
@@ -143,7 +146,6 @@ void RenderInteractor::TrackBallZoom()
   MotionFactor = 0.0001f * (1 + 10 * std::abs(focalDist));
 
   _RenderManager.GetCamera().SetFocalDistance(focalDist);
-
 }
 //-------------------------------------------------------
 
@@ -174,35 +176,9 @@ float RenderInteractor::fps()
 }
 
 //-------------------------------------------------------
-//  Draw world axis
-//-------------------------------------------------------
-void RenderInteractor::DrawAxis()
-{
-  glUseProgram(AxisHelper.shader_id());
-
-  float const ratio = static_cast<float>(WindowSize[0])/WindowSize[1];
-  cpe::mat4 const orientation = cpe::mat4(
-    _RenderManager.GetCamera().GetOrientation().to_mat3());
-  cpe::mat4 const scaling = cpe::mat4(
-    1.0f, 0.0f, 0.0f, 0.0f,
-    0.0f, ratio, 0.0f, 0.0f,
-    0.0f, 0.0f, 1.0f, 0.0f,
-    0.0f, 0.0f, 0.0f, 1.0f);
-
-  glUniformMatrix4fv(get_uni_loc(AxisHelper.shader_id(),"camera_modelview"), 1, false, orientation.pointer()); PRINT_OPENGL_ERROR();
-  glUniformMatrix4fv(get_uni_loc(AxisHelper.shader_id(),"camera_projection"), 1, false, scaling.pointer());    PRINT_OPENGL_ERROR();
-
-  glClear(GL_DEPTH_BUFFER_BIT); PRINT_OPENGL_ERROR();
-
-  glLineWidth(2.0);
-  AxisHelper.draw();
-  glLineWidth(1.0);
-}
-
-//-------------------------------------------------------
 //  Picking
 //-------------------------------------------------------
-std::pair<cpe::vec3,cpe::vec3> RenderInteractor::GetPickingRay(int const x_screen,int const y_screen) const
+std::pair<cpe::vec3,cpe::vec3> RenderInteractor::GetPickingRay(int const x_screen,int const y_screen)
 {
 //  float const h=WindowSize[1];
 //  float const w=WindowSize[0];
@@ -234,6 +210,8 @@ std::pair<cpe::vec3,cpe::vec3> RenderInteractor::GetPickingRay(int const x_scree
   cpe::vec3 const ray=normalized(mod_inv*proj_ray);
   cpe::vec3 const center = cam.GetPosition();
 
+  Debug.DrawLine(cpe::vec3(0,0,0),cpe::vec3(100,100,0));
+
   return std::make_pair(center,ray);
 }
 //-------------------------------------------------------
@@ -247,8 +225,12 @@ RenderManager const& RenderInteractor::GetRenderManager() const {return _RenderM
 
 /** Get/Set window size */
 int* RenderInteractor::GetWindowSize() {return WindowSize;}
-void RenderInteractor::SetWindowSize( int width, int length ) {
-  WindowSize[0] = width; WindowSize[1] = length;}
+void RenderInteractor::SetWindowSize( int width, int height )
+{
+  WindowSize[0] = width;
+  WindowSize[1] = height;
+  _RenderManager.GetCamera().SetAspectRatio(static_cast<float>(width)/height);
+}
 
 /** Get/Set event position */
 int* RenderInteractor::GetEventPosition() {return EventPosition;}

@@ -70,7 +70,6 @@ void RenderManager::Render()
   cpe::vec3 OrientCam = MainCamera.GetOrientation()*cpe::vec3(0,0,1);
   cpe::vec3 PosGround = -PosCam;
 
-  std::cout<<PosGround<<std::endl;
   GameGrid.BuildGrid(GameGrid.getSquareSize()*cpe::vec2(std::floor(PosGround.x()/GameGrid.getSquareSize()),std::floor(PosGround.z()/GameGrid.getSquareSize())));
   mesh_ground_opengl.fill_vbo(GameGrid.getMeshGrid());
   mesh_ground_opengl.draw();
