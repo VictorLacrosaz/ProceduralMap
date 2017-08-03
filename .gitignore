@@ -42,6 +42,7 @@ CTestTestfile.cmake
 
 ##QtCreator
 CMakeLists.txt.user
+*.autosave
 
 ##Data
 data/*
