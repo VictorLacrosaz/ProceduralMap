@@ -7,7 +7,7 @@
 
 Camera::Camera()
 {
-  //Projectio parameters
+  //Projection parameters
   this->FieldOfView = 55.0f*M_PI/180.0;
   this->NearDistance = 1e-3f;
   this->FarDistance = 500.0f;
@@ -32,7 +32,6 @@ void Camera::UpdateMatrixModelView()
   //Zoom
   cpe::mat4 world_matrix_zoom;
   world_matrix_zoom.set_translation({0.0f,0.0f,this->FocalDistance});
-
   //Translation
   cpe::mat4 world_matrix_translation;
   world_matrix_translation.set_translation(this->Position);

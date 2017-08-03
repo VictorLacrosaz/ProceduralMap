@@ -37,15 +37,11 @@ void Grid::BuildGrid (cpe::vec2 Center)
       for (int j = Center.y()-Radius*SquareSize;j <= Center.y()+Radius*SquareSize;j += SquareSize)
         {
           //Height informations for the square
-//          float Height = HeightMax*HeightMap(cpe::vec3(v+Center.x(),u+Center.y(),KeyMap));
-//          float HeightN1 = HeightMax*HeightMap(cpe::vec3(v+1+Center.x(),u+Center.y(),KeyMap));
-//          float HeightN2 = HeightMax*HeightMap(cpe::vec3(v+Center.x(),u+1+Center.y(),KeyMap));
-//          float HeightN3 = HeightMax*HeightMap(cpe::vec3(v+1+Center.x(),u+1+Center.y(),KeyMap));
           float Height = HeightMax*HeightMap(cpe::vec3(v+Center.x()/SquareSize,u+Center.y()/SquareSize,KeyMap));
           float HeightN1 = HeightMax*HeightMap(cpe::vec3(v+1+Center.x()/SquareSize,u+Center.y()/SquareSize,KeyMap));
           float HeightN2 = HeightMax*HeightMap(cpe::vec3(v+Center.x()/SquareSize,u+1+Center.y()/SquareSize,KeyMap));
           float HeightN3 = HeightMax*HeightMap(cpe::vec3(v+1+Center.x()/SquareSize,u+1+Center.y()/SquareSize,KeyMap));
-//          //Temperature informations for the square
+//        //Temperature informations for the square
 //          float Temp = TemperatureMap(cpe::vec3(v+Center.x(),u+Center.y(),KeyMap));
 //          float TempN1 = TemperatureMap(cpe::vec3(v+std::pow(-1,v)+Center.x(),u+Center.y(),KeyMap));
 //          float TempN2 = TemperatureMap(cpe::vec3(v+Center.x(),u+std::pow(-1,u)+Center.y(),KeyMap));

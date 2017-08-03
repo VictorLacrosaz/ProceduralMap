@@ -43,7 +43,7 @@ private:
     /** Vector of shaders ID */
     std::vector<GLuint> Shaders;
 
-    /** Default id for the texture (white texture) */
+    /** Textures ID*/
     std::vector<GLuint> Textures;
 
     /** Ground mesh */
@@ -53,7 +53,6 @@ private:
 
     /** Grid */
     Grid GameGrid;
-
 
     Camera MainCamera;
 };
