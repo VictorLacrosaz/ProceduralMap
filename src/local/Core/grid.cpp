@@ -19,7 +19,7 @@ Grid::Grid()
 
   Radius = 10;
 
-  SquareSize = 20;
+  SquareSize = 10;
 
 
 }
@@ -37,22 +37,25 @@ void Grid::BuildGrid (cpe::vec2 Center)
       for (int j = Center.y()-Radius*SquareSize;j <= Center.y()+Radius*SquareSize;j += SquareSize)
         {
           //Height informations for the square
-          float Height = HeightMax*HeightMap(cpe::vec3(v+Center.x(),u+Center.y(),KeyMap));
-          float HeightN1 = HeightMax*HeightMap(cpe::vec3(v+std::pow(-1,v)+Center.x(),u+Center.y(),KeyMap));
-          float HeightN2 = HeightMax*HeightMap(cpe::vec3(v+Center.x(),u+std::pow(-1,u)+Center.y(),KeyMap));
-          float HeightN3 = HeightMax*HeightMap(cpe::vec3(v+std::pow(-1,v)+Center.x(),u+std::pow(-1,u)+Center.y(),KeyMap));
+//          float Height = HeightMax*HeightMap(cpe::vec3(v+Center.x(),u+Center.y(),KeyMap));
+//          float HeightN1 = HeightMax*HeightMap(cpe::vec3(v+1+Center.x(),u+Center.y(),KeyMap));
+//          float HeightN2 = HeightMax*HeightMap(cpe::vec3(v+Center.x(),u+1+Center.y(),KeyMap));
+//          float HeightN3 = HeightMax*HeightMap(cpe::vec3(v+1+Center.x(),u+1+Center.y(),KeyMap));
+          float Height = HeightMax*HeightMap(cpe::vec3(v+Center.x()/SquareSize,u+Center.y()/SquareSize,KeyMap));
+          float HeightN1 = HeightMax*HeightMap(cpe::vec3(v+1+Center.x()/SquareSize,u+Center.y()/SquareSize,KeyMap));
+          float HeightN2 = HeightMax*HeightMap(cpe::vec3(v+Center.x()/SquareSize,u+1+Center.y()/SquareSize,KeyMap));
+          float HeightN3 = HeightMax*HeightMap(cpe::vec3(v+1+Center.x()/SquareSize,u+1+Center.y()/SquareSize,KeyMap));
+//          //Temperature informations for the square
+//          float Temp = TemperatureMap(cpe::vec3(v+Center.x(),u+Center.y(),KeyMap));
+//          float TempN1 = TemperatureMap(cpe::vec3(v+std::pow(-1,v)+Center.x(),u+Center.y(),KeyMap));
+//          float TempN2 = TemperatureMap(cpe::vec3(v+Center.x(),u+std::pow(-1,u)+Center.y(),KeyMap));
+//          float TempN3 = TemperatureMap(cpe::vec3(v+std::pow(-1,v)+Center.x(),u+std::pow(-1,u)+Center.y(),KeyMap));
 
-          //Temperature informations for the square
-          float Temp = TemperatureMap(cpe::vec3(v+Center.x(),u+Center.y(),KeyMap));
-          float TempN1 = TemperatureMap(cpe::vec3(v+std::pow(-1,v)+Center.x(),u+Center.y(),KeyMap));
-          float TempN2 = TemperatureMap(cpe::vec3(v+Center.x(),u+std::pow(-1,u)+Center.y(),KeyMap));
-          float TempN3 = TemperatureMap(cpe::vec3(v+std::pow(-1,v)+Center.x(),u+std::pow(-1,u)+Center.y(),KeyMap));
-
-          //Moisture informations for the square
-          float Moisture = MoistureMap(cpe::vec3(v+Center.x(),u+Center.y(),KeyMap));
-          float MoistureN1 = MoistureMap(cpe::vec3(v+std::pow(-1,v)+Center.x(),u+Center.y(),KeyMap));
-          float MoistureN2 = MoistureMap(cpe::vec3(v+Center.x(),u+std::pow(-1,u)+Center.y(),KeyMap));
-          float MoistureN3 = MoistureMap(cpe::vec3(v+std::pow(-1,v)+Center.x(),u+std::pow(-1,u)+Center.y(),KeyMap));
+//          //Moisture informations for the square
+//          float Moisture = MoistureMap(cpe::vec3(v+Center.x(),u+Center.y(),KeyMap));
+//          float MoistureN1 = MoistureMap(cpe::vec3(v+std::pow(-1,v)+Center.x(),u+Center.y(),KeyMap));
+//          float MoistureN2 = MoistureMap(cpe::vec3(v+Center.x(),u+std::pow(-1,u)+Center.y(),KeyMap));
+//          float MoistureN3 = MoistureMap(cpe::vec3(v+std::pow(-1,v)+Center.x(),u+std::pow(-1,u)+Center.y(),KeyMap));
 
           m.add_vertex(cpe::vec3(i,Height,j));
           m.add_texture_coord(cpe::vec2(u,v));
@@ -75,6 +78,7 @@ void Grid::BuildGrid (cpe::vec2 Center)
             {
               m.add_color(cpe::vec3(0.75,0,0));
             }
+
 
 
           //if(std::pow(i-Center.x(),2)+std::pow(j-Center.y(),2) <= std::pow(Radius*SquareSize,2))
@@ -111,3 +115,13 @@ void Grid::setMeshGrid(const cpe::mesh &value)
 {
   MeshGrid = value;
 }
+int Grid::getSquareSize() const
+{
+  return SquareSize;
+}
+
+void Grid::setSquareSize(int value)
+{
+  SquareSize = value;
+}
+

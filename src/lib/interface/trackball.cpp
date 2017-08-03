@@ -28,7 +28,7 @@ namespace cpe
     trackball::trackball()
         :disc_radius(0.8f)
     {
-        quaternion q;q.set_axis_angle({0.0f,1.0f,0.0f},M_PI/6.0f);
+        quaternion q ;q.set_axis_angle({0.0f,1.0f,0.0f},M_PI/6.0f);
 
         current_q = q;
     }

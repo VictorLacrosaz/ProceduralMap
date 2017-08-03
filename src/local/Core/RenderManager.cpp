@@ -11,36 +11,6 @@
 
 using namespace cpe;
 
-static cpe::mesh BuildGrid (vec2 Center,int Radius)
-{
-  mesh m;
-  int u = 0,v = 0;
-  int Size  = 2*Radius+1;
-  for (int i = Center.x()-Radius;i <= Center.x()+Radius;i++)
-  {
-    for (int j = Center.y()-Radius;j <= Center.y()+Radius;j++)
-    {
-        m.add_vertex(vec3(i,j,0));
-        if(std::pow(i,2)+std::pow(j,2) < std::pow(Radius,2))
-        {
-            if(u < Size-1 && v < Size-1)
-            {
-
-                m.add_triangle_index({u+v*Size,u+(v+1)*Size,(u+1)+v*Size});
-                m.add_triangle_index({u+(v+1)*Size,u+1+(v+1)*Size,(u+1)+v*Size});
-            }
-        }
-        u++;
-    }
-
-    u = 0;
-    v++;
-  }
-
-  m.fill_color(vec3(0.8,0.6,0.6));
-
- return m;
-}
 
 
 static cpe::mesh build_ground(float const L,float const h)
@@ -63,19 +33,29 @@ static cpe::mesh build_ground(float const L,float const h)
 // Constructors
 //---------------------------------------------------------------------------
 RenderManager::RenderManager()
-    :ShaderDefault(0), MainCamera()
+    :Shaders(0), MainCamera(),GameGrid()
 {}
 
 void RenderManager::Initialize()
 {
+
   // Preload default structure
-  ShaderDefault = read_shader("Default.vert",
-                              "Default.frag");  PRINT_OPENGL_ERROR();
+  Shaders.push_back(read_shader("Default.vert",
+                                "Default.frag"));  PRINT_OPENGL_ERROR();
+  //Preload grid shader
+  Shaders.push_back(read_shader("Grid.vert",
+                                "Grid.frag"));  PRINT_OPENGL_ERROR();
 
   // Build ground
-  mesh_ground = BuildGrid(vec2(0, 0) ,10);
-  mesh_ground.fill_empty_field_by_default();
-  mesh_ground_opengl.fill_vbo(mesh_ground);
+  cpe::vec3 PosCam = MainCamera.GetPosition();
+  cpe::vec3 OrientCam = MainCamera.GetOrientation()*cpe::vec3(0,0,1);
+  cpe::vec3 PosGround = PosCam;
+
+
+
+  //floor:round down the value
+  GameGrid.BuildGrid(GameGrid.getSquareSize()*cpe::vec2(std::floor(PosGround.x()/GameGrid.getSquareSize()),std::floor(PosGround.z()/GameGrid.getSquareSize())));
+  mesh_ground_opengl.fill_vbo(GameGrid.getMeshGrid());
 }
 
 //---------------------------------------------------------------------------
@@ -84,7 +64,15 @@ void RenderManager::Initialize()
 void RenderManager::Render()
 {
   // Draw the ground
-  SetupShaderDefault();
+  SetupShaders();
+
+  cpe::vec3 PosCam = MainCamera.GetPosition();
+  cpe::vec3 OrientCam = MainCamera.GetOrientation()*cpe::vec3(0,0,1);
+  cpe::vec3 PosGround = -PosCam;
+
+  std::cout<<PosGround<<std::endl;
+  GameGrid.BuildGrid(GameGrid.getSquareSize()*cpe::vec2(std::floor(PosGround.x()/GameGrid.getSquareSize()),std::floor(PosGround.z()/GameGrid.getSquareSize())));
+  mesh_ground_opengl.fill_vbo(GameGrid.getMeshGrid());
   mesh_ground_opengl.draw();
 }
 
@@ -92,26 +80,38 @@ void RenderManager::Render()
 //---------------------------------------------------------------------------
 // Setup default shader for mesh rendering using default texture
 //---------------------------------------------------------------------------
-void RenderManager::SetupShaderDefault()
+void RenderManager::SetupShaders()
 {
-  //Setup uniform parameters
-  glUseProgram(ShaderDefault);                                               PRINT_OPENGL_ERROR();
+  for(unsigned int i = 0; i < Shaders.size(); i++)
+    {
+      //Setup uniform parameters
+      glUseProgram(Shaders[i]);                                               PRINT_OPENGL_ERROR();
 
-  //Set Uniform data to GPU
-  glUniformMatrix4fv(get_uni_loc(ShaderDefault, "camera_modelview"), 1, false,
-    MainCamera.GetMatrixModelView().pointer());                              PRINT_OPENGL_ERROR();
-  glUniformMatrix4fv(get_uni_loc(ShaderDefault, "camera_projection"), 1, false,
-    MainCamera.GetMatrixProjection().pointer());                             PRINT_OPENGL_ERROR();
-  glUniformMatrix4fv(get_uni_loc(ShaderDefault, "normal_matrix"), 1, false,
-    MainCamera.GetMatrixNormal().pointer());                                 PRINT_OPENGL_ERROR();
+      //Set Uniform data to GPU
+      glUniformMatrix4fv(get_uni_loc(Shaders[i], "camera_modelview"), 1, false,
+                         MainCamera.GetMatrixModelView().pointer());                              PRINT_OPENGL_ERROR();
+      glUniformMatrix4fv(get_uni_loc(Shaders[i], "camera_projection"), 1, false,
+                         MainCamera.GetMatrixProjection().pointer());                             PRINT_OPENGL_ERROR();
+      glUniformMatrix4fv(get_uni_loc(Shaders[i], "normal_matrix"), 1, false,
+                         MainCamera.GetMatrixNormal().pointer());                                 PRINT_OPENGL_ERROR();
 
-  //load white texture
-  glBindTexture(GL_TEXTURE_2D, TextureDefault);                               PRINT_OPENGL_ERROR();
+      GLint samplerArrayLoc = glGetUniformLocation(Shaders[i], "texture");
+      const GLint samplers[4] = {0,1,2,3};
+      glUniform1iv( samplerArrayLoc, 4, samplers );
+
+    }
+
+  for (unsigned int i = 0; i<Textures.size(); i++)
+    {
+      //load textures
+      glActiveTexture(GL_TEXTURE0+i);
+      glBindTexture(GL_TEXTURE_2D,Textures[i]);                                                   PRINT_OPENGL_ERROR();
+    }
 }
 
 
-void RenderManager::SetTextureDefault(GLuint t)
+void RenderManager::SetTextures(std::vector<GLuint> t)
 {
-  TextureDefault = t;
+  Textures = t;
 }
 

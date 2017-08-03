@@ -20,6 +20,9 @@ public:
   cpe::mesh getMeshGrid() const;
   void setMeshGrid(const cpe::mesh &value);
 
+  int getSquareSize() const;
+  void setSquareSize(int value);
+
 private:
 
   //Perlin noises for the creation of the map

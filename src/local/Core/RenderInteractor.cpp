@@ -74,7 +74,7 @@ void RenderInteractor::MoveForward()
 {
   float const dL =  5.0f * MotionFactor * (EventPosition[1]-LastEventPosition[1]);
   Camera& cam = _RenderManager.GetCamera();
-  cpe::vec3 const z(0,0,1);
+  cpe::vec3 const z(0.0f,0.0f,1.0f);
   cpe::vec3 cameraPosition = cam.GetPosition();
   cpe::quaternion q_CamOrientation = conjugated(cam.GetOrientation());
   cam.SetPosition(cameraPosition + dL * (q_CamOrientation * z));
@@ -84,7 +84,7 @@ void RenderInteractor::MoveRight()
 {
   float const dL = -MotionFactor * (EventPosition[0] - LastEventPosition[0]);
   Camera& cam = _RenderManager.GetCamera();
-  cpe::vec3 const x(-1,0,0);
+  cpe::vec3 const x(-1.0f,0.0f,0.0f);
   cpe::vec3 cameraPosition = cam.GetPosition();
   cpe::quaternion q_CamOrientation = conjugated(cam.GetOrientation());
   cam.SetPosition(cameraPosition + dL * (q_CamOrientation * x));
@@ -94,7 +94,7 @@ void RenderInteractor::MoveUp()
 {
   float const dL = MotionFactor * (EventPosition[1]-LastEventPosition[1]);
   Camera& cam = _RenderManager.GetCamera();
-  cpe::vec3 const y(0,-1,0);
+  cpe::vec3 const y(0.0f,-1.0f,0.0f);
   cpe::vec3 cameraPosition = cam.GetPosition();
   cpe::quaternion q_CamOrientation = conjugated(cam.GetOrientation());
   cam.SetPosition(cameraPosition + dL * (q_CamOrientation * y));
@@ -143,6 +143,7 @@ void RenderInteractor::TrackBallZoom()
   MotionFactor = 0.0001f * (1 + 10 * std::abs(focalDist));
 
   _RenderManager.GetCamera().SetFocalDistance(focalDist);
+
 }
 //-------------------------------------------------------
 

@@ -5,7 +5,7 @@ varying vec4 position_3d_modelview;
 varying vec3 normal;
 varying vec4 color;
 
-uniform sampler2D texture;
+uniform sampler2D texture [4];
 
 uniform vec3 light=vec3(0.5,0.3,5.0);
 
@@ -25,7 +25,7 @@ void main (void)
 
     vec4 white=vec4(1.0,1.0,1.0,0.0);
     vec2 tex_coord=gl_TexCoord[0].xy;
-    vec4 color_texture=texture2D(texture,tex_coord);
+    vec4 color_texture=texture2D(texture [0],tex_coord);
     vec4 color_final=color*color_texture;
 
     gl_FragColor = (ambiant_term+diffuse_term)*color_final+specular_term*white;

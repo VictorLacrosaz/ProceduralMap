@@ -9,8 +9,10 @@
 #include "Camera.hpp"
 #include "mesh.hpp"
 #include "mesh_opengl.hpp"
+#include "grid.hpp"
 
 #include <vector>
+
 
 
 class RenderManager
@@ -26,7 +28,7 @@ public:
     void Render();
 
     /**  Rendering callback */
-    void SetTextureDefault(GLuint t);
+    void SetTextures(std::vector<GLuint> t);
 
     //* Accesors */
     Camera& GetCamera() {return MainCamera;}
@@ -36,18 +38,21 @@ public:
 private:
 
     /** Setup default shader for mesh rendering using default texture */
-    void SetupShaderDefault();
+    void SetupShaders ();
 
-    /** Default shader ID */
-    GLuint ShaderDefault;
+    /** Vector of shaders ID */
+    std::vector<GLuint> Shaders;
 
-    /** Default id for the texture (white texture) */
-    GLuint TextureDefault;
+    /** Textures ID*/
+    std::vector<GLuint> Textures;
 
     /** Ground mesh */
     cpe::mesh mesh_ground;
     /** Ground mesh for OpenGL drawing */
     cpe::mesh_opengl mesh_ground_opengl;
+
+    /** Grid */
+    Grid GameGrid;
 
     Camera MainCamera;
 };
