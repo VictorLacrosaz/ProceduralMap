@@ -1,25 +1,34 @@
 #version 130
 
+//Input attributes
+in vec3 Position;
+in vec3 Normal;
+in vec3 Color;
+in vec2 TCoord;
+
+//Output attributes
+out vec4 v_PositionLC; //Vertex position in local object coordinates
+out vec4 v_PositionWC; //Vertex position in world coordinates
+out vec3 v_Normal;
+flat out vec4 v_Color;
+out vec2 v_TCoord;
+
 uniform mat4 camera_projection;
 uniform mat4 camera_modelview;
 uniform mat4 normal_matrix;
 
-varying vec4 position_3d_original;
-varying vec4 position_3d_modelview;
-
-varying vec3 normal;
-flat out vec4 color;
 
 
 void main (void)
 {
-    gl_Position = camera_projection*camera_modelview*gl_Vertex;
+    gl_Position = camera_projection * camera_modelview * vec4(Position, 1.0f);
 
-    position_3d_original = gl_Vertex;
-    position_3d_modelview = camera_modelview*gl_Vertex;
-    color = gl_Color;
-    vec4 normal4d = normal_matrix*vec4(normalize(gl_Normal),0.0);
-    normal = normal4d.xyz;
+    //Compute output attributes
+    v_PositionLC = vec4(Position, 1.0f);
+    v_PositionWC = camera_modelview * vec4(Position, 1.0f);
+    v_Color = vec4(Color, 1.0f);
+    vec4 normal4d = normal_matrix * vec4(normalize(Normal), 0.0);
+    v_Normal = normal4d.xyz;
 
-    gl_TexCoord[0]=gl_MultiTexCoord0;
+    v_TCoord = TCoord;
 }
