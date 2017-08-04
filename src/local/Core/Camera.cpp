@@ -9,14 +9,14 @@ Camera::Camera()
 {
   //Projection parameters
   this->FieldOfView = 55.0f*M_PI/180.0;
-  this->NearDistance = 1e-3f;
-  this->FarDistance = 500.0f;
+  this->NearDistance = 1e0f;
+  this->FarDistance = 10000.0f;
   this->AspectRatio = 1.0f;
 
   //ModelView parameters
-  this->Position = cpe::vec3(0.0f,0.0f,0.0f);
-  this->Orientation = cpe::quaternion();
-  this->FocalDistance = -100.0f;
+  this->Position = cpe::vec3(0.0f,-200.0f,0.0f);
+  this->Orientation = cpe::quaternion(0.0f,1.0f,0.0f,1.0f);
+  this->FocalDistance = -1200.0f;
 
   //Compute matrices
   this->UpdateMatrixModelView();

@@ -104,6 +104,7 @@ void RenderManager::SetupShaders()
       glActiveTexture(GL_TEXTURE0+i);
       glBindTexture(GL_TEXTURE_2D,Textures[i]);                                                   PRINT_OPENGL_ERROR();
     }
+
 }
 
 

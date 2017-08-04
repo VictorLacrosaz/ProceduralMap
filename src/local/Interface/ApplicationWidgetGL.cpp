@@ -18,6 +18,7 @@ ApplicationWidgetGL::ApplicationWidgetGL(const QGLFormat& format,QGLWidget *pare
     QGLWidget(format,parent), DrawState(true)
 {
     QWidget::setFocusPolicy(Qt::StrongFocus);
+    setMouseTracking(true);
     startTimer(25); //start timer every 25ms
     renderInteractor = RenderInteractor();
 }
@@ -80,6 +81,16 @@ void ApplicationWidgetGL::mousePressEvent(QMouseEvent *event)
   }
 }
 
+void ApplicationWidgetGL::wheelEvent(QWheelEvent *event)
+{
+  int numDegrees = event->delta() / 8;
+  int numSteps = numDegrees / 15;
+
+  renderInteractor.SetWheelMouv(numSteps);
+
+  renderInteractor.TrackBallZoomWheel();
+
+}
 
 void ApplicationWidgetGL::mouseMoveEvent(QMouseEvent *event)
 {
@@ -89,23 +100,39 @@ void ApplicationWidgetGL::mouseMoveEvent(QMouseEvent *event)
   int const ctrl_pressed  = (event->modifiers() & Qt::ControlModifier);
   int const shift_pressed = (event->modifiers() & Qt::ShiftModifier);
 
-  // Left button controls the rotation
-  if (!ctrl_pressed && !shift_pressed && (event->buttons() & Qt::LeftButton) )
-  {
-    renderInteractor.TrackBallRotate();
-  }
 
-  // Right button controls the zoom
+  // Screen boarder Move
+  if ((event->x() > 0.95*renderInteractor.GetWindowSize()[0]
+      || event->x() < 0.05*renderInteractor.GetWindowSize()[0])
+      && !(event->button() | Qt::NoButton))
+    {
+      renderInteractor.MoveRightScreen();
+    }
+  if ((event->y() > 0.95*renderInteractor.GetWindowSize()[1]
+      || event->y() < 0.05*renderInteractor.GetWindowSize()[1])
+      && !(event->button() | Qt::NoButton))
+    {
+      renderInteractor.MoveForwardScreen();
+    }
+
+
+  // Left button controls the translation
+  if (!ctrl_pressed && !shift_pressed && (event->buttons() & Qt::LeftButton) )
+    {
+      renderInteractor.MoveForward();
+      renderInteractor.MoveRight();
+    }
+
+  // Right button controls the window rotation
   if (!ctrl_pressed && !shift_pressed && (event->buttons() & Qt::RightButton))
   {
-    renderInteractor.TrackBallZoom();
+    renderInteractor.TrackBallRotateY();
   }
 
-  // Shift+Left button controls the window translation (left/right, bottom/up)
+  // Shift+Left button controls the window zoom
   if (!ctrl_pressed && shift_pressed && (event->buttons() & Qt::LeftButton))
   {
-    renderInteractor.MoveForward();
-    renderInteractor.MoveRight();
+    renderInteractor.TrackBallZoomMouse();
   }
 
   // Shift+Right button enables to translate forward/backward
@@ -147,6 +174,8 @@ void ApplicationWidgetGL::initializeGL()
 
     //Activate depth buffer
     glEnable(GL_DEPTH_TEST); PRINT_OPENGL_ERROR();
+    //Define provoking vertex for flat shading
+    glProvokingVertex(GL_FIRST_VERTEX_CONVENTION);
 }
 
 void ApplicationWidgetGL::resizeGL(int const width,int const height)

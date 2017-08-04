@@ -58,6 +58,8 @@ protected:
     void mouseMoveEvent(QMouseEvent *event);
     /** Function called when keyboard is pressed */
     void keyPressEvent(QKeyEvent *event);
+    /** Function called when mouse wheel is moved */
+    void wheelEvent(QWheelEvent *event);
 
     /** Function called on timer overflow */
     void timerEvent(QTimerEvent *event);

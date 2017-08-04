@@ -47,15 +47,19 @@ public:
   //-------------------------------------------------------
   /** \brief move the camera forward by a distance dL */
   void MoveForward();
+  void MoveForwardScreen();
   /** \brief move the camera to the right by a distance dL */
   void MoveRight();
+  void MoveRightScreen();
   /** \brief move the camera up by a distance dL */
   void MoveUp();
 
   /** \brief camera rotation using on-screen coordinates */
   void TrackBallRotate();
+  void TrackBallRotateY();
   /** \brief camera zoom using on-screen coordinates */
-  void TrackBallZoom();
+  void TrackBallZoomWheel();
+  void TrackBallZoomMouse();
 
   //-------------------------------------------------------
   //  Picking
@@ -127,6 +131,9 @@ public:
   bool right_button() const;
 
 
+  int GetWheelMouv() const;
+  void SetWheelMouv(int value);
+
 private:
 
   //-------------------------------------------------------
@@ -140,6 +147,9 @@ private:
 
   /** Internal storage of previous cursor position */
   int LastEventPosition[2];
+
+  /** Internal storage of mouse wheel mouvment*/
+  int WheelMouv;
 
   /** \brief internal storage when left button is clicked */
   bool is_left_button;
