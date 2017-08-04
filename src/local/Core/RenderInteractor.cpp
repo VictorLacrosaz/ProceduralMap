@@ -83,9 +83,46 @@ void RenderInteractor::MoveForward()
   cam.SetPosition(cameraPosition + dL * (q_CamOrientation * z));
 }
 
+void RenderInteractor::MoveForwardScreen()
+{
+  float dL;
+  if(EventPosition[1] < 0.05*WindowSize[1])
+    {
+      dL = MotionFactor * 10;
+    }
+  else
+    {
+      dL = -MotionFactor * 10;
+    }
+  Camera& cam = _RenderManager.GetCamera();
+  cpe::vec3 const z(0.0f,0.0f,1.0f);
+  cpe::vec3 cameraPosition = cam.GetPosition();
+  cpe::quaternion q_CamOrientation = conjugated(cam.GetOrientation());
+  cam.SetPosition(cameraPosition + dL * (q_CamOrientation * z));
+}
+
+
 void RenderInteractor::MoveRight()
 {
   float const dL = -MotionFactor * (EventPosition[0] - LastEventPosition[0]);
+  Camera& cam = _RenderManager.GetCamera();
+  cpe::vec3 const x(-1.0f,0.0f,0.0f);
+  cpe::vec3 cameraPosition = cam.GetPosition();
+  cpe::quaternion q_CamOrientation = conjugated(cam.GetOrientation());
+  cam.SetPosition(cameraPosition + dL * (q_CamOrientation * x));
+}
+
+void RenderInteractor::MoveRightScreen()
+{
+    float dL;
+  if(EventPosition[0] < 0.05*WindowSize[0])
+    {
+      dL = -MotionFactor * 10;
+    }
+  else
+    {
+      dL = MotionFactor * 10;
+    }
   Camera& cam = _RenderManager.GetCamera();
   cpe::vec3 const x(-1.0f,0.0f,0.0f);
   cpe::vec3 cameraPosition = cam.GetPosition();
@@ -127,10 +164,51 @@ void RenderInteractor::TrackBallRotate()
   }
 }
 
-void RenderInteractor::TrackBallZoom()
+void RenderInteractor::TrackBallRotateY()
+{
+  cpe::vec2 Pos = cpe::vec2(EventPosition[0], EventPosition[1]);
+  cpe::vec2 LastPos = cpe::vec2(LastEventPosition[0], LastEventPosition[1]);
+
+  float const h = WindowSize[1];
+  float const w = WindowSize[0];
+  Pos = Pos - cpe::vec2(w/2,h/2);
+  LastPos = LastPos - cpe::vec2(w/2,h/2);
+
+  float sign = Pos.x() * LastPos.y() - Pos.y() * LastPos.x();
+
+  sign > 0.0f ? sign = 1.0f : sign=-1.0f;
+
+  float diff = sign * cpe::norm(Pos-LastPos)/w;
+  cpe::quaternion q;
+  q.set_axis_angle(cpe::vec3(0.0f,1.0f,0.0f),diff);
+
+  _RenderManager.GetCamera().SetOrientation(_RenderManager.GetCamera().GetOrientation()*q);
+
+
+}
+
+void RenderInteractor::TrackBallZoomWheel()
 {
   //magnification factor
-  float const F0=500.0f;
+  float const F0 = 30.0f;
+
+  float const u = WheelMouv;
+  float const fu= u/F0;
+
+  float focalDist = _RenderManager.GetCamera().GetFocalDistance();
+  focalDist += (std::fabs(focalDist)+1.0f)*fu;
+  focalDist = std::min(focalDist,0.0f); //clamp
+
+  //Update motion factor
+  MotionFactor = 0.0001f * (1 + 10 * std::abs(focalDist));
+
+  _RenderManager.GetCamera().SetFocalDistance(focalDist);
+
+}
+void RenderInteractor::TrackBallZoomMouse()
+{
+  //magnification factor
+  float const F0 = 500.0f;
 
   float const y = EventPosition[1];
   float const y_old = LastEventPosition[1];
@@ -265,3 +343,13 @@ bool& RenderInteractor::left_button() {return is_left_button;}
 bool RenderInteractor::left_button() const {return is_left_button;}
 bool& RenderInteractor::right_button() {return is_right_button;}
 bool RenderInteractor::right_button() const {return is_right_button;}
+int RenderInteractor::GetWheelMouv() const
+{
+  return WheelMouv;
+}
+
+void RenderInteractor::SetWheelMouv(int value)
+{
+  WheelMouv = value;
+}
+
