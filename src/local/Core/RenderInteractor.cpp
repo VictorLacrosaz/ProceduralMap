@@ -178,41 +178,60 @@ float RenderInteractor::fps()
 //-------------------------------------------------------
 //  Picking
 //-------------------------------------------------------
-std::pair<cpe::vec3,cpe::vec3> RenderInteractor::GetPickingRay(int const x_screen,int const y_screen)
+std::pair<cpe::vec3,cpe::vec3> RenderInteractor::GetPickingRay()
 {
-//  float const h=WindowSize[1];
-//  float const w=WindowSize[0];
-
-//  float const loc_x=(2.0f*x-w)/w;
-//  float const loc_y=(h-2.0f*y)/h;
-
-//  cpe::vec3 const local(loc_x,loc_y,0.0f);
-//  cpe::vec3 const proj_ray=(local[0]*Lh*aspect,local[1]*Lh,-znear);
-
   Camera cam = _RenderManager.GetCamera();
 
-  //normalized screen coordinates
-  float const local_x=(static_cast<int>(WindowSize[0])-2.0f*x_screen)/static_cast<float>(WindowSize[0]);
-  float const local_y=(2.0f*y_screen-static_cast<int>(WindowSize[1]))/static_cast<float>(WindowSize[1]);
+  //Normalized screen coordinates (x[-1;1], y[1;-1])
+  float const local_x = (WindowSize[0] - 2.0f * EventPosition[0]) /
+    static_cast<float>(WindowSize[0]);
+  float const local_y = (2.0f * EventPosition[1] - WindowSize[1]) /
+    static_cast<float>(WindowSize[1]);
 
-  cpe::vec3 const local(local_x,local_y,0.0f);
+  //Camera projection parameters
   std::vector<float> const cameraParam = cam.GetProjectionParameters();
   float const Lh=-cameraParam[1];
   float const aspect=cameraParam[4];
   float const znear = cameraParam[2];
 
+  //Normalized projected coordinates
+  cpe::vec3 const rayProjection(local_x * Lh * aspect, local_y * Lh, -znear);
 
-  cpe::vec3 const proj_ray(local[0]*Lh*aspect,local[1]*Lh,-znear);
+  //Unproject ray
+  cpe::mat3 const modelViewInv = transposed(cam.GetOrientation().to_mat3());
+  cpe::vec3 const rayDirection = normalized(modelViewInv * rayProjection);
+  //Compute ray origin
+  cpe::vec3 cameraZoom(0.0f,0.0f,-cam.GetFocalDistance());
+  cpe::vec3 const rayStart = -cam.GetPosition() + (modelViewInv * cameraZoom);
 
-  cpe::mat3 const mod=cam.GetOrientation().to_mat3();
-  cpe::mat3 const mod_inv=transposed(mod);
+  //Return ray origin and direction in world coordinates
+  return std::make_pair(rayStart,rayDirection);
+}
 
-  cpe::vec3 const ray=normalized(mod_inv*proj_ray);
-  cpe::vec3 const center = cam.GetPosition();
+cpe::vec3 RenderInteractor::Pick()
+{
+  //Get pick ray
+  std::pair<cpe::vec3,cpe::vec3> rayPair = this->GetPickingRay();
+  cpe::vec3 rayStart = rayPair.first;
+  cpe::vec3 rayDirection = rayPair.second;
 
-  Debug.DrawLine(cpe::vec3(0,0,0),cpe::vec3(100,100,0));
+  cpe::vec3 pickPoint = rayStart + rayDirection;
 
-  return std::make_pair(center,ray);
+  //-- WIP : Pick along ray with steps of 10.0f and draw line for debug purpose
+  int i = 2;
+  while(i< 100)
+  {
+    pickPoint = rayStart+ i * 10.0f * rayDirection;
+    i++;
+    if(pickPoint.y()<0.0)
+    {
+      break;
+    }
+  }
+  Debug.DrawLine(rayStart ,pickPoint);
+  // -- end WIP
+
+  return pickPoint;
 }
 //-------------------------------------------------------
 

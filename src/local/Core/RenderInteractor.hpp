@@ -61,13 +61,21 @@ public:
   //  Picking
   //-------------------------------------------------------
   /** \brief
-   * Given (x,y) coordinates in screen space, returns the origin
+   * Given the (x,y) event coordinates in screen space, returns the origin
    * and the direction in world space of the picking ray.
    *
    * \return
    * <origin,direction> : std::pair<cpe::vec3,cpe::vec3>
   */
-  std::pair<cpe::vec3,cpe::vec3> GetPickingRay(int x_screen,int y_screen);
+  std::pair<cpe::vec3,cpe::vec3> GetPickingRay();
+
+  /** \brief
+   * Given the (x,y) event coordinates in screen space, proceed to a pick
+   * along a ray and return the picked point in world coordinates.
+   *
+   * \return PickPoint : cpe::vec3
+  */
+  cpe::vec3 Pick();
 
   //-------------------------------------------------------
   //  FPS

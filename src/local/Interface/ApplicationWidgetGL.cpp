@@ -67,8 +67,17 @@ void ApplicationWidgetGL::keyPressEvent(QKeyEvent *event)
 
 void ApplicationWidgetGL::mousePressEvent(QMouseEvent *event)
 {
+  //Init last event position
   renderInteractor.SetLastEventPosition(event->x(),event->y());
-//  updateGL(); PRINT_OPENGL_ERROR();
+  //Update event position
+  renderInteractor.SetEventPosition(event->x(),event->y());
+
+  //WIP : Ray picking debug
+  int const ctrl_pressed  = (event->modifiers() & Qt::ControlModifier);
+  if(ctrl_pressed)
+  {
+    renderInteractor.Pick();
+  }
 }
 
 
