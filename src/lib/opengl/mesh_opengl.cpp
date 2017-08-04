@@ -199,6 +199,11 @@ void mesh_opengl::Render() const
         throw cpe::exception_cpe("vbo_index incorrect",EXCEPTION_PARAMETERS_CPE);
     glDrawElements(GL_TRIANGLES, 3*number_of_triangles, GL_UNSIGNED_INT, 0); PRINT_OPENGL_ERROR();
 
+    //Disable vertex arrays to allow drawing with old OpenGL (< 1.2)
+    glDisableVertexAttribArray(0);
+    glDisableVertexAttribArray(1);
+    glDisableVertexAttribArray(2);
+    glDisableVertexAttribArray(3);
 }
 
 
