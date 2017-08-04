@@ -161,6 +161,52 @@ void mesh_opengl::draw() const
 
 }
 
+void mesh_opengl::Render() const
+{
+    if(number_of_triangles<=0)
+        throw cpe::exception_cpe("Incorrect number of triangles",EXCEPTION_PARAMETERS_CPE);
+
+
+    glBindBuffer(GL_ARRAY_BUFFER,vbo_vertex); PRINT_OPENGL_ERROR();
+    if(!glIsBuffer(vbo_vertex))
+        throw cpe::exception_cpe("vbo_vertex incorrect",EXCEPTION_PARAMETERS_CPE);
+    glEnableVertexAttribArray(0);                                                                    PRINT_OPENGL_ERROR();
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);                                           PRINT_OPENGL_ERROR();
+
+
+    glBindBuffer(GL_ARRAY_BUFFER,vbo_normal); PRINT_OPENGL_ERROR();
+    if(!glIsBuffer(vbo_normal))
+        throw cpe::exception_cpe("vbo_normal incorrect",EXCEPTION_PARAMETERS_CPE);
+    glEnableVertexAttribArray(1);                                                                    PRINT_OPENGL_ERROR();
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, 0);                                           PRINT_OPENGL_ERROR();
+
+    glBindBuffer(GL_ARRAY_BUFFER,vbo_color); PRINT_OPENGL_ERROR();
+    if(!glIsBuffer(vbo_color))
+        throw cpe::exception_cpe("vbo_color incorrect",EXCEPTION_PARAMETERS_CPE);
+    glEnableVertexAttribArray(2);                                                                    PRINT_OPENGL_ERROR();
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);                                           PRINT_OPENGL_ERROR();
+
+
+    glBindBuffer(GL_ARRAY_BUFFER,vbo_texture); PRINT_OPENGL_ERROR();
+    if(!glIsBuffer(vbo_texture))
+        throw cpe::exception_cpe("vbo_texture incorrect",EXCEPTION_PARAMETERS_CPE);
+    glEnableVertexAttribArray(3);                                                                    PRINT_OPENGL_ERROR();
+    glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, 0, 0);                                           PRINT_OPENGL_ERROR();
+
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,vbo_index); PRINT_OPENGL_ERROR();
+    if(!glIsBuffer(vbo_index))
+        throw cpe::exception_cpe("vbo_index incorrect",EXCEPTION_PARAMETERS_CPE);
+    glDrawElements(GL_TRIANGLES, 3*number_of_triangles, GL_UNSIGNED_INT, 0); PRINT_OPENGL_ERROR();
+
+    //Disable vertex arrays to allow drawing with old OpenGL (< 1.2)
+    glDisableVertexAttribArray(0);
+    glDisableVertexAttribArray(1);
+    glDisableVertexAttribArray(2);
+    glDisableVertexAttribArray(3);
+}
+
+
 
 void mesh_opengl::update_vbo_vertex(mesh_basic const& m)
 {

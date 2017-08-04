@@ -1,12 +1,15 @@
 #include "grid.hpp"
+
 #include "iostream"
+#include "limits.h"
+
 
 Grid::Grid()
 {
   std::random_device rd;
   std::mt19937 gen(rd());
 
-  std::uniform_int_distribution<> dist (0, 99999999999);
+  std::uniform_int_distribution<> dist (0, INT_MAX);
   KeyMap = dist(gen);
 
   HeightMap = cpe::perlin(4,0.1f,0.05f,2.0f);

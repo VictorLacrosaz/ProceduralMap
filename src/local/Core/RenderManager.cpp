@@ -33,7 +33,7 @@ static cpe::mesh build_ground(float const L,float const h)
 // Constructors
 //---------------------------------------------------------------------------
 RenderManager::RenderManager()
-    :Shaders(0), MainCamera(),GameGrid()
+    :Shaders(0), GameGrid(), MainCamera()
 {}
 
 void RenderManager::Initialize()
@@ -43,12 +43,11 @@ void RenderManager::Initialize()
   Shaders.push_back(read_shader("Default.vert",
                                 "Default.frag"));  PRINT_OPENGL_ERROR();
   //Preload grid shader
-  Shaders.push_back(read_shader("Grid.vert",
-                                "Grid.frag"));  PRINT_OPENGL_ERROR();
+  Shaders.push_back(ReadShader("Grid.vert",
+                               "Grid.frag",{"Position","Normal","Color","T_Coord"}));  PRINT_OPENGL_ERROR();
 
   // Build ground
   cpe::vec3 PosCam = MainCamera.GetPosition();
-  cpe::vec3 OrientCam = MainCamera.GetOrientation()*cpe::vec3(0,0,1);
   cpe::vec3 PosGround = PosCam;
 
 
@@ -67,12 +66,11 @@ void RenderManager::Render()
   SetupShaders();
 
   cpe::vec3 PosCam = MainCamera.GetPosition();
-  cpe::vec3 OrientCam = MainCamera.GetOrientation()*cpe::vec3(0,0,1);
   cpe::vec3 PosGround = -PosCam;
 
   GameGrid.BuildGrid(GameGrid.getSquareSize()*cpe::vec2(std::floor(PosGround.x()/GameGrid.getSquareSize()),std::floor(PosGround.z()/GameGrid.getSquareSize())));
   mesh_ground_opengl.fill_vbo(GameGrid.getMeshGrid());
-  mesh_ground_opengl.draw();
+  mesh_ground_opengl.Render();
 }
 
 

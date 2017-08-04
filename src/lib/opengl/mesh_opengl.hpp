@@ -43,6 +43,9 @@ public:
      *  fill_vbo must have been called previously */
     void draw() const;
 
+    void Render() const;
+
+
     /** Update only the vertex on the GPU */
     void update_vbo_vertex(mesh_basic const& m);
     /** Update only the normal on the GPU */
