@@ -1,6 +1,8 @@
 #include "grid.hpp"
 
-#include "iostream"
+#include "error_handling.hpp"
+
+#include <iostream>
 #include "limits.h"
 
 Grid::Grid()
@@ -22,58 +24,50 @@ Grid::Grid()
   Radius = 8;
 
   SquareSize = 200;
-
 }
 
-//Grid constructor for deserializing
-Grid::Grid(int key)
+void Grid::BuildGrid(cpe::vec2 origin)
 {
+  // Clear Tiles
+  if (Tiles.size() > 0)
+  {
+    Tiles.clear();
+  }
+  this->Origin = origin;
 
-  KeyMap = key;
-
-  HeightMap = cpe::perlin(4,0.1f,0.15f,2.0f);
-
-  TemperatureMap = cpe::perlin(4,0.1f,0.01f,2.0f);
-
-  MoistureMap = cpe::perlin(4,0.1,0.02,2.0);
-
-  OffsetXY = std::pair<int,int> (0,0);
-
-  Radius = 8;
-
-  SquareSize = 200;
-
+  // Build the map
+  this->BuildGrid();
 }
 
-void Grid::BuildGrid (cpe::vec2 Center)
+void Grid::BuildGrid()
 {
   cpe::mesh m;
 
   int u = 0,v = 0;
   int Size  = 2*Radius+1;
   float HeightMax = 2.5*SquareSize;
-  for (int i = Center.x()-Radius*SquareSize;i <= Center.x()+Radius*SquareSize;i += SquareSize)
+  for (int i = Origin.x()-Radius*SquareSize;i <= Origin.x()+Radius*SquareSize;i += SquareSize)
     {
 
-      for (int j = Center.y()-Radius*SquareSize;j <= Center.y()+Radius*SquareSize;j += SquareSize)
+      for (int j = Origin.y()-Radius*SquareSize;j <= Origin.y()+Radius*SquareSize;j += SquareSize)
         {
           //Height informations for the square
-          float Height = HeightMax*HeightMap(cpe::vec3(v+Center.x()/SquareSize,u+Center.y()/SquareSize,KeyMap));
-          float HeightN1 = HeightMax*HeightMap(cpe::vec3(v+1+Center.x()/SquareSize,u+Center.y()/SquareSize,KeyMap));
-          float HeightN2 = HeightMax*HeightMap(cpe::vec3(v+Center.x()/SquareSize,u+1+Center.y()/SquareSize,KeyMap));
-          float HeightN3 = HeightMax*HeightMap(cpe::vec3(v+1+Center.x()/SquareSize,u+1+Center.y()/SquareSize,KeyMap));
+          float Height = HeightMax*HeightMap(cpe::vec3(v+Origin.x()/SquareSize,u+Origin.y()/SquareSize,KeyMap));
+          float HeightN1 = HeightMax*HeightMap(cpe::vec3(v+1+Origin.x()/SquareSize,u+Origin.y()/SquareSize,KeyMap));
+          float HeightN2 = HeightMax*HeightMap(cpe::vec3(v+Origin.x()/SquareSize,u+1+Origin.y()/SquareSize,KeyMap));
+          float HeightN3 = HeightMax*HeightMap(cpe::vec3(v+1+Origin.x()/SquareSize,u+1+Origin.y()/SquareSize,KeyMap));
 
 //          //Temperature informations for the square
-//          float Temp = TemperatureMap(cpe::vec3(v+Center.x(),u+Center.y(),KeyMap));
-//          float TempN1 = TemperatureMap(cpe::vec3(v+std::pow(-1,v)+Center.x(),u+Center.y(),KeyMap));
-//          float TempN2 = TemperatureMap(cpe::vec3(v+Center.x(),u+std::pow(-1,u)+Center.y(),KeyMap));
-//          float TempN3 = TemperatureMap(cpe::vec3(v+std::pow(-1,v)+Center.x(),u+std::pow(-1,u)+Center.y(),KeyMap));
+//          float Temp = TemperatureMap(cpe::vec3(v+Origin.x(),u+Origin.y(),KeyMap));
+//          float TempN1 = TemperatureMap(cpe::vec3(v+std::pow(-1,v)+Origin.x(),u+Origin.y(),KeyMap));
+//          float TempN2 = TemperatureMap(cpe::vec3(v+Origin.x(),u+std::pow(-1,u)+Origin.y(),KeyMap));
+//          float TempN3 = TemperatureMap(cpe::vec3(v+std::pow(-1,v)+Origin.x(),u+std::pow(-1,u)+Origin.y(),KeyMap));
 
 //          //Moisture informations for the square
-//          float Moisture = MoistureMap(cpe::vec3(v+Center.x(),u+Center.y(),KeyMap));
-//          float MoistureN1 = MoistureMap(cpe::vec3(v+std::pow(-1,v)+Center.x(),u+Center.y(),KeyMap));
-//          float MoistureN2 = MoistureMap(cpe::vec3(v+Center.x(),u+std::pow(-1,u)+Center.y(),KeyMap));
-//          float MoistureN3 = MoistureMap(cpe::vec3(v+std::pow(-1,v)+Center.x(),u+std::pow(-1,u)+Center.y(),KeyMap));
+//          float Moisture = MoistureMap(cpe::vec3(v+Origin.x(),u+Origin.y(),KeyMap));
+//          float MoistureN1 = MoistureMap(cpe::vec3(v+std::pow(-1,v)+Origin.x(),u+Origin.y(),KeyMap));
+//          float MoistureN2 = MoistureMap(cpe::vec3(v+Origin.x(),u+std::pow(-1,u)+Origin.y(),KeyMap));
+//          float MoistureN3 = MoistureMap(cpe::vec3(v+std::pow(-1,v)+Origin.x(),u+std::pow(-1,u)+Origin.y(),KeyMap));
 
           m.add_vertex(cpe::vec3(i,Height,j));
           m.add_texture_coord(cpe::vec2(u,v));
@@ -96,10 +90,13 @@ void Grid::BuildGrid (cpe::vec2 Center)
             {
               m.add_color(cpe::vec3(0.75,0,0));
             }
+//std::cout<<"H : "<<Height<<std::endl;
+//std::cout<<"H1 : "<<HeightN1<<std::endl;
+//std::cout<<"H2 : "<<HeightN2<<std::endl;
+//std::cout<<"H3 : "<<HeightN3<<std::endl;
 
 
-
-          //if(std::pow(i-Center.x(),2)+std::pow(j-Center.y(),2) <= std::pow(Radius*SquareSize,2))
+          //if(std::pow(i-Origin.x(),2)+std::pow(j-Origin.y(),2) <= std::pow(Radius*SquareSize,2))
           // {
               if(u < Size-1 && v < Size-1)
                 {
@@ -107,6 +104,13 @@ void Grid::BuildGrid (cpe::vec2 Center)
 
                   m.add_triangle_index({u+v*Size,(u+1)+v*Size,u+1+(v+1)*Size});
                   m.add_triangle_index({u+v*Size,u+1+(v+1)*Size,u+(v+1)*Size});
+
+                  Tile tile = Tile();
+                  cpe::vec3 pts[4] = {
+                    cpe::vec3(i,Height,j), cpe::vec3(i+SquareSize,HeightN1,j),
+                    cpe::vec3(i,HeightN2,j+SquareSize),cpe::vec3(i+SquareSize,HeightN3,j+SquareSize)};
+                  tile.SetPoints(pts);
+                  Tiles.push_back(tile);
 
 
                 }
@@ -121,8 +125,16 @@ void Grid::BuildGrid (cpe::vec2 Center)
   m.fill_normal();
   m.fill_empty_field_by_default();
 
-
   MeshGrid = m;
+}
+
+cpe::vec2 const& Grid::GetOrigin() const
+{
+  return Origin;
+}
+void Grid::SetOrigin(cpe::vec2 origin)
+{
+  this->Origin = origin;
 }
 
 cpe::mesh Grid::GetMeshGrid() const
@@ -155,4 +167,19 @@ void Grid::SetKeyMap(int value)
   KeyMap = value;
 }
 
+Tile const& Grid::GetTile(unsigned int u, unsigned int v) const
+{
+  ASSERT_CPE(u * (2 * Radius) + v < Tiles.size(),"Tile ID out of bounds");
+  return Tiles[u * (2 * Radius) + v];
+}
 
+Tile const& Grid::GetTile(float x, float y) const
+{
+  int i = std::floor(x/SquareSize)-Origin.x()/SquareSize;
+  int j = std::floor(y/SquareSize)-Origin.y()/SquareSize;
+
+  unsigned int u = i + Radius;
+  unsigned int v = j + Radius;
+
+  return GetTile(u, v);
+}

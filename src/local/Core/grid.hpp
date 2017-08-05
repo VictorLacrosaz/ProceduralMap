@@ -2,12 +2,13 @@
 #define GRID_HPP
 
 #include "boost/serialization/access.hpp"
-#include "cmath"
-#include "random"
+#include <cmath>
+#include <random>
+#include <utility>
 
 #include "mesh.hpp"
 #include "perlin.hpp"
-#include "utility"
+#include "Tile.hpp"
 #include "vec2.hpp"
 
 class Grid
@@ -16,7 +17,7 @@ public:
   Grid();
   Grid(int key);
 
-  void BuildGrid (cpe::vec2 Center);
+  void BuildGrid (cpe::vec2 origin);
 
   cpe::mesh GetMeshGrid() const;
   void SetMeshGrid(const cpe::mesh &value);
@@ -27,7 +28,15 @@ public:
   int GetKeyMap() const;
   void SetKeyMap(int value);
 
+  Tile const& GetTile(unsigned int u, unsigned int v) const;
+  Tile const& GetTile(float x, float y) const;
+
+  cpe::vec2 const& GetOrigin() const;
+  void SetOrigin(cpe::vec2 origin);
+
 private:
+
+  void BuildGrid ();
 
   //Perlin noises for the creation of the map
   cpe::perlin HeightMap;
@@ -48,6 +57,8 @@ private:
 
   int KeyMap;
 
+  //Map Tiles
+  std::vector<Tile> Tiles;
 
   //Boost serialize function for data save
   friend class boost::serialization::access;
@@ -59,6 +70,8 @@ private:
 
   }
 
+  //Map origin
+  cpe::vec2 Origin;
 };
 
 #endif // GRID_HPP

@@ -34,6 +34,8 @@ public:
     Camera& GetCamera() {return MainCamera;}
     Camera const& GetCamera() const {return MainCamera;}
 
+    Grid& GetGrid() {return GameGrid;}
+    Grid const& GetGrid() const {return GameGrid;}
 
     Grid GetGameGrid() const;
 

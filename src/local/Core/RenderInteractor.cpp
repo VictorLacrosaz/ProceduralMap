@@ -22,6 +22,7 @@
 #include "glutils.hpp"
 #include "mat3.hpp"
 #include "quaternion.hpp"
+#include "Tile.hpp"
 
 #include <cmath>
 #include <iostream>
@@ -75,7 +76,7 @@ void RenderInteractor::Initialize()
 //-------------------------------------------------------
 void RenderInteractor::MoveForward()
 {
-  float const dL =  5.0f * MotionFactor * (EventPosition[1]-LastEventPosition[1]);
+  float const dL =  5.0f * MotionFactor * (EventPosition[1] - LastEventPosition[1]);
   Camera& cam = _RenderManager.GetCamera();
   cpe::vec3 const z(0.0f,0.0f,1.0f);
   cpe::vec3 cameraPosition = cam.GetPosition();
@@ -325,16 +326,30 @@ cpe::vec3 RenderInteractor::Pick()
   cpe::vec3 pickPoint = rayStart + rayDirection;
 
   //-- WIP : Pick along ray with steps of 10.0f and draw line for debug purpose
+  Tile t;
   int i = 2;
   while(i< 100)
   {
-    pickPoint = rayStart+ i * 10.0f * rayDirection;
+    pickPoint = rayStart+ i * 200.0f * rayDirection;
     i++;
+
+    std::cout<<"Pick point : "<<pickPoint<<std::endl;
+    t = _RenderManager.GetGrid().GetTile(pickPoint.x(),pickPoint.z());
+
+    std::cout<<"Tile Points  : "<<t.GetPoints()[0]<<std::endl;
+    std::cout<<"            "<<t.GetPoints()[1]<<std::endl;
+    std::cout<<"            "<<t.GetPoints()[2]<<std::endl;
+    std::cout<<"            "<<t.GetPoints()[3]<<std::endl;
+
     if(pickPoint.y()<0.0)
     {
       break;
     }
   }
+  Debug.DrawPoints({pickPoint, t.GetPoints()[0] + cpe::vec3(0.0,3.0,0.0),
+    t.GetPoints()[1] + cpe::vec3(0.0,3.0,0.0),
+    t.GetPoints()[2] + cpe::vec3(0.0,3.0,0.0),
+    t.GetPoints()[3] + cpe::vec3(0.0,3.0,0.0)});
   Debug.DrawLine(rayStart ,pickPoint);
   // -- end WIP
 
