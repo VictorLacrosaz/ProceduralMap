@@ -23,7 +23,7 @@
 
 
 DebugObject::DebugObject()
-    :vboLine(0),ShaderIDLine(0)
+    :vboLine(0),ShaderIDPrimitives(0)
 {
   for (int i = DebugAction::DrawAxis; i < DebugAction::nbOfDebugActions; i++)
   {
@@ -36,6 +36,11 @@ DebugObject::DebugObject()
 //-------------------------------------------------------
 void DebugObject::Render(Camera const& camera) const
 {
+  if (ActionState[DebugAction::DrawPoints])
+  {
+    this->RenderPoints(camera);
+  }
+
   if (ActionState[DebugAction::DrawLine])
   {
     this->RenderLine(camera);
@@ -46,6 +51,22 @@ void DebugObject::Render(Camera const& camera) const
     this->RenderAxis(camera);
   }
 }
+
+//-------------------------------------------------------
+// Toggle drawing of a set of point
+//-------------------------------------------------------
+void DebugObject::DrawPoints(std::vector<cpe::vec3> pts)
+{
+  ActionState[DebugAction::DrawPoints] = true;
+  InitializePoints(pts);
+}
+
+void DebugObject::DrawPointsOff()
+{
+  ActionState[DebugAction::DrawPoints] = false;
+}
+//-------------------------------------------------------
+
 
 //-------------------------------------------------------
 // Toggle drawing of a line defined by [p1, p2]
@@ -78,6 +99,59 @@ void DebugObject::DrawAxisOff()
 //-------------------------------------------------------
 
 //-------------------------------------------------------
+// Internal initialization of points
+//-------------------------------------------------------
+void DebugObject::InitializePoints(std::vector<cpe::vec3> pts)
+{
+  this->NbPoints = pts.size();
+
+  if(NbPoints == 0)
+  {
+    return;
+  }
+
+  //load shaders
+  ShaderIDPrimitives = read_shader("DebugPrimitives.vert",
+                             "DebugPrimitives.frag");
+
+  if(vboPoints == 0)
+  {
+    glGenBuffers(1, &vboPoints); PRINT_OPENGL_ERROR();
+    ASSERT_CPE(vboPoints != 0, "Problem initializing VBO");
+  }
+  //Send data on the GPU
+  glBindBuffer(GL_ARRAY_BUFFER, vboPoints);                                         PRINT_OPENGL_ERROR();
+  glBufferData(GL_ARRAY_BUFFER, pts.size()*3*sizeof(float), pts[0].pointer(), GL_DYNAMIC_DRAW);  PRINT_OPENGL_ERROR();
+}
+
+//-------------------------------------------------------
+// Points Rendering Callback
+//-------------------------------------------------------
+void  DebugObject::RenderPoints(Camera const& camera) const
+{
+  if(!vboPoints || NbPoints == 0)
+  {
+    return;
+  }
+  ASSERT_CPE(vboPoints != 0,"VBO for Debug Line Helper should be initialized before been used");
+
+  glUseProgram(ShaderIDPrimitives);
+
+  glUniformMatrix4fv(get_uni_loc(ShaderIDPrimitives,"camera_modelview"), 1, false, camera.GetMatrixModelView().pointer());    PRINT_OPENGL_ERROR();
+  glUniformMatrix4fv(get_uni_loc(ShaderIDPrimitives,"camera_projection"), 1, false, camera.GetMatrixProjection().pointer());  PRINT_OPENGL_ERROR();
+
+
+  glBindBuffer(GL_ARRAY_BUFFER, vboPoints);          PRINT_OPENGL_ERROR();
+
+  glEnableClientState(GL_VERTEX_ARRAY);              PRINT_OPENGL_ERROR();
+  glVertexPointer(3, GL_FLOAT, 3*sizeof(float), 0);  PRINT_OPENGL_ERROR();
+
+  glPointSize(3.0f);
+  glDrawArrays(GL_POINTS, 0, NbPoints);              PRINT_OPENGL_ERROR();
+  glPointSize(1.0f);
+}
+
+//-------------------------------------------------------
 // Internal initialization of a line
 //-------------------------------------------------------
 void DebugObject::InitializeLine(cpe::vec3 p1, cpe::vec3 p2)
@@ -88,8 +162,8 @@ void DebugObject::InitializeLine(cpe::vec3 p1, cpe::vec3 p2)
     p2.x(),p2.y(),p2.z(), 1.0f,0.0f,0.0f};
 
   //load shaders
-  ShaderIDLine = read_shader("DebugLine.vert",
-                             "DebugLine.frag");
+  ShaderIDPrimitives = read_shader("DebugPrimitives.vert",
+                             "DebugPrimitives.frag");
 
   if(vboLine==0)
   {
@@ -112,10 +186,10 @@ void  DebugObject::RenderLine(Camera const& camera) const
   }
   ASSERT_CPE(vboLine != 0,"VBO for Debug Line Helper should be initialized before been used");
 
-  glUseProgram(ShaderIDLine);
+  glUseProgram(ShaderIDPrimitives);
 
-  glUniformMatrix4fv(get_uni_loc(ShaderIDLine,"camera_modelview"), 1, false, camera.GetMatrixModelView().pointer()); PRINT_OPENGL_ERROR();
-  glUniformMatrix4fv(get_uni_loc(ShaderIDLine,"camera_projection"), 1, false, camera.GetMatrixProjection().pointer());    PRINT_OPENGL_ERROR();
+  glUniformMatrix4fv(get_uni_loc(ShaderIDPrimitives,"camera_modelview"), 1, false, camera.GetMatrixModelView().pointer()); PRINT_OPENGL_ERROR();
+  glUniformMatrix4fv(get_uni_loc(ShaderIDPrimitives,"camera_projection"), 1, false, camera.GetMatrixProjection().pointer());    PRINT_OPENGL_ERROR();
 
 
   glBindBuffer(GL_ARRAY_BUFFER, vboLine);                                         PRINT_OPENGL_ERROR();
