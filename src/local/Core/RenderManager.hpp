@@ -35,6 +35,9 @@ public:
     Camera const& GetCamera() const {return MainCamera;}
 
 
+    Grid GetGameGrid() const;
+
+
 private:
 
     /** Setup default shader for mesh rendering using default texture */

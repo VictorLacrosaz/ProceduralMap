@@ -22,6 +22,8 @@ set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_DIR} )
 # Find external packages
 find_package(Qt4 REQUIRED)
 find_package(OpenGL REQUIRED)
+find_package(Boost 1.54 REQUIRED)
+
 set(QT_USE_OPENGL TRUE)
 include(${QT_USE_FILE})
 
@@ -33,7 +35,7 @@ file( GLOB_RECURSE source_files
 
 # Include directories
 include(ProjectConfig)
-include_directories( ${APPLICATION_SRC_DIRS} ${LIB_SRC_DIRS} ${CMAKE_CURRENT_BINARY_DIR} )
+include_directories( ${APPLICATION_SRC_DIRS} ${LIB_SRC_DIRS} ${CMAKE_CURRENT_BINARY_DIR} ${Boost_INCLUDE_DIRS})
 
 # Specify g++ option
 add_definitions( -Wall -Wextra -std=c++11 -Wno-comment -Wno-unused-parameter -Wno-unused-function -Wno-unused-variable -DCORRECTION)
@@ -54,4 +56,4 @@ add_executable( ${PROJECT_NAME}
   ${MOC_GENERATED} )
 
 target_link_libraries( ${PROJECT_NAME} -lm -ldl -lGLEW ${OPENGL_LIBRARIES}
-  ${QT_LIBRARIES} ${QT_GL_LIBRARIES} ${QT_QTOPENGL_LIBRARY} )
+  ${QT_LIBRARIES} ${QT_GL_LIBRARIES} ${QT_QTOPENGL_LIBRARY} -lboost_serialization ${Boost_LIBRARIES})

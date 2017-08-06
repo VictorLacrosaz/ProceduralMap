@@ -104,23 +104,23 @@ void ApplicationWidgetGL::mouseMoveEvent(QMouseEvent *event)
   // Screen boarder Move
   if ((event->x() > 0.95*renderInteractor.GetWindowSize()[0]
       || event->x() < 0.05*renderInteractor.GetWindowSize()[0])
-      && !(event->button() | Qt::NoButton))
+      && !(event->buttons() | Qt::NoButton))
     {
-      renderInteractor.MoveRightScreen();
+      renderInteractor.MoveXDirectionScreen();
     }
   if ((event->y() > 0.95*renderInteractor.GetWindowSize()[1]
       || event->y() < 0.05*renderInteractor.GetWindowSize()[1])
-      && !(event->button() | Qt::NoButton))
+      && !(event->buttons() | Qt::NoButton))
     {
-      renderInteractor.MoveForwardScreen();
+      renderInteractor.MoveZDirectionScreen();
     }
 
 
   // Left button controls the translation
   if (!ctrl_pressed && !shift_pressed && (event->buttons() & Qt::LeftButton) )
     {
-      renderInteractor.MoveForward();
-      renderInteractor.MoveRight();
+      renderInteractor.MoveZDirection();
+      renderInteractor.MoveXDirection();
     }
 
   // Right button controls the window rotation

@@ -1,27 +1,31 @@
 #ifndef GRID_HPP
 #define GRID_HPP
 
-#include "perlin.hpp"
-#include "utility"
-#include "mesh.hpp"
-#include "vec2.hpp"
+#include "boost/serialization/access.hpp"
 #include "cmath"
 #include "random"
 
-
+#include "mesh.hpp"
+#include "perlin.hpp"
+#include "utility"
+#include "vec2.hpp"
 
 class Grid
 {
 public:
   Grid();
+  Grid(int key);
 
   void BuildGrid (cpe::vec2 Center);
 
-  cpe::mesh getMeshGrid() const;
-  void setMeshGrid(const cpe::mesh &value);
+  cpe::mesh GetMeshGrid() const;
+  void SetMeshGrid(const cpe::mesh &value);
 
-  int getSquareSize() const;
-  void setSquareSize(int value);
+  int GetSquareSize() const;
+  void SetSquareSize(int value);
+
+  int GetKeyMap() const;
+  void SetKeyMap(int value);
 
 private:
 
@@ -45,9 +49,15 @@ private:
   int KeyMap;
 
 
+  //Boost serialize function for data save
+  friend class boost::serialization::access;
+  template<class Archive>
+  void serialize(Archive & ar, const unsigned int version)
+  {
+      // Simply list all the fields to be serialized/deserialized.
+      ar & KeyMap;
 
-
-
+  }
 
 };
 

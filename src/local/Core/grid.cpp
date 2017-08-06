@@ -3,7 +3,6 @@
 #include "iostream"
 #include "limits.h"
 
-
 Grid::Grid()
 {
   std::random_device rd;
@@ -24,6 +23,25 @@ Grid::Grid()
 
   SquareSize = 200;
 
+}
+
+//Grid constructor for deserializing
+Grid::Grid(int key)
+{
+
+  KeyMap = key;
+
+  HeightMap = cpe::perlin(4,0.1f,0.15f,2.0f);
+
+  TemperatureMap = cpe::perlin(4,0.1f,0.01f,2.0f);
+
+  MoistureMap = cpe::perlin(4,0.1,0.02,2.0);
+
+  OffsetXY = std::pair<int,int> (0,0);
+
+  Radius = 8;
+
+  SquareSize = 200;
 
 }
 
@@ -106,22 +124,35 @@ void Grid::BuildGrid (cpe::vec2 Center)
 
   MeshGrid = m;
 }
-cpe::mesh Grid::getMeshGrid() const
+
+cpe::mesh Grid::GetMeshGrid() const
 {
   return MeshGrid;
 }
 
-void Grid::setMeshGrid(const cpe::mesh &value)
+void Grid::SetMeshGrid(const cpe::mesh &value)
 {
   MeshGrid = value;
 }
-int Grid::getSquareSize() const
+
+int Grid::GetSquareSize() const
 {
   return SquareSize;
 }
 
-void Grid::setSquareSize(int value)
+void Grid::SetSquareSize(int value)
 {
   SquareSize = value;
 }
+
+int Grid::GetKeyMap() const
+{
+  return KeyMap;
+}
+
+void Grid::SetKeyMap(int value)
+{
+  KeyMap = value;
+}
+
 
