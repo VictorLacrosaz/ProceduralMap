@@ -53,8 +53,8 @@ void RenderManager::Initialize()
 
 
   //floor:round down the value
-  GameGrid.BuildGrid(GameGrid.getSquareSize()*cpe::vec2(std::floor(PosGround.x()/GameGrid.getSquareSize()),std::floor(PosGround.z()/GameGrid.getSquareSize())));
-  mesh_ground_opengl.fill_vbo(GameGrid.getMeshGrid());
+  GameGrid.BuildGrid(GameGrid.GetSquareSize()*cpe::vec2(std::floor(PosGround.x()/GameGrid.GetSquareSize()),std::floor(PosGround.z()/GameGrid.GetSquareSize())));
+  mesh_ground_opengl.fill_vbo(GameGrid.GetMeshGrid());
 }
 
 //---------------------------------------------------------------------------
@@ -68,8 +68,8 @@ void RenderManager::Render()
   cpe::vec3 PosCam = MainCamera.GetPosition();
   cpe::vec3 PosGround = -PosCam;
 
-  GameGrid.BuildGrid(GameGrid.getSquareSize()*cpe::vec2(std::floor(PosGround.x()/GameGrid.getSquareSize()),std::floor(PosGround.z()/GameGrid.getSquareSize())));
-  mesh_ground_opengl.fill_vbo(GameGrid.getMeshGrid());
+  GameGrid.BuildGrid(GameGrid.GetSquareSize()*cpe::vec2(std::floor(PosGround.x()/GameGrid.GetSquareSize()),std::floor(PosGround.z()/GameGrid.GetSquareSize())));
+  mesh_ground_opengl.fill_vbo(GameGrid.GetMeshGrid());
   mesh_ground_opengl.Render();
 }
 
@@ -107,6 +107,10 @@ void RenderManager::SetupShaders()
 
 }
 
+Grid RenderManager::GetGameGrid() const
+{
+  return GameGrid;
+}
 
 void RenderManager::SetTextures(std::vector<GLuint> t)
 {

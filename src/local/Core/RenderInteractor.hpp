@@ -47,10 +47,12 @@ public:
   //-------------------------------------------------------
   /** \brief move the camera forward by a distance dL */
   void MoveForward();
-  void MoveForwardScreen();
+  void MoveZDirectionScreen();
+  void MoveZDirection();
   /** \brief move the camera to the right by a distance dL */
   void MoveRight();
-  void MoveRightScreen();
+  void MoveXDirectionScreen();
+  void MoveXDirection();
   /** \brief move the camera up by a distance dL */
   void MoveUp();
 

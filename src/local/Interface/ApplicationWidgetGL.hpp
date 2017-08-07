@@ -6,6 +6,11 @@
 #include <GL/glew.h>
 #include <GL/gl.h>
 
+#include <boost/archive/text_iarchive.hpp>
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/binary_iarchive.hpp>
+#include <boost/archive/binary_oarchive.hpp>
+#include  <fstream>
 #include <QtOpenGL/QGLWidget>
 #include <QMouseEvent>
 
@@ -13,7 +18,6 @@
 #include "mesh.hpp"
 #include "mesh_opengl.hpp"
 #include "RenderInteractor.hpp"
-
 
 /** Qt Widget to render OpenGL scene */
 class ApplicationWidgetGL : public QGLWidget

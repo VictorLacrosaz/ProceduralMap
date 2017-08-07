@@ -83,7 +83,20 @@ void RenderInteractor::MoveForward()
   cam.SetPosition(cameraPosition + dL * (q_CamOrientation * z));
 }
 
-void RenderInteractor::MoveForwardScreen()
+void RenderInteractor::MoveZDirection()
+{
+  float const dL =  5.0f * MotionFactor * (EventPosition[1]-LastEventPosition[1]);
+  Camera& cam = _RenderManager.GetCamera();
+  cpe::vec3 const z(0.0f,0.0f,1.0f);
+  cpe::vec3 cameraPosition = cam.GetPosition();
+  cpe::quaternion q_CamOrientation = conjugated(cam.GetOrientation());
+  q_CamOrientation.x() = 0;
+  q_CamOrientation.z() = 0;
+
+  cam.SetPosition(cameraPosition + dL * (q_CamOrientation * z));
+}
+
+void RenderInteractor::MoveZDirectionScreen()
 {
   float dL;
   if(EventPosition[1] < 0.05*WindowSize[1])
@@ -98,6 +111,8 @@ void RenderInteractor::MoveForwardScreen()
   cpe::vec3 const z(0.0f,0.0f,1.0f);
   cpe::vec3 cameraPosition = cam.GetPosition();
   cpe::quaternion q_CamOrientation = conjugated(cam.GetOrientation());
+  q_CamOrientation.x() = 0;
+  q_CamOrientation.z() = 0;
   cam.SetPosition(cameraPosition + dL * (q_CamOrientation * z));
 }
 
@@ -112,7 +127,19 @@ void RenderInteractor::MoveRight()
   cam.SetPosition(cameraPosition + dL * (q_CamOrientation * x));
 }
 
-void RenderInteractor::MoveRightScreen()
+void RenderInteractor::MoveXDirection()
+{
+  float const dL = -MotionFactor * (EventPosition[0] - LastEventPosition[0]);
+  Camera& cam = _RenderManager.GetCamera();
+  cpe::vec3 const x(-1.0f,0.0f,0.0f);
+  cpe::vec3 cameraPosition = cam.GetPosition();
+  cpe::quaternion q_CamOrientation = conjugated(cam.GetOrientation());
+  q_CamOrientation.x() = 0;
+  q_CamOrientation.z() = 0;
+  cam.SetPosition(cameraPosition + dL * (q_CamOrientation * x));
+}
+
+void RenderInteractor::MoveXDirectionScreen()
 {
     float dL;
   if(EventPosition[0] < 0.05*WindowSize[0])
@@ -127,7 +154,9 @@ void RenderInteractor::MoveRightScreen()
   cpe::vec3 const x(-1.0f,0.0f,0.0f);
   cpe::vec3 cameraPosition = cam.GetPosition();
   cpe::quaternion q_CamOrientation = conjugated(cam.GetOrientation());
-  cam.SetPosition(cameraPosition + dL * (q_CamOrientation * x));
+  q_CamOrientation.x() = 0;
+  q_CamOrientation.z() = 0;
+  cam.SetPosition(cameraPosition + dL *(q_CamOrientation * x));
 }
 
 void RenderInteractor::MoveUp()
