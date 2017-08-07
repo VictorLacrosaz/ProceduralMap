@@ -198,6 +198,11 @@ vec2 normalized(vec2 const& v)
         return vec2(1.0f,0.0f); //default case
 }
 
+float AngleBetweenVectors(vec2 const& v1, vec2 const& v2)
+{
+  float alpha_rd = std::atan2(v2.y(), v2.x()) - std::atan2(v1.y(), v1.x());
+  return alpha_rd * 180.0f / M_PI;
+}
 
 constexpr int vec2::size(){return 2;}
 float* vec2::begin() {return &x_data;}

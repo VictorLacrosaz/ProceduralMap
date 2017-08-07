@@ -158,7 +158,8 @@ float norm(vec2 const& v);
 /** Return a normalized vector of unit length */
 vec2 normalized(vec2 const& v);
 
-
+/** Return the signed angle in degrees between two vectors. [-180;180] */
+float AngleBetweenVectors(vec2 const& v1, vec2 const& v2);
 
 }
 
