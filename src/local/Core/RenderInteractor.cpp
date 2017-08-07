@@ -20,6 +20,7 @@
 #include "RenderInteractor.hpp"
 
 #include "glutils.hpp"
+#include "intersection.hpp"
 #include "mat3.hpp"
 #include "quaternion.hpp"
 #include "Tile.hpp"
@@ -318,40 +319,218 @@ std::pair<cpe::vec3,cpe::vec3> RenderInteractor::GetPickingRay()
 
 cpe::vec3 RenderInteractor::Pick()
 {
+//-- Initialization
+
   //Get pick ray
   std::pair<cpe::vec3,cpe::vec3> rayPair = this->GetPickingRay();
   cpe::vec3 rayStart = rayPair.first;
   cpe::vec3 rayDirection = rayPair.second;
 
+  //Iteratively picked point along the ray
   cpe::vec3 pickPoint = rayStart + rayDirection;
 
-  //-- WIP : Pick along ray with steps of 10.0f and draw line for debug purpose
-  Tile t;
-  int i = 2;
-  while(i< 100)
+  //Projection plane directions
+  cpe::vec2 X(1.0, 0.0);
+  cpe::vec2 Z(0.0, 1.0);
+
+  //Find the quadrant in the projection plane XZ corresponding to the ray direction.
+  // Quadrant : 00 : up-right
+  //            10 : up-left
+  //            11 : down-left
+  //            01 : down-right
+  int quadrant = 0;
+  if (rayDirection.x() < 0.0)
   {
-    pickPoint = rayStart+ i * 200.0f * rayDirection;
-    i++;
+    X *= -1.0;
+    quadrant += 10;
+  }
+  if (rayDirection.z() < 0.0)
+  {
+    Z *= -1.0;
+    quadrant += 1;
+  }
 
-    std::cout<<"Pick point : "<<pickPoint<<std::endl;
-    t = _RenderManager.GetGrid().GetTile(pickPoint.x(),pickPoint.z());
+  //Project ray into the projection plane XZ
+  cpe::vec2 rayXZ = normalized(cpe::vec2(rayDirection.x(), rayDirection.z()));
+  //Angles between the ray and the plane main directions
+  float aX = AngleBetweenVectors(X, rayXZ);
+  float aZ = AngleBetweenVectors(Z, rayXZ);
 
-    std::cout<<"Tile Points  : "<<t.GetPoints()[0]<<std::endl;
-    std::cout<<"            "<<t.GetPoints()[1]<<std::endl;
-    std::cout<<"            "<<t.GetPoints()[2]<<std::endl;
-    std::cout<<"            "<<t.GetPoints()[3]<<std::endl;
+  float tileWidth = _RenderManager.GetGrid().GetSquareSize();
 
-    if(pickPoint.y()<0.0)
-    {
+  //Current tile origin in world space
+  float x_int =tileWidth * floor(pickPoint.x() / tileWidth);
+  float z_int =tileWidth * floor(pickPoint.z() / tileWidth);
+
+  //Starting point offset in the tile, relatively to the tile origin.
+  float dX = pickPoint.x() - x_int;
+  float dZ = pickPoint.z() - z_int;
+
+  //Compute the distance to walk along the ray in order to reach the previous
+  //  intersection with a tile axis.
+  float dLz = 0.0f;
+  float dLx = 0.0f;
+  switch (quadrant)
+  {
+    case 0:
+      dLx = dX / fabs(cos(aX*M_PI/180.0));
+      dLz = dZ / fabs(cos(aZ*M_PI/180.0));
       break;
+    case 10:
+      dLx = (tileWidth - dX) / fabs(cos(aX*M_PI/180.0));
+      dLz = dZ / fabs(cos(aZ*M_PI/180.0));
+      break;
+    case 1:
+      dLx = dX / fabs(cos(aX*M_PI/180.0));
+      dLz = (tileWidth - dZ) / fabs(cos(aZ*M_PI/180.0));
+      break;
+    case 11:
+      dLx = (tileWidth - dX) / fabs(cos(aX*M_PI/180.0));
+      dLz = (tileWidth - dZ) / fabs(cos(aZ*M_PI/180.0));
+      break;
+    default:
+      break;
+  }
+
+  //Distance to walk along the ray between to successive intersection with
+  //  a tile axis.
+  float stepX = tileWidth / fabs(cos(aX*M_PI/180.0));
+  float stepZ = tileWidth / fabs(cos(aZ*M_PI/180.0));
+
+  //Keep track of the number of intersection we found along each axis.
+  unsigned int itStepX = 1;
+  unsigned int itStepZ = 1;
+
+//*************************************
+  std::vector<cpe::vec3> dbgPts;
+//*************************************
+
+//-- Iterations
+
+  while(norm(pickPoint - rayStart) < _RenderManager.GetCamera().GetFarDistance())
+  {
+    //Distance along the projected ray before to the next intersection
+    // is reached, for each axis.
+    float pointStepX = -dLx + itStepX * stepX;
+    float pointStepZ = -dLz + itStepZ * stepZ;
+
+    //Compute distance along the projected ray before to the first intersection
+    // and the one just after.
+    float pointStep1 = 0.0f;
+    float pointStep2 = 0.0f;
+
+    //If the current X intersection is closer than the current Z intersection
+    if(pointStepX < pointStepZ)
+    {
+      //-- 1st intersection
+      //Check if the previous Z intersection is closer than our X intersection.
+      //If yes, we keep the old Z value for the first intersection, otherwise it's X.
+      float previousPointStepZ = -dLz + (itStepZ-1) * stepZ;
+      pointStepX > previousPointStepZ ? pointStep1 = pointStepX : pointStep1 = previousPointStepZ;
+
+      //-- 2nd intersection
+      //If the next X intersection is closer than the current Z intersection,
+      //  choose it for the second intersection.
+      if(-dLx + (itStepX+1) * stepX < pointStepZ)
+      {
+        pointStep2 =-dLx + (itStepX+1) * stepX;
+        itStepX++;
+      }
+      else
+      {
+        pointStep2 = pointStepZ;
+        itStepZ++;
+      }
+    }
+    else
+    {
+      //-- 1st intersection
+      float previousPointStepX = -dLx + (itStepX-1) * stepX;
+      pointStepZ > previousPointStepX ? pointStep1 = pointStepZ : pointStep1 = previousPointStepX;
+
+      //-- 2nd intersection
+      if(-dLz + (itStepZ+1) * stepZ < pointStepX)
+      {
+        pointStep2 = -dLz + (itStepZ + 1) * stepZ;
+        itStepZ++;
+      }
+      else
+      {
+        pointStep2 = pointStepX;
+        itStepX++;
+      }
+    }
+
+    //Distance along the projected ray to the next tile
+    float dLxz = (pointStep2 + pointStep1)/2.0f;
+
+    //Project distance to the next tile along the ray
+    cpe::vec3 Y(0.0f, 1.0f, 0.0f);
+    if (rayDirection.y() < 0.0f)
+    {
+      Y *= -1.0f;
+    }
+    float aY = acos(dot(Y,rayDirection));
+    //Distance along the ray to the next tile
+    float dL = dLxz / sin(aY);
+
+    //*************************************
+//    cpe::vec3 pXZ = cpe::vec3(rayStart.x() + rayDirection.x(), 0.0f, rayStart.z() + rayDirection.z());
+//    cpe::vec3 p= dLxz * normalized(cpe::vec3(rayXZ.x(), 0.0f, rayXZ.y()));
+//    dbgPts.push_back(pXZ + p);//Draw way points XZ
+//    cpe::vec3 pXZ = cpe::vec3(pickPoint.x(),0.0f, pickPoint.z());
+//    dbgPts.push_back(pickPoint);
+    //*************************************
+
+
+    //Get the tile under the current picked point, before incrementing the ray.
+    Tile currentTile = _RenderManager.GetGrid().GetTile(pickPoint.x(),pickPoint.z());
+
+    //Increment picked point along ray
+    pickPoint = rayStart + dL * rayDirection;
+
+    //Check intersection with the tile triangles
+    // Triangle 1 : 0 2 3 - Triangle 2 : 0 3 1
+    const cpe::vec3* tilePoints = currentTile.GetPoints();
+    float t1 = intersection::RayTriangle(rayStart, pickPoint-rayStart,
+      tilePoints[0], tilePoints[2], tilePoints[3]);
+    float t2 = intersection::RayTriangle(rayStart, pickPoint-rayStart,
+      tilePoints[0], tilePoints[1], tilePoints[3]);
+
+    //If we intersect one of the triangle
+    if(t1 > 0.0f || t2 > 0.0f)
+    {
+      //Get the closest existing intersection
+      float t = std::min(t1, t2);
+      if(t1 > 0.0f && !(t2 > 0.0f))
+      {
+        t = t1;
+      }
+      if(t2 > 0.0f && !(t1 > 0.0f))
+      {
+        t = t2;
+      }
+
+      //Final picked point
+      pickPoint = rayStart + t * dL * rayDirection;
+
+      //*************************************
+      dbgPts.push_back(pickPoint);
+      Tile pickedTile = _RenderManager.GetGrid().GetTile(pickPoint.x(),pickPoint.z());
+      dbgPts.push_back(pickedTile.GetPoints()[0]);
+      dbgPts.push_back(pickedTile.GetPoints()[1]);
+      dbgPts.push_back(pickedTile.GetPoints()[2]);
+      dbgPts.push_back(pickedTile.GetPoints()[3]);
+      //*************************************
+
+      break;//Intersection found. Stop picking.
     }
   }
-  Debug.DrawPoints({pickPoint, t.GetPoints()[0] + cpe::vec3(0.0,3.0,0.0),
-    t.GetPoints()[1] + cpe::vec3(0.0,3.0,0.0),
-    t.GetPoints()[2] + cpe::vec3(0.0,3.0,0.0),
-    t.GetPoints()[3] + cpe::vec3(0.0,3.0,0.0)});
+
+  //*************************************
+  Debug.DrawPoints(dbgPts);
   Debug.DrawLine(rayStart ,pickPoint);
-  // -- end WIP
+  //*************************************
 
   return pickPoint;
 }

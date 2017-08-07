@@ -38,7 +38,7 @@ void Tile::SetPoints(cpe::vec3 points[4])
   }
 }
 
-cpe::vec3* Tile::GetPoints()
+const cpe::vec3* Tile::GetPoints() const
 {
   return Points;
 }

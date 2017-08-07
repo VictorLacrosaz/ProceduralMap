@@ -35,16 +35,13 @@ public:
   /** \brief Constructor setting the tile ID */
   Tile();
 
-
   void SetPoints(cpe::vec3 points[4]);
-  cpe::vec3* GetPoints();
-
-
-
+  const cpe::vec3* GetPoints() const;
 
 private:
+  // Triangle 1 : 0 2 3
+  // Triangle 2 : 0 3 1
   cpe::vec3 Points[4];
-
 };
 
 #endif
