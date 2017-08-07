@@ -29,27 +29,41 @@
 #include "GL/gl.h"
 
 /** Enumeration of DebugObject actions*/
-enum DebugAction{DrawLine = 0, DrawAxis, nbOfDebugActions};
+enum DebugAction{DrawPoints = 0, DrawLine, DrawAxis, nbOfDebugActions};
 
 /** A container class to draw debug information */
 class DebugObject
 {
 public:
-    DebugObject();
+  DebugObject();
 
-    /** Rendering callback */
-    void Render(Camera const& camera) const;
+  /** Rendering callback */
+  void Render(Camera const& camera) const;
 
-    /** Toggle drawing of a line defined by [p1, p2] */
-    void DrawLine(cpe::vec3 p1, cpe::vec3 p2);
-    void DrawLineOff();
+  /** Toggle drawing of set of point */
+  void DrawPoints(std::vector<cpe::vec3> pts);
+  void DrawPointsOff();
 
-    /** Toggle drawing of the world axis */
-    void DrawAxis();
-    void DrawAxisOff();
+  /** Toggle drawing of a line defined by [p1, p2] */
+  void DrawLine(cpe::vec3 p1, cpe::vec3 p2);
+  void DrawLineOff();
+
+  /** Toggle drawing of the world axis */
+  void DrawAxis();
+  void DrawAxisOff();
 
 
 private:
+
+  // Points
+  /** Internal glPoints initialization given a vector of positions */
+  void InitializePoints(std::vector<cpe::vec3> pts);
+  /** glPoints rendering callback */
+  void RenderPoints(Camera const& camera) const;
+  /** VBO internal storage */
+  GLuint vboPoints;
+  /** Number of points rendered */
+  unsigned int NbPoints;
 
   // Line
   /** Internal line initialization given its extremities */
@@ -58,8 +72,9 @@ private:
   void RenderLine(Camera const& camera) const;
   /** VBO Line internal storage */
   GLuint vboLine;
+
   /** Shader ID internal storage */
-  GLuint ShaderIDLine;
+  GLuint ShaderIDPrimitives;
 
   // World Axis
   /** Helper class drawing the world axis */
