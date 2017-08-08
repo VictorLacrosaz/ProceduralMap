@@ -1,16 +1,16 @@
 
 #include <QApplication>
 
-#include "ApplicationQt.hpp"
-#include "ApplicationWindow.hpp"
+#include "gltkApplicationQt.hpp"
+#include "gltkApplicationWindow.hpp"
 
 int main(int argc, char *argv[])
 {
   //Qt main application (handles exceptions)
-  ApplicationQt app(argc, argv);
+  gltkApplicationQt app(argc, argv);
 
   //The main window
-  ApplicationWindow appWindow;
+  gltkApplicationWindow appWindow;
   appWindow.show();
 
   //Start Qt Application

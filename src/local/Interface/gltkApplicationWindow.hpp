@@ -1,28 +1,28 @@
 #pragma once
 
-#ifndef MY_WINDOW_HPP
-#define MY_WINDOW_HPP
+#ifndef GLTK_APPLICATION_WINDOW_HPP
+#define GLTK_APPLICATION_WINDOW_HPP
 
 
 #include <QMainWindow>
-
 
 //forward declaration
 namespace Ui
 {
 class MainWindow;
 }
-class ApplicationWidgetGL;
+class gltkApplicationWidgetGL;
+
 
 /** Declaration of the Window class */
-class ApplicationWindow: public QMainWindow
+class gltkApplicationWindow: public QMainWindow
 {
   Q_OBJECT
 
 public:
 
-    ApplicationWindow(QWidget *parent=NULL);
-    ~ApplicationWindow();
+    gltkApplicationWindow(QWidget *parent=NULL);
+    ~gltkApplicationWindow();
 
 private slots:
 
@@ -38,7 +38,7 @@ private:
     /** Layout for the Window */
     Ui::MainWindow *ui;
     /** The OpenGL Widget */
-    ApplicationWidgetGL *glWidget;
+    gltkApplicationWidgetGL *glWidget;
 };
 
 #endif

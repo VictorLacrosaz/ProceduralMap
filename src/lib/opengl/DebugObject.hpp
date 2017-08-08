@@ -22,7 +22,7 @@
 #define DEBUG_OBJECT_HPP
 
 #include "axes_helper.hpp"
-#include "Camera.hpp"
+#include "gltkCamera.hpp"
 #include "vec3.hpp"
 
 #include "GL/glew.h"
@@ -38,7 +38,7 @@ public:
   DebugObject();
 
   /** Rendering callback */
-  void Render(Camera const& camera) const;
+  void Render(gltkCamera const& camera) const;
 
   /** Toggle drawing of set of point */
   void DrawPoints(std::vector<cpe::vec3> pts);
@@ -59,7 +59,7 @@ private:
   /** Internal glPoints initialization given a vector of positions */
   void InitializePoints(std::vector<cpe::vec3> pts);
   /** glPoints rendering callback */
-  void RenderPoints(Camera const& camera) const;
+  void RenderPoints(gltkCamera const& camera) const;
   /** VBO internal storage */
   GLuint vboPoints;
   /** Number of points rendered */
@@ -69,7 +69,7 @@ private:
   /** Internal line initialization given its extremities */
   void InitializeLine(cpe::vec3 p1, cpe::vec3 p2);
   /** Line rendering callback */
-  void RenderLine(Camera const& camera) const;
+  void RenderLine(gltkCamera const& camera) const;
   /** VBO Line internal storage */
   GLuint vboLine;
 
@@ -80,7 +80,7 @@ private:
   /** Helper class drawing the world axis */
   cpe::axes_helper AxisHelper;
   /** Axis rendering callback */
-  void RenderAxis(Camera const& camera) const;
+  void RenderAxis(gltkCamera const& camera) const;
 
   // Internal storing of actions enable states
   bool ActionState[DebugAction::nbOfDebugActions];

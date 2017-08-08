@@ -1,11 +1,11 @@
-#include "grid.hpp"
+#include "gltkProceduralGrid.hpp"
 
 #include "error_handling.hpp"
 
 #include <iostream>
 #include "limits.h"
 
-Grid::Grid()
+gltkProceduralGrid::gltkProceduralGrid()
 {
   std::random_device rd;
   std::mt19937 gen(rd());
@@ -26,7 +26,7 @@ Grid::Grid()
   SquareSize = 200;
 }
 
-void Grid::BuildGrid(cpe::vec2 origin)
+void gltkProceduralGrid::Build(cpe::vec2 origin)
 {
   // Clear Tiles
   if (Tiles.size() > 0)
@@ -36,10 +36,10 @@ void Grid::BuildGrid(cpe::vec2 origin)
   this->Origin = origin;
 
   // Build the map
-  this->BuildGrid();
+  this->Build();
 }
 
-void Grid::BuildGrid()
+void gltkProceduralGrid::Build()
 {
   cpe::mesh m;
 
@@ -105,7 +105,7 @@ void Grid::BuildGrid()
                   m.add_triangle_index({u+v*Size,(u+1)+v*Size,u+1+(v+1)*Size});
                   m.add_triangle_index({u+v*Size,u+1+(v+1)*Size,u+(v+1)*Size});
 
-                  Tile tile = Tile();
+                  gltkGridTile tile = gltkGridTile();
                   cpe::vec3 pts[4] = {
                     cpe::vec3(i,Height,j), cpe::vec3(i+SquareSize,HeightN1,j),
                     cpe::vec3(i,HeightN2,j+SquareSize),cpe::vec3(i+SquareSize,HeightN3,j+SquareSize)};
@@ -128,52 +128,52 @@ void Grid::BuildGrid()
   MeshGrid = m;
 }
 
-cpe::vec2 const& Grid::GetOrigin() const
+cpe::vec2 const& gltkProceduralGrid::GetOrigin() const
 {
   return Origin;
 }
-void Grid::SetOrigin(cpe::vec2 origin)
+void gltkProceduralGrid::SetOrigin(cpe::vec2 origin)
 {
   this->Origin = origin;
 }
 
-cpe::mesh Grid::GetMeshGrid() const
+cpe::mesh gltkProceduralGrid::GetMeshGrid() const
 {
   return MeshGrid;
 }
 
-void Grid::SetMeshGrid(const cpe::mesh &value)
+void gltkProceduralGrid::SetMeshGrid(const cpe::mesh &value)
 {
   MeshGrid = value;
 }
 
-int Grid::GetSquareSize() const
+int gltkProceduralGrid::GetSquareSize() const
 {
   return SquareSize;
 }
 
-void Grid::SetSquareSize(int value)
+void gltkProceduralGrid::SetSquareSize(int value)
 {
   SquareSize = value;
 }
 
-int Grid::GetKeyMap() const
+int gltkProceduralGrid::GetKeyMap() const
 {
   return KeyMap;
 }
 
-void Grid::SetKeyMap(int value)
+void gltkProceduralGrid::SetKeyMap(int value)
 {
   KeyMap = value;
 }
 
-Tile const& Grid::GetTile(unsigned int u, unsigned int v) const
+gltkGridTile const& gltkProceduralGrid::GetTile(unsigned int u, unsigned int v) const
 {
   ASSERT_CPE(u * (2 * Radius) + v < Tiles.size(),"Tile ID out of bounds");
   return Tiles[u * (2 * Radius) + v];
 }
 
-Tile const& Grid::GetTile(float x, float y) const
+gltkGridTile   const& gltkProceduralGrid::GetTile(float x, float y) const
 {
   int i = std::floor(x/SquareSize)-Origin.x()/SquareSize;
   int j = std::floor(y/SquareSize)-Origin.y()/SquareSize;

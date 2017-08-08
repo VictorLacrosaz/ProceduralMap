@@ -16,16 +16,16 @@
 **    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "ApplicationQt.hpp"
+#include "gltkApplicationQt.hpp"
 #include "error_handling.hpp"
 
 #include <iostream>
 
-ApplicationQt::ApplicationQt(int& argc,char *argv[])
+gltkApplicationQt::gltkApplicationQt(int& argc,char *argv[])
     :QApplication(argc,argv)
 {}
 
-bool ApplicationQt::notify(QObject * receiver, QEvent * event)
+bool gltkApplicationQt::notify(QObject * receiver, QEvent * event)
 {
     try
     {

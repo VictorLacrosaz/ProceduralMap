@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef MY_WIDGET_GL_HPP
-#define MY_WIDGET_GL_HPP
+#ifndef GLTK_APPLICATION_WIGDET_HPP
+#define GLTK_APPLICATION_WIGDET_HPP
 
 #include <GL/glew.h>
 #include <GL/gl.h>
@@ -10,24 +10,24 @@
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/binary_iarchive.hpp>
 #include <boost/archive/binary_oarchive.hpp>
-#include  <fstream>
+#include <fstream>
 #include <QtOpenGL/QGLWidget>
 #include <QMouseEvent>
 
 #include "axes_helper.hpp"
+#include "gltkRenderInteractor.hpp"
 #include "mesh.hpp"
 #include "mesh_opengl.hpp"
-#include "RenderInteractor.hpp"
 
 /** Qt Widget to render OpenGL scene */
-class ApplicationWidgetGL : public QGLWidget
+class gltkApplicationWidgetGL : public QGLWidget
 {
   Q_OBJECT
 
 public:
 
-    ApplicationWidgetGL(const QGLFormat& format, QGLWidget *parent = 0);
-    ~ApplicationWidgetGL();
+    gltkApplicationWidgetGL(const QGLFormat& format, QGLWidget *parent = 0);
+    ~gltkApplicationWidgetGL();
 
     //-------------------------------------------------------
     //  UI action binding
@@ -82,7 +82,7 @@ private:
     bool DrawState;
 
     /** Handle interactions with the rendering manager */
-    RenderInteractor renderInteractor;
+    gltkRenderInteractor RenderInteractor;
 };
 
 #endif

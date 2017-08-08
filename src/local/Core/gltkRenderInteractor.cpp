@@ -17,21 +17,21 @@
 **    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "RenderInteractor.hpp"
+#include "gltkRenderInteractor.hpp"
 
 #include "glutils.hpp"
 #include "intersection.hpp"
 #include "mat3.hpp"
 #include "quaternion.hpp"
-#include "Tile.hpp"
+#include "gltkGridTile.hpp"
 
 #include <cmath>
 #include <iostream>
 
 
-RenderInteractor::RenderInteractor()
+gltkRenderInteractor::gltkRenderInteractor()
   :is_left_button(false), is_right_button(false),
-  _RenderManager()
+  RenderManager()
 {
   WindowSize[0] = 800;
   WindowSize[1] = 800;
@@ -44,29 +44,29 @@ RenderInteractor::RenderInteractor()
   MotionFactor = 0.0f;
 }
 
-void RenderInteractor::Render()
+void gltkRenderInteractor::Render()
 {
   //Render scene
-  _RenderManager.Render();
+  RenderManager.Render();
 
   //Eventually render debug objects
-  Debug.Render(_RenderManager.GetCamera());
+  Debug.Render(RenderManager.GetCamera());
 }
 
-void RenderInteractor::Initialize()
+void gltkRenderInteractor::Initialize()
 {
   //Initialize scene
-  _RenderManager.Initialize();
+  RenderManager.Initialize();
 
   //Setup camera
   float aspect = static_cast<float>(WindowSize[0]) / WindowSize[1];
-  _RenderManager.GetCamera().SetAspectRatio(aspect);
+  RenderManager.GetCamera().SetAspectRatio(aspect);
   cpe::trackball trackBall;
-  _RenderManager.GetCamera().SetOrientation(trackBall.quat());
+  RenderManager.GetCamera().SetOrientation(trackBall.quat());
 
   //Setup motion factor
   MotionFactor =
-    0.0001f * (1 + 10 * std::abs(_RenderManager.GetCamera().GetFocalDistance()));
+    0.0001f * (1 + 10 * std::abs(RenderManager.GetCamera().GetFocalDistance()));
 
   //Toggle drawing of world axis
   Debug.DrawAxis();
@@ -75,20 +75,20 @@ void RenderInteractor::Initialize()
 //-------------------------------------------------------
 //  Camera transformation
 //-------------------------------------------------------
-void RenderInteractor::MoveForward()
+void gltkRenderInteractor::MoveForward()
 {
   float const dL =  5.0f * MotionFactor * (EventPosition[1] - LastEventPosition[1]);
-  Camera& cam = _RenderManager.GetCamera();
+  gltkCamera& cam = RenderManager.GetCamera();
   cpe::vec3 const z(0.0f,0.0f,1.0f);
   cpe::vec3 cameraPosition = cam.GetPosition();
   cpe::quaternion q_CamOrientation = conjugated(cam.GetOrientation());
   cam.SetPosition(cameraPosition + dL * (q_CamOrientation * z));
 }
 
-void RenderInteractor::MoveZDirection()
+void gltkRenderInteractor::MoveZDirection()
 {
   float const dL =  5.0f * MotionFactor * (EventPosition[1]-LastEventPosition[1]);
-  Camera& cam = _RenderManager.GetCamera();
+  gltkCamera& cam = RenderManager.GetCamera();
   cpe::vec3 const z(0.0f,0.0f,1.0f);
   cpe::vec3 cameraPosition = cam.GetPosition();
   cpe::quaternion q_CamOrientation = conjugated(cam.GetOrientation());
@@ -98,7 +98,7 @@ void RenderInteractor::MoveZDirection()
   cam.SetPosition(cameraPosition + dL * (q_CamOrientation * z));
 }
 
-void RenderInteractor::MoveZDirectionScreen()
+void gltkRenderInteractor::MoveZDirectionScreen()
 {
   float dL;
   if(EventPosition[1] < 0.05*WindowSize[1])
@@ -109,7 +109,7 @@ void RenderInteractor::MoveZDirectionScreen()
     {
       dL = -MotionFactor * 10;
     }
-  Camera& cam = _RenderManager.GetCamera();
+  gltkCamera& cam = RenderManager.GetCamera();
   cpe::vec3 const z(0.0f,0.0f,1.0f);
   cpe::vec3 cameraPosition = cam.GetPosition();
   cpe::quaternion q_CamOrientation = conjugated(cam.GetOrientation());
@@ -119,20 +119,20 @@ void RenderInteractor::MoveZDirectionScreen()
 }
 
 
-void RenderInteractor::MoveRight()
+void gltkRenderInteractor::MoveRight()
 {
   float const dL = -MotionFactor * (EventPosition[0] - LastEventPosition[0]);
-  Camera& cam = _RenderManager.GetCamera();
+  gltkCamera& cam = RenderManager.GetCamera();
   cpe::vec3 const x(-1.0f,0.0f,0.0f);
   cpe::vec3 cameraPosition = cam.GetPosition();
   cpe::quaternion q_CamOrientation = conjugated(cam.GetOrientation());
   cam.SetPosition(cameraPosition + dL * (q_CamOrientation * x));
 }
 
-void RenderInteractor::MoveXDirection()
+void gltkRenderInteractor::MoveXDirection()
 {
   float const dL = -MotionFactor * (EventPosition[0] - LastEventPosition[0]);
-  Camera& cam = _RenderManager.GetCamera();
+  gltkCamera& cam = RenderManager.GetCamera();
   cpe::vec3 const x(-1.0f,0.0f,0.0f);
   cpe::vec3 cameraPosition = cam.GetPosition();
   cpe::quaternion q_CamOrientation = conjugated(cam.GetOrientation());
@@ -141,7 +141,7 @@ void RenderInteractor::MoveXDirection()
   cam.SetPosition(cameraPosition + dL * (q_CamOrientation * x));
 }
 
-void RenderInteractor::MoveXDirectionScreen()
+void gltkRenderInteractor::MoveXDirectionScreen()
 {
     float dL;
   if(EventPosition[0] < 0.05*WindowSize[0])
@@ -152,7 +152,7 @@ void RenderInteractor::MoveXDirectionScreen()
     {
       dL = MotionFactor * 10;
     }
-  Camera& cam = _RenderManager.GetCamera();
+  gltkCamera& cam = RenderManager.GetCamera();
   cpe::vec3 const x(-1.0f,0.0f,0.0f);
   cpe::vec3 cameraPosition = cam.GetPosition();
   cpe::quaternion q_CamOrientation = conjugated(cam.GetOrientation());
@@ -161,17 +161,17 @@ void RenderInteractor::MoveXDirectionScreen()
   cam.SetPosition(cameraPosition + dL *(q_CamOrientation * x));
 }
 
-void RenderInteractor::MoveUp()
+void gltkRenderInteractor::MoveUp()
 {
   float const dL = MotionFactor * (EventPosition[1]-LastEventPosition[1]);
-  Camera& cam = _RenderManager.GetCamera();
+  gltkCamera& cam = RenderManager.GetCamera();
   cpe::vec3 const y(0.0f,-1.0f,0.0f);
   cpe::vec3 cameraPosition = cam.GetPosition();
   cpe::quaternion q_CamOrientation = conjugated(cam.GetOrientation());
   cam.SetPosition(cameraPosition + dL * (q_CamOrientation * y));
 }
 
-void RenderInteractor::TrackBallRotate()
+void gltkRenderInteractor::TrackBallRotate()
 {
   int const x = EventPosition[0];
   int const y = EventPosition[1];
@@ -188,14 +188,14 @@ void RenderInteractor::TrackBallRotate()
   if (std::sqrt((x0 - x1)*(x0 - x1) + (y0 - y1)*(y0 - y1)) > 1e-4)
   {
     cpe::trackball trackBall;
-    trackBall.quat() = _RenderManager.GetCamera().GetOrientation();
+    trackBall.quat() = RenderManager.GetCamera().GetOrientation();
     trackBall.set_2d_coords(x0,y0,x1,y1);
     trackBall.apply_rotation();
-    _RenderManager.GetCamera().SetOrientation(trackBall.quat());
+    RenderManager.GetCamera().SetOrientation(trackBall.quat());
   }
 }
 
-void RenderInteractor::TrackBallRotateY()
+void gltkRenderInteractor::TrackBallRotateY()
 {
   cpe::vec2 Pos = cpe::vec2(EventPosition[0], EventPosition[1]);
   cpe::vec2 LastPos = cpe::vec2(LastEventPosition[0], LastEventPosition[1]);
@@ -213,12 +213,12 @@ void RenderInteractor::TrackBallRotateY()
   cpe::quaternion q;
   q.set_axis_angle(cpe::vec3(0.0f,1.0f,0.0f),diff);
 
-  _RenderManager.GetCamera().SetOrientation(_RenderManager.GetCamera().GetOrientation()*q);
+  RenderManager.GetCamera().SetOrientation(RenderManager.GetCamera().GetOrientation()*q);
 
 
 }
 
-void RenderInteractor::TrackBallZoomWheel()
+void gltkRenderInteractor::TrackBallZoomWheel()
 {
   //magnification factor
   float const F0 = 30.0f;
@@ -226,17 +226,17 @@ void RenderInteractor::TrackBallZoomWheel()
   float const u = WheelMouv;
   float const fu= u/F0;
 
-  float focalDist = _RenderManager.GetCamera().GetFocalDistance();
+  float focalDist = RenderManager.GetCamera().GetFocalDistance();
   focalDist += (std::fabs(focalDist)+1.0f)*fu;
   focalDist = std::min(focalDist,0.0f); //clamp
 
   //Update motion factor
   MotionFactor = 0.0001f * (1 + 10 * std::abs(focalDist));
 
-  _RenderManager.GetCamera().SetFocalDistance(focalDist);
+  RenderManager.GetCamera().SetFocalDistance(focalDist);
 
 }
-void RenderInteractor::TrackBallZoomMouse()
+void gltkRenderInteractor::TrackBallZoomMouse()
 {
   //magnification factor
   float const F0 = 500.0f;
@@ -247,26 +247,26 @@ void RenderInteractor::TrackBallZoomMouse()
   float const u = y-y_old;
   float const fu= u/F0;
 
-  float focalDist = _RenderManager.GetCamera().GetFocalDistance();
+  float focalDist = RenderManager.GetCamera().GetFocalDistance();
   focalDist += (std::fabs(focalDist)+1.0f)*fu;
   focalDist = std::min(focalDist,0.0f); //clamp
 
   //Update motion factor
   MotionFactor = 0.0001f * (1 + 10 * std::abs(focalDist));
 
-  _RenderManager.GetCamera().SetFocalDistance(focalDist);
+  RenderManager.GetCamera().SetFocalDistance(focalDist);
 }
 //-------------------------------------------------------
 
 //-------------------------------------------------------
 //  FPS
 //-------------------------------------------------------
-void RenderInteractor::increase_frame_number() {++frame;}
+void gltkRenderInteractor::increase_frame_number() {++frame;}
 
-unsigned int RenderInteractor::time() const {return current_time;}
-unsigned int& RenderInteractor::time() {return current_time;}
+unsigned int gltkRenderInteractor::time() const {return current_time;}
+unsigned int& gltkRenderInteractor::time() {return current_time;}
 
-float RenderInteractor::update_fps()
+float gltkRenderInteractor::update_fps()
 {
   current_fps=static_cast<float>(frame*1000.0f)/static_cast<float>(current_time-old_time);
   old_time=current_time;
@@ -274,12 +274,12 @@ float RenderInteractor::update_fps()
   return current_fps;
 }
 
-float RenderInteractor::delta_time()
+float gltkRenderInteractor::delta_time()
 {
   return current_time-old_time;
 }
 
-float RenderInteractor::fps()
+float gltkRenderInteractor::fps()
 {
   return current_fps;
 }
@@ -287,9 +287,9 @@ float RenderInteractor::fps()
 //-------------------------------------------------------
 //  Picking
 //-------------------------------------------------------
-std::pair<cpe::vec3,cpe::vec3> RenderInteractor::GetPickingRay()
+std::pair<cpe::vec3,cpe::vec3> gltkRenderInteractor::GetPickingRay()
 {
-  Camera cam = _RenderManager.GetCamera();
+  gltkCamera cam = RenderManager.GetCamera();
 
   //Normalized screen coordinates (x[-1;1], y[1;-1])
   float const local_x = (WindowSize[0] - 2.0f * EventPosition[0]) /
@@ -317,7 +317,7 @@ std::pair<cpe::vec3,cpe::vec3> RenderInteractor::GetPickingRay()
   return std::make_pair(rayStart,rayDirection);
 }
 
-cpe::vec3 RenderInteractor::Pick()
+cpe::vec3 gltkRenderInteractor::Pick()
 {
 //-- Initialization
 
@@ -356,7 +356,7 @@ cpe::vec3 RenderInteractor::Pick()
   float aX = AngleBetweenVectors(X, rayXZ);
   float aZ = AngleBetweenVectors(Z, rayXZ);
 
-  float tileWidth = _RenderManager.GetGrid().GetSquareSize();
+  float tileWidth = RenderManager.GetGrid().GetSquareSize();
 
   //Current tile origin in world space
   float x_int =tileWidth * floor(pickPoint.x() / tileWidth);
@@ -407,7 +407,7 @@ cpe::vec3 RenderInteractor::Pick()
 
 //-- Iterations
 
-  while(norm(pickPoint - rayStart) < _RenderManager.GetCamera().GetFarDistance())
+  while(norm(pickPoint - rayStart) < RenderManager.GetCamera().GetFarDistance())
   {
     //Distance along the projected ray before to the next intersection
     // is reached, for each axis.
@@ -484,7 +484,7 @@ cpe::vec3 RenderInteractor::Pick()
 
 
     //Get the tile under the current picked point, before incrementing the ray.
-    Tile currentTile = _RenderManager.GetGrid().GetTile(pickPoint.x(),pickPoint.z());
+    gltkGridTile currentTile = RenderManager.GetGrid().GetTile(pickPoint.x(),pickPoint.z());
 
     //Increment picked point along ray
     pickPoint = rayStart + dL * rayDirection;
@@ -516,7 +516,7 @@ cpe::vec3 RenderInteractor::Pick()
 
       //*************************************
       dbgPts.push_back(pickPoint);
-      Tile pickedTile = _RenderManager.GetGrid().GetTile(pickPoint.x(),pickPoint.z());
+      gltkGridTile pickedTile = RenderManager.GetGrid().GetTile(pickPoint.x(),pickPoint.z());
       dbgPts.push_back(pickedTile.GetPoints()[0]);
       dbgPts.push_back(pickedTile.GetPoints()[1]);
       dbgPts.push_back(pickedTile.GetPoints()[2]);
@@ -540,38 +540,38 @@ cpe::vec3 RenderInteractor::Pick()
 // Accessors
 //-------------------------------------------------------
 /** Get/Set render manager */
-RenderManager& RenderInteractor::GetRenderManager() {return _RenderManager;}
-RenderManager const& RenderInteractor::GetRenderManager() const {return _RenderManager;}
+gltkRenderManager& gltkRenderInteractor::GetRenderManager() {return RenderManager;}
+gltkRenderManager const& gltkRenderInteractor::GetRenderManager() const {return RenderManager;}
 
 /** Get/Set window size */
-int* RenderInteractor::GetWindowSize() {return WindowSize;}
-void RenderInteractor::SetWindowSize( int width, int height )
+int* gltkRenderInteractor::GetWindowSize() {return WindowSize;}
+void gltkRenderInteractor::SetWindowSize( int width, int height )
 {
   WindowSize[0] = width;
   WindowSize[1] = height;
-  _RenderManager.GetCamera().SetAspectRatio(static_cast<float>(width)/height);
+  RenderManager.GetCamera().SetAspectRatio(static_cast<float>(width)/height);
 }
 
 /** Get/Set event position */
-int* RenderInteractor::GetEventPosition() {return EventPosition;}
-void RenderInteractor::SetEventPosition(const int x, const int y) {
+int* gltkRenderInteractor::GetEventPosition() {return EventPosition;}
+void gltkRenderInteractor::SetEventPosition(const int x, const int y) {
   EventPosition[0] = x; EventPosition[1] = y;}
 
 /** Get/Set last event position */
-int* RenderInteractor::GetLastEventPosition() {return LastEventPosition;}
-void RenderInteractor::SetLastEventPosition(const int x, const int y) {
+int* gltkRenderInteractor::GetLastEventPosition() {return LastEventPosition;}
+void gltkRenderInteractor::SetLastEventPosition(const int x, const int y) {
   LastEventPosition[0] = x; LastEventPosition[1] = y;}
 
-bool& RenderInteractor::left_button() {return is_left_button;}
-bool RenderInteractor::left_button() const {return is_left_button;}
-bool& RenderInteractor::right_button() {return is_right_button;}
-bool RenderInteractor::right_button() const {return is_right_button;}
-int RenderInteractor::GetWheelMouv() const
+bool& gltkRenderInteractor::left_button() {return is_left_button;}
+bool gltkRenderInteractor::left_button() const {return is_left_button;}
+bool& gltkRenderInteractor::right_button() {return is_right_button;}
+bool gltkRenderInteractor::right_button() const {return is_right_button;}
+int gltkRenderInteractor::GetWheelMouv() const
 {
   return WheelMouv;
 }
 
-void RenderInteractor::SetWheelMouv(int value)
+void gltkRenderInteractor::SetWheelMouv(int value)
 {
   WheelMouv = value;
 }

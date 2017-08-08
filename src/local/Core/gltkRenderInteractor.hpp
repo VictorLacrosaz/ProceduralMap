@@ -18,24 +18,24 @@
 
 #pragma once
 
-#ifndef RENDERINTERACTOR_HPP
-#define RENDERINTERACTOR_HPP
+#ifndef GLTK_RENDER_INTERACTOR_HPP
+#define GLTK_RENDER_INTERACTOR_HPP
 
 #include "DebugObject.hpp"
+#include "gltkRenderManager.hpp"
 #include "mat3.hpp"
-#include "RenderManager.hpp"
 #include "trackball.hpp"
 #include "vec3.hpp"
 
 /** \brief
  * Container class for rendering, events and fps manipulation
  */
-class RenderInteractor
+class gltkRenderInteractor
 {
 public:
 
   /** \brief empty constructor */
-  RenderInteractor();
+  gltkRenderInteractor();
 
   /** \brief Initialisation */
   void Initialize();
@@ -106,8 +106,8 @@ public:
   //  Accessors
   //-------------------------------------------------------
   /** Get/Set render manager */
-  RenderManager& GetRenderManager();
-  RenderManager const& GetRenderManager() const;
+  gltkRenderManager& GetRenderManager();
+  gltkRenderManager const& GetRenderManager() const;
 
   /** Get/Set window size */
   int* GetWindowSize();
@@ -181,7 +181,7 @@ private:
 
 
   /** All the content of the 3D scene */
-  RenderManager _RenderManager;
+  gltkRenderManager RenderManager;
 };
 
 

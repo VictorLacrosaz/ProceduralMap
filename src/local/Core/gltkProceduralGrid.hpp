@@ -1,23 +1,23 @@
-#ifndef GRID_HPP
-#define GRID_HPP
+#ifndef GLTK_PROCEDURAL_GRID_HPP
+#define GLTK_PROCEDURAL_GRID_HPP
 
 #include "boost/serialization/access.hpp"
 #include <cmath>
 #include <random>
 #include <utility>
 
+#include "gltkGridTile.hpp"
 #include "mesh.hpp"
 #include "perlin.hpp"
-#include "Tile.hpp"
 #include "vec2.hpp"
 
-class Grid
+class gltkProceduralGrid
 {
 public:
-  Grid();
-  Grid(int key);
+  gltkProceduralGrid();
+  gltkProceduralGrid(int key);
 
-  void BuildGrid (cpe::vec2 origin);
+  void Build(cpe::vec2 origin);
 
   cpe::mesh GetMeshGrid() const;
   void SetMeshGrid(const cpe::mesh &value);
@@ -28,15 +28,15 @@ public:
   int GetKeyMap() const;
   void SetKeyMap(int value);
 
-  Tile const& GetTile(unsigned int u, unsigned int v) const;
-  Tile const& GetTile(float x, float y) const;
+  gltkGridTile const& GetTile(unsigned int u, unsigned int v) const;
+  gltkGridTile const& GetTile(float x, float y) const;
 
   cpe::vec2 const& GetOrigin() const;
   void SetOrigin(cpe::vec2 origin);
 
 private:
 
-  void BuildGrid ();
+  void Build();
 
   //Perlin noises for the creation of the map
   cpe::perlin HeightMap;
@@ -58,7 +58,7 @@ private:
   int KeyMap;
 
   //Map Tiles
-  std::vector<Tile> Tiles;
+  std::vector<gltkGridTile> Tiles;
 
   //Boost serialize function for data save
   friend class boost::serialization::access;

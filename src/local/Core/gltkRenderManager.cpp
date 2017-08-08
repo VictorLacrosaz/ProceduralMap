@@ -1,4 +1,4 @@
-#include "RenderManager.hpp"
+#include "gltkRenderManager.hpp"
 
 #include "glutils.hpp"
 #include "mesh_io.hpp"
@@ -32,11 +32,11 @@ static cpe::mesh build_ground(float const L,float const h)
 //---------------------------------------------------------------------------
 // Constructors
 //---------------------------------------------------------------------------
-RenderManager::RenderManager()
-    :Shaders(0), GameGrid(), MainCamera()
+gltkRenderManager::gltkRenderManager()
+    :Shaders(0), ProceduralGrid(), Camera()
 {}
 
-void RenderManager::Initialize()
+void gltkRenderManager::Initialize()
 {
 
   // Preload default structure
@@ -47,29 +47,29 @@ void RenderManager::Initialize()
                                "Grid.frag",{"Position","Normal","Color","T_Coord"}));  PRINT_OPENGL_ERROR();
 
   // Build ground
-  cpe::vec3 PosCam = MainCamera.GetPosition();
+  cpe::vec3 PosCam = Camera.GetPosition();
   cpe::vec3 PosGround = PosCam;
 
 
 
   //floor:round down the value
-  GameGrid.BuildGrid(GameGrid.GetSquareSize()*cpe::vec2(std::floor(PosGround.x()/GameGrid.GetSquareSize()),std::floor(PosGround.z()/GameGrid.GetSquareSize())));
-  mesh_ground_opengl.fill_vbo(GameGrid.GetMeshGrid());
+  ProceduralGrid.Build(ProceduralGrid.GetSquareSize()*cpe::vec2(std::floor(PosGround.x()/ProceduralGrid.GetSquareSize()),std::floor(PosGround.z()/ProceduralGrid.GetSquareSize())));
+  mesh_ground_opengl.fill_vbo(ProceduralGrid.GetMeshGrid());
 }
 
 //---------------------------------------------------------------------------
 // Rendering callback
 //---------------------------------------------------------------------------
-void RenderManager::Render()
+void gltkRenderManager::Render()
 {
   // Draw the ground
   SetupShaders();
 
-  cpe::vec3 PosCam = MainCamera.GetPosition();
+  cpe::vec3 PosCam = Camera.GetPosition();
   cpe::vec3 PosGround = -PosCam;
 
-  GameGrid.BuildGrid(GameGrid.GetSquareSize()*cpe::vec2(std::floor(PosGround.x()/GameGrid.GetSquareSize()),std::floor(PosGround.z()/GameGrid.GetSquareSize())));
-  mesh_ground_opengl.fill_vbo(GameGrid.GetMeshGrid());
+  ProceduralGrid.Build(ProceduralGrid.GetSquareSize()*cpe::vec2(std::floor(PosGround.x()/ProceduralGrid.GetSquareSize()),std::floor(PosGround.z()/ProceduralGrid.GetSquareSize())));
+  mesh_ground_opengl.fill_vbo(ProceduralGrid.GetMeshGrid());
   mesh_ground_opengl.Render();
 }
 
@@ -77,20 +77,20 @@ void RenderManager::Render()
 //---------------------------------------------------------------------------
 // Setup default shader for mesh rendering using default texture
 //---------------------------------------------------------------------------
-void RenderManager::SetupShaders()
+void gltkRenderManager::SetupShaders()
 {
   for(unsigned int i = 0; i < Shaders.size(); i++)
     {
       //Setup uniform parameters
-      glUseProgram(Shaders[i]);                                               PRINT_OPENGL_ERROR();
+      glUseProgram(Shaders[i]);                                                   PRINT_OPENGL_ERROR();
 
       //Set Uniform data to GPU
       glUniformMatrix4fv(get_uni_loc(Shaders[i], "camera_modelview"), 1, false,
-                         MainCamera.GetMatrixModelView().pointer());                              PRINT_OPENGL_ERROR();
+                         Camera.GetMatrixModelView().pointer());                  PRINT_OPENGL_ERROR();
       glUniformMatrix4fv(get_uni_loc(Shaders[i], "camera_projection"), 1, false,
-                         MainCamera.GetMatrixProjection().pointer());                             PRINT_OPENGL_ERROR();
+                         Camera.GetMatrixProjection().pointer());                 PRINT_OPENGL_ERROR();
       glUniformMatrix4fv(get_uni_loc(Shaders[i], "normal_matrix"), 1, false,
-                         MainCamera.GetMatrixNormal().pointer());                                 PRINT_OPENGL_ERROR();
+                         Camera.GetMatrixNormal().pointer());                     PRINT_OPENGL_ERROR();
 
       GLint samplerArrayLoc = glGetUniformLocation(Shaders[i], "texture");
       const GLint samplers[4] = {0,1,2,3};
@@ -98,21 +98,15 @@ void RenderManager::SetupShaders()
 
     }
 
-  for (unsigned int i = 0; i<Textures.size(); i++)
+  for (unsigned int i = 0; i < Textures.size(); i++)
     {
       //load textures
-      glActiveTexture(GL_TEXTURE0+i);
-      glBindTexture(GL_TEXTURE_2D,Textures[i]);                                                   PRINT_OPENGL_ERROR();
+      glActiveTexture(GL_TEXTURE0 + i);
+      glBindTexture(GL_TEXTURE_2D,Textures[i]);  PRINT_OPENGL_ERROR();
     }
-
 }
 
-Grid RenderManager::GetGameGrid() const
-{
-  return GameGrid;
-}
-
-void RenderManager::SetTextures(std::vector<GLuint> t)
+void gltkRenderManager::SetTextures(std::vector<GLuint> t)
 {
   Textures = t;
 }

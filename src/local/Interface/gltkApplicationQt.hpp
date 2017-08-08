@@ -17,8 +17,8 @@
 */
 #pragma once
 
-#ifndef APPLICATION_QT_HPP
-#define APPLICATION_QT_HPP
+#ifndef GLTK_APPLICATION_QT_HPP
+#define GLTK_APPLICATION_QT_HPP
 
 #include <QtGui/QApplication>
 
@@ -26,13 +26,13 @@
 /**
  * \brief Application Qt to handle exception cpe
  */
-class ApplicationQt : public QApplication
+class gltkApplicationQt : public QApplication
 {
   Q_OBJECT
 
 public:
 
-    ApplicationQt(int& argc,char *argv[]);
+    gltkApplicationQt(int& argc,char *argv[]);
     virtual bool notify(QObject * receiver, QEvent * event);
 
 };

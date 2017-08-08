@@ -1,3 +1,4 @@
+
 /*
 **    TP CPE Lyon
 **    Copyright (C) 2015 Damien Rohmer
@@ -16,32 +17,28 @@
 **    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#pragma once
+#include "gltkGridTile.hpp"
 
-#ifndef TILE_HPP
-#define TILE_HPP
 
-#include "vec3.hpp"
 
-#include <vector>
-
-/** \brief
- * Container class for a square tile
- */
-class Tile
+gltkGridTile::gltkGridTile()
 {
-public:
+  for (int i = 0; i < 4; i++)
+  {
+    Points[i] = cpe::vec3();
+  }
+}
 
-  /** \brief Constructor setting the tile ID */
-  Tile();
 
-  void SetPoints(cpe::vec3 points[4]);
-  const cpe::vec3* GetPoints() const;
+void gltkGridTile::SetPoints(cpe::vec3 points[4])
+{
+  for (int i = 0; i < 4; i++)
+  {
+    Points[i] = points[i];
+  }
+}
 
-private:
-  // Triangle 1 : 0 2 3
-  // Triangle 2 : 0 3 1
-  cpe::vec3 Points[4];
-};
-
-#endif
+const cpe::vec3* gltkGridTile::GetPoints() const
+{
+  return Points;
+}

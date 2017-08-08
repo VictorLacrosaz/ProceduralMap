@@ -1,12 +1,12 @@
-#include "ApplicationWindow.hpp"
+#include "gltkApplicationWindow.hpp"
 
-#include "ApplicationWidgetGL.hpp"
+#include "gltkApplicationWidgetGL.hpp"
 #include "error_handling.hpp"
-#include "ui_ApplicationWindow.h"
+#include "ui_gltkApplicationWindow.h"
 
 #include <iostream>
 
-ApplicationWindow::ApplicationWindow(QWidget *parent)
+gltkApplicationWindow::gltkApplicationWindow(QWidget *parent)
     :QMainWindow(parent),ui(new Ui::MainWindow)
 {
     try
@@ -19,7 +19,7 @@ ApplicationWindow::ApplicationWindow(QWidget *parent)
         qglFormat.setVersion(1,2);
 
         //Create OpenGL Widget renderer
-        glWidget=new ApplicationWidgetGL(qglFormat);
+        glWidget=new gltkApplicationWidgetGL(qglFormat);
 
         //Add the OpenGL Widget into the layout
         ui->layout_scene->addWidget(glWidget);
@@ -36,20 +36,20 @@ ApplicationWindow::ApplicationWindow(QWidget *parent)
 
 }
 
-ApplicationWindow::~ApplicationWindow()
+gltkApplicationWindow::~gltkApplicationWindow()
 {}
 
-void ApplicationWindow::action_quit()
+void gltkApplicationWindow::action_quit()
 {
   close();
 }
 
-void ApplicationWindow::action_draw()
+void gltkApplicationWindow::action_draw()
 {
   glWidget->ToggleDrawState();
 }
 
-void ApplicationWindow::action_wireframe()
+void gltkApplicationWindow::action_wireframe()
 {
   bool const wireframeState = ui->wireframe->isChecked();
   glWidget->SetWireframe(wireframeState);

@@ -34,7 +34,7 @@ DebugObject::DebugObject()
 //-------------------------------------------------------
 // Objects rendering callback
 //-------------------------------------------------------
-void DebugObject::Render(Camera const& camera) const
+void DebugObject::Render(gltkCamera const& camera) const
 {
   if (ActionState[DebugAction::DrawPoints])
   {
@@ -127,7 +127,7 @@ void DebugObject::InitializePoints(std::vector<cpe::vec3> pts)
 //-------------------------------------------------------
 // Points Rendering Callback
 //-------------------------------------------------------
-void  DebugObject::RenderPoints(Camera const& camera) const
+void  DebugObject::RenderPoints(gltkCamera const& camera) const
 {
   if(!vboPoints || NbPoints == 0)
   {
@@ -178,7 +178,7 @@ void DebugObject::InitializeLine(cpe::vec3 p1, cpe::vec3 p2)
 //-------------------------------------------------------
 // Line Rendering Callback
 //-------------------------------------------------------
-void  DebugObject::RenderLine(Camera const& camera) const
+void  DebugObject::RenderLine(gltkCamera const& camera) const
 {
   if(!vboLine)
   {
@@ -208,7 +208,7 @@ void  DebugObject::RenderLine(Camera const& camera) const
 //-------------------------------------------------------
 //  World Axis Rendering Callback
 //-------------------------------------------------------
-void DebugObject::RenderAxis(Camera const& camera) const
+void DebugObject::RenderAxis(gltkCamera const& camera) const
 {
   glUseProgram(AxisHelper.shader_id());
 

@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef CAMERA_HPP
-#define CAMERA_HPP
+#ifndef GLTK_CAMERA_HPP
+#define GLTK_CAMERA_HPP
 
 #include "mat4.hpp"
 #include "quaternion.hpp"
@@ -10,12 +10,12 @@
 #include <vector>
 
 
-class Camera
+class gltkCamera
 {
 public:
 
   /** \brief empty constructor */
-  Camera();
+  gltkCamera();
 
   void UpdateMatrixModelView();
   void UpdateMatrixProjection();

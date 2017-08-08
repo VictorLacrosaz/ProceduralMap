@@ -1,11 +1,11 @@
-#include "Camera.hpp"
+#include "gltkCamera.hpp"
 
 #include "mat4.hpp"
 #include "mat3.hpp"
 
 #include "math.h"
 
-Camera::Camera()
+gltkCamera::gltkCamera()
 {
   //Projection parameters
   this->FieldOfView = 55.0f*M_PI/180.0;
@@ -27,7 +27,7 @@ Camera::Camera()
 //---------------------------------------------------------------------------
 // Update ModelView matrix
 //---------------------------------------------------------------------------
-void Camera::UpdateMatrixModelView()
+void gltkCamera::UpdateMatrixModelView()
 {
   //Zoom
   cpe::mat4 world_matrix_zoom;
@@ -49,7 +49,7 @@ void Camera::UpdateMatrixModelView()
 //---------------------------------------------------------------------------
 // Update Projection matrix
 //---------------------------------------------------------------------------
-void Camera::UpdateMatrixProjection()
+void gltkCamera::UpdateMatrixProjection()
 {
   this->Projection.set_projection_perspective(this->FieldOfView,
     this->AspectRatio, this->NearDistance, this->FarDistance);
@@ -58,7 +58,7 @@ void Camera::UpdateMatrixProjection()
 //---------------------------------------------------------------------------
 //  Build Normal matrix
 //---------------------------------------------------------------------------
-cpe::mat4 Camera::BuildNormalMatrix(const cpe::mat4& w)
+cpe::mat4 gltkCamera::BuildNormalMatrix(const cpe::mat4& w)
 {
   //the normal matrix is used to compute the transformation of the normals of the meshes
   cpe::mat4 normal_matrix=cpe::mat4(w(0,0),w(1,0),w(2,0),0,
@@ -79,7 +79,7 @@ cpe::mat4 Camera::BuildNormalMatrix(const cpe::mat4& w)
 //---------------------------------------------------------------------------
 //  Projection parameters
 //---------------------------------------------------------------------------
-std::vector<float> Camera::GetProjectionParameters() const
+std::vector<float> gltkCamera::GetProjectionParameters() const
 {
   float const top = tan(FieldOfView * 0.5f) * NearDistance;
   float left= AspectRatio * top;
@@ -97,7 +97,7 @@ std::vector<float> Camera::GetProjectionParameters() const
 //---------------------------------------------------------------------------
 //  ACCESSORS
 //---------------------------------------------------------------------------
-void Camera::SetFieldOfView(float fov)
+void gltkCamera::SetFieldOfView(float fov)
 {
   if (fov == this->FieldOfView )
   {
@@ -108,13 +108,13 @@ void Camera::SetFieldOfView(float fov)
   this->UpdateMatrixProjection();
 }
 
-float Camera::GetFieldOfView()
+float gltkCamera::GetFieldOfView()
 {
   return this->FieldOfView;
 }
 
 //---------------------------------------------------------------------------
-void Camera::SetNearDistance(float nearDistance)
+void gltkCamera::SetNearDistance(float nearDistance)
 {
   if (nearDistance == this->NearDistance )
   {
@@ -125,13 +125,13 @@ void Camera::SetNearDistance(float nearDistance)
   this->UpdateMatrixProjection();
 }
 
-float Camera::GetNearDistance()
+float gltkCamera::GetNearDistance()
 {
   return this->NearDistance;
 }
 
 //---------------------------------------------------------------------------
-void Camera::SetFarDistance(float farDistance)
+void gltkCamera::SetFarDistance(float farDistance)
 {
   if (farDistance == this->FarDistance )
   {
@@ -142,13 +142,13 @@ void Camera::SetFarDistance(float farDistance)
   this->UpdateMatrixProjection();
 }
 
-float Camera::GetFarDistance()
+float gltkCamera::GetFarDistance()
 {
   return this->FarDistance;
 }
 
 //---------------------------------------------------------------------------
-void Camera::SetAspectRatio(float ratio)
+void gltkCamera::SetAspectRatio(float ratio)
 {
   if (ratio == this->AspectRatio )
   {
@@ -159,25 +159,25 @@ void Camera::SetAspectRatio(float ratio)
   this->UpdateMatrixProjection();
 }
 
-float Camera::GetAspectRatio() const
+float gltkCamera::GetAspectRatio() const
 {
   return this->AspectRatio;
 }
 
 //---------------------------------------------------------------------------
-void Camera::SetOrientation(const cpe::quaternion& ori)
+void gltkCamera::SetOrientation(const cpe::quaternion& ori)
 {
   this->Orientation = ori;
   this->UpdateMatrixModelView();
 }
 
-cpe::quaternion Camera::GetOrientation() const
+cpe::quaternion gltkCamera::GetOrientation() const
 {
   return this->Orientation;
 }
 
 //---------------------------------------------------------------------------
-void Camera::SetPosition(const cpe::vec3& tr)
+void gltkCamera::SetPosition(const cpe::vec3& tr)
 {
   if (tr[0] == this->Position[0] &&
     tr[1] == this->Position[1] &&
@@ -190,13 +190,13 @@ void Camera::SetPosition(const cpe::vec3& tr)
   this->UpdateMatrixModelView();
 }
 
-cpe::vec3 Camera::GetPosition()
+cpe::vec3 gltkCamera::GetPosition()
 {
   return this->Position;
 }
 
 //---------------------------------------------------------------------------
-void Camera::SetFocalDistance(float d)
+void gltkCamera::SetFocalDistance(float d)
 {
   if (d == this->FocalDistance )
   {
@@ -207,36 +207,36 @@ void Camera::SetFocalDistance(float d)
   this->UpdateMatrixModelView();
 }
 
-float Camera::GetFocalDistance()
+float gltkCamera::GetFocalDistance()
 {
   return this->FocalDistance;
 }
 
 //---------------------------------------------------------------------------
-void Camera::SetMatrixModelView(const cpe::mat4& m)
+void gltkCamera::SetMatrixModelView(const cpe::mat4& m)
 {
   this->ModelView = m;
 }
 
-cpe::mat4 Camera::GetMatrixModelView() const
+cpe::mat4 gltkCamera::GetMatrixModelView() const
 {
   return this->ModelView;
 }
 
 
 //---------------------------------------------------------------------------
-void Camera::SetMatrixModelProjection(const cpe::mat4& m)
+void gltkCamera::SetMatrixModelProjection(const cpe::mat4& m)
 {
   this->Projection = m;
 }
 
-cpe::mat4 Camera::GetMatrixProjection() const
+cpe::mat4 gltkCamera::GetMatrixProjection() const
 {
   return this->Projection;
 }
 
 //---------------------------------------------------------------------------
-cpe::mat4 Camera::GetMatrixNormal()
+cpe::mat4 gltkCamera::GetMatrixNormal()
 {
   return this->Normal;
 }

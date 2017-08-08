@@ -1,4 +1,4 @@
-#include "ApplicationWidgetGL.hpp"
+#include "gltkApplicationWidgetGL.hpp"
 #include "Project_Config.h"
 
 #include "GL/glew.h"
@@ -14,26 +14,26 @@
 #include <unistd.h>
 
 
-ApplicationWidgetGL::ApplicationWidgetGL(const QGLFormat& format,QGLWidget *parent) :
+gltkApplicationWidgetGL::gltkApplicationWidgetGL(const QGLFormat& format,QGLWidget *parent) :
     QGLWidget(format,parent), DrawState(true)
 {
     QWidget::setFocusPolicy(Qt::StrongFocus);
     setMouseTracking(true);
     startTimer(25); //start timer every 25ms
-    renderInteractor = RenderInteractor();
+    RenderInteractor = gltkRenderInteractor();
 }
 
-ApplicationWidgetGL::~ApplicationWidgetGL()
+gltkApplicationWidgetGL::~gltkApplicationWidgetGL()
 {}
 
 //-------------------------------------------------------
 //  Rendering callbacks
 //-------------------------------------------------------
-void ApplicationWidgetGL::paintGL()
+void gltkApplicationWidgetGL::paintGL()
 {
   //clear screen
-  int width = renderInteractor.GetWindowSize()[0];
-  int height = renderInteractor.GetWindowSize()[1];
+  int width = RenderInteractor.GetWindowSize()[0];
+  int height = RenderInteractor.GetWindowSize()[1];
   glViewport (0, 0, width, height);                    PRINT_OPENGL_ERROR();
   glClearColor (1.0f, 1.0f, 1.0f, 1.0f);               PRINT_OPENGL_ERROR();
   glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); PRINT_OPENGL_ERROR();
@@ -41,14 +41,14 @@ void ApplicationWidgetGL::paintGL()
   //draw 3D scene
   if (DrawState)
   {
-    renderInteractor.Render();
+    RenderInteractor.Render();
   }
 }
 
 //-------------------------------------------------------
 //  Interaction callbacks
 //-------------------------------------------------------
-void ApplicationWidgetGL::keyPressEvent(QKeyEvent *event)
+void gltkApplicationWidgetGL::keyPressEvent(QKeyEvent *event)
 {
     QString k=event->text();
 
@@ -66,87 +66,87 @@ void ApplicationWidgetGL::keyPressEvent(QKeyEvent *event)
 }
 
 
-void ApplicationWidgetGL::mousePressEvent(QMouseEvent *event)
+void gltkApplicationWidgetGL::mousePressEvent(QMouseEvent *event)
 {
   //Init last event position
-  renderInteractor.SetLastEventPosition(event->x(),event->y());
+  RenderInteractor.SetLastEventPosition(event->x(),event->y());
   //Update event position
-  renderInteractor.SetEventPosition(event->x(),event->y());
+  RenderInteractor.SetEventPosition(event->x(),event->y());
 
   //WIP : Ray picking debug
   int const ctrl_pressed  = (event->modifiers() & Qt::ControlModifier);
   if(ctrl_pressed)
   {
-    renderInteractor.Pick();
+    RenderInteractor.Pick();
   }
 }
 
-void ApplicationWidgetGL::wheelEvent(QWheelEvent *event)
+void gltkApplicationWidgetGL::wheelEvent(QWheelEvent *event)
 {
   int numDegrees = event->delta() / 8;
   int numSteps = numDegrees / 15;
 
-  renderInteractor.SetWheelMouv(numSteps);
+  RenderInteractor.SetWheelMouv(numSteps);
 
-  renderInteractor.TrackBallZoomWheel();
+  RenderInteractor.TrackBallZoomWheel();
 
 }
 
-void ApplicationWidgetGL::mouseMoveEvent(QMouseEvent *event)
+void gltkApplicationWidgetGL::mouseMoveEvent(QMouseEvent *event)
 {
   //Update cursor position
-  renderInteractor.SetEventPosition(event->x(), event->y());
+  RenderInteractor.SetEventPosition(event->x(), event->y());
 
   int const ctrl_pressed  = (event->modifiers() & Qt::ControlModifier);
   int const shift_pressed = (event->modifiers() & Qt::ShiftModifier);
 
 
   // Screen boarder Move
-  if ((event->x() > 0.95*renderInteractor.GetWindowSize()[0]
-      || event->x() < 0.05*renderInteractor.GetWindowSize()[0])
+  if ((event->x() > 0.95*RenderInteractor.GetWindowSize()[0]
+      || event->x() < 0.05*RenderInteractor.GetWindowSize()[0])
       && !(event->buttons() | Qt::NoButton))
     {
-      renderInteractor.MoveXDirectionScreen();
+      RenderInteractor.MoveXDirectionScreen();
     }
-  if ((event->y() > 0.95*renderInteractor.GetWindowSize()[1]
-      || event->y() < 0.05*renderInteractor.GetWindowSize()[1])
+  if ((event->y() > 0.95*RenderInteractor.GetWindowSize()[1]
+      || event->y() < 0.05*RenderInteractor.GetWindowSize()[1])
       && !(event->buttons() | Qt::NoButton))
     {
-      renderInteractor.MoveZDirectionScreen();
+      RenderInteractor.MoveZDirectionScreen();
     }
 
 
   // Left button controls the translation
   if (!ctrl_pressed && !shift_pressed && (event->buttons() & Qt::LeftButton) )
     {
-      renderInteractor.MoveZDirection();
-      renderInteractor.MoveXDirection();
+      RenderInteractor.MoveZDirection();
+      RenderInteractor.MoveXDirection();
     }
 
   // Right button controls the window rotation
   if (!ctrl_pressed && !shift_pressed && (event->buttons() & Qt::RightButton))
   {
-    renderInteractor.TrackBallRotateY();
+    RenderInteractor.TrackBallRotateY();
   }
 
   // Shift+Left button controls the window zoom
   if (!ctrl_pressed && shift_pressed && (event->buttons() & Qt::LeftButton))
   {
-    renderInteractor.TrackBallZoomMouse();
+    RenderInteractor.TrackBallZoomMouse();
   }
 
   // Shift+Right button enables to translate forward/backward
   if (!ctrl_pressed && shift_pressed && (event->buttons() & Qt::RightButton))
   {
-    renderInteractor.MoveUp();
+    RenderInteractor.MoveUp();
   }
 
   //Store last cursor position
-  renderInteractor.SetLastEventPosition(event->x(),event->y());
+  RenderInteractor.SetLastEventPosition(event->x(),event->y());
 }
 
 
-void ApplicationWidgetGL::timerEvent(QTimerEvent *event)
+void gltkApplicationWidgetGL::timerEvent(QTimerEvent *event)
 {
     event->accept();
     updateGL(); PRINT_OPENGL_ERROR();
@@ -156,13 +156,13 @@ void ApplicationWidgetGL::timerEvent(QTimerEvent *event)
 //-------------------------------------------------------
 //  GL callbacks
 //-------------------------------------------------------
-void ApplicationWidgetGL::initializeGL()
+void gltkApplicationWidgetGL::initializeGL()
 {
     //Init OpenGL
     InitGL();
 
     //Init Scene 3D
-    renderInteractor.Initialize();
+    RenderInteractor.Initialize();
 
     std::vector <GLuint> Textures;
     Textures.push_back(LoadTextureFromFile("champ.jpg"));
@@ -170,7 +170,7 @@ void ApplicationWidgetGL::initializeGL()
     Textures.push_back(LoadTextureFromFile("Grass.jpg"));
     Textures.push_back(LoadTextureFromFile("Argile.jpeg"));
 
-    renderInteractor.GetRenderManager().SetTextures(Textures);
+    RenderInteractor.GetRenderManager().SetTextures(Textures);
 
     //Activate depth buffer
     glEnable(GL_DEPTH_TEST); PRINT_OPENGL_ERROR();
@@ -178,9 +178,9 @@ void ApplicationWidgetGL::initializeGL()
     glProvokingVertex(GL_FIRST_VERTEX_CONVENTION);
 }
 
-void ApplicationWidgetGL::resizeGL(int const width,int const height)
+void gltkApplicationWidgetGL::resizeGL(int const width,int const height)
 {
-    renderInteractor.SetWindowSize( width, height );
+    RenderInteractor.SetWindowSize( width, height );
     glViewport(0,0, width, height); PRINT_OPENGL_ERROR();
 }
 //-------------------------------------------------------
@@ -188,7 +188,7 @@ void ApplicationWidgetGL::resizeGL(int const width,int const height)
 //-------------------------------------------------------
 //  Initialize OpenGL Context
 //-------------------------------------------------------
-void ApplicationWidgetGL::InitGL()
+void gltkApplicationWidgetGL::InitGL()
 {
   //Print Context
   PrintGLInfo();
@@ -197,7 +197,7 @@ void ApplicationWidgetGL::InitGL()
   InitGlew();
 }
 
-void ApplicationWidgetGL::InitGlew()
+void gltkApplicationWidgetGL::InitGlew()
 {
   //Initialize Glew
   GLenum GlewInitResult = glewInit();
@@ -215,7 +215,7 @@ void ApplicationWidgetGL::InitGlew()
     << std::endl;
 }
 
-void ApplicationWidgetGL::PrintGLContext() const
+void gltkApplicationWidgetGL::PrintGLContext() const
 {
   std::cout << "Current OpenGL context: " <<
     context()->format().majorVersion() << "." <<
@@ -226,13 +226,13 @@ void ApplicationWidgetGL::PrintGLContext() const
 //-------------------------------------------------------
 //  UI actions binding
 //-------------------------------------------------------
-void ApplicationWidgetGL::ToggleDrawState()
+void gltkApplicationWidgetGL::ToggleDrawState()
 {
     DrawState =! DrawState;
     updateGL();
 }
 
-void ApplicationWidgetGL::SetWireframe(bool const wireframe)
+void gltkApplicationWidgetGL::SetWireframe(bool const wireframe)
 {
   if (wireframe)
   {
@@ -247,7 +247,7 @@ void ApplicationWidgetGL::SetWireframe(bool const wireframe)
 }
 //-------------------------------------------------------
 
-GLuint ApplicationWidgetGL::LoadTextureFromFile(std::string const& filename)
+GLuint gltkApplicationWidgetGL::LoadTextureFromFile(std::string const& filename)
 {
     std::string data_dir = DATA_DIR;
     data_dir.append( "/" );

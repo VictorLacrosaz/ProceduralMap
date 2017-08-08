@@ -1,25 +1,25 @@
 #pragma once
 
-#ifndef RENDERMANAGER_HPP
-#define RENDERMANAGER_HPP
+#ifndef GLTK_RENDER_MANAGER_HPP
+#define GLTK_RENDER_MANAGER_HPP
 
 #include <GL/glew.h>
 #include <GL/gl.h>
 
-#include "Camera.hpp"
+#include "gltkCamera.hpp"
+#include "gltkProceduralGrid.hpp"
 #include "mesh.hpp"
 #include "mesh_opengl.hpp"
-#include "grid.hpp"
 
 #include <vector>
 
 
 
-class RenderManager
+class gltkRenderManager
 {
 public:
 
-    RenderManager();
+   gltkRenderManager();
 
     /**  Method called only once at the beginning (load off files ...) */
     void Initialize();
@@ -31,14 +31,11 @@ public:
     void SetTextures(std::vector<GLuint> t);
 
     //* Accesors */
-    Camera& GetCamera() {return MainCamera;}
-    Camera const& GetCamera() const {return MainCamera;}
+    gltkCamera& GetCamera() {return Camera;}
+    gltkCamera const& GetCamera() const {return Camera;}
 
-    Grid& GetGrid() {return GameGrid;}
-    Grid const& GetGrid() const {return GameGrid;}
-
-    Grid GetGameGrid() const;
-
+    gltkProceduralGrid& GetGrid() {return ProceduralGrid;}
+    gltkProceduralGrid const& GetGrid() const {return ProceduralGrid;}
 
 private:
 
@@ -57,9 +54,9 @@ private:
     cpe::mesh_opengl mesh_ground_opengl;
 
     /** Grid */
-    Grid GameGrid;
+    gltkProceduralGrid ProceduralGrid;
 
-    Camera MainCamera;
+    gltkCamera Camera;
 };
 
 #endif
