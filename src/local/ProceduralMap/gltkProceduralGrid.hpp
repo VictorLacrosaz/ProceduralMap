@@ -9,8 +9,8 @@
 #include <utility>
 
 #include "gltkGridTile.hpp"
+#include "gltkPerlinNoise.hpp"
 #include "mesh.hpp"
-#include "perlin.hpp"
 #include "vec2.hpp"
 
 class gltkProceduralGrid
@@ -41,9 +41,9 @@ private:
   void Build();
 
   //Perlin noises for the creation of the map
-  cpe::perlin HeightMap;
-  cpe::perlin MoistureMap;
-  cpe::perlin TemperatureMap;
+  gltkPerlinNoise HeightMap;
+  gltkPerlinNoise MoistureMap;
+  gltkPerlinNoise TemperatureMap;
 
   //Mouvement of the map from coordinate (0,0)
   std::pair<int,int> OffsetXY;

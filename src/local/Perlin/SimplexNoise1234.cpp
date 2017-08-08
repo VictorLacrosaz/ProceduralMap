@@ -39,7 +39,7 @@
 
 
 // We don't need to include this. It does no harm, but no use either.
-#include	"simplexnoise1234.hpp"
+#include	"SimplexNoise1234.hpp"
 
 #define FASTFLOOR(x) ( ((x)>0) ? ((int)x) : (((int)x)-1) )
 

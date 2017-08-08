@@ -18,7 +18,7 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 /** \file
-		\brief Header for "simplexnoise1234.c" for producing Perlin simplex noise.
+    \brief Header for "SimplexNoise1234.c" for producing Perlin simplex noise.
 		\author Stefan Gustavson (stegu@itn.liu.se)
 */
 

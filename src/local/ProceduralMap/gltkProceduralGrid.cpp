@@ -13,11 +13,11 @@ gltkProceduralGrid::gltkProceduralGrid()
   std::uniform_int_distribution<> dist (0, INT_MAX);
   KeyMap = dist(gen);
 
-  HeightMap = cpe::perlin(4,0.1f,0.15f,2.0f);
+  HeightMap = gltkPerlinNoise(4,0.1f,0.15f,2.0f);
 
-  TemperatureMap = cpe::perlin(4,0.1f,0.01f,2.0f);
+  TemperatureMap = gltkPerlinNoise(4,0.1f,0.01f,2.0f);
 
-  MoistureMap = cpe::perlin(4,0.1,0.02,2.0);
+  MoistureMap = gltkPerlinNoise(4,0.1,0.02,2.0);
 
   OffsetXY = std::pair<int,int> (0,0);
 

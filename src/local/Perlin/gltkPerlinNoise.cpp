@@ -16,36 +16,33 @@
 **    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "perlin.hpp"
+#include "gltkPerlinNoise.hpp"
 
 #include "error_handling.hpp"
-#include "simplexnoise1234.hpp"
+#include "SimplexNoise1234.hpp"
 #include "vec2.hpp"
 #include "vec3.hpp"
 #include "vec4.hpp"
 
-
 #include <cmath>
 
-namespace cpe
-{
-
-perlin::perlin()
-    :OctaveNumber(5),Persistency(0.3f),FrequencyStart(1.0),
-      FrequencyStep(2.0)
+gltkPerlinNoise::gltkPerlinNoise()
+  :OctaveNumber(5), Persistency(0.3f),
+  FrequencyStart(1.0), FrequencyStep(2.0)
 {}
-perlin::perlin(int Octave,float PersistencyData,float Start,float Step)
-    :OctaveNumber(Octave),Persistency(PersistencyData),
-      FrequencyStart(Start),FrequencyStep(Step)
+
+gltkPerlinNoise::gltkPerlinNoise(int Octave,float PersistencyData,float Start,float Step)
+  :OctaveNumber(Octave), Persistency(PersistencyData),
+  FrequencyStart(Start), FrequencyStep(Step)
 {
-    ASSERT_CPE(Octave>0,"Octave should be >0");
-    ASSERT_CPE(PersistencyData>0,"Persistency should be > 0");
-    ASSERT_CPE(PersistencyData<1,"Persistency should be < 1");
-    ASSERT_CPE(Start>0,"Frequency start should be > 0");
-    ASSERT_CPE(Step>0,"Frequency step should be > 0");
+  ASSERT_CPE(Octave>0,"Octave should be >0");
+  ASSERT_CPE(PersistencyData>0,"Persistency should be > 0");
+  ASSERT_CPE(PersistencyData<1,"Persistency should be < 1");
+  ASSERT_CPE(Start>0,"Frequency start should be > 0");
+  ASSERT_CPE(Step>0,"Frequency step should be > 0");
 }
 
-float perlin::operator()(float const p) const
+float gltkPerlinNoise::operator()(float const p) const
 {
   float value = 0.0f;
   double frequency = FrequencyStart;
@@ -53,11 +50,11 @@ float perlin::operator()(float const p) const
 
   //Add the value of snoise1 for each octave
   for(int k = 0;k < OctaveNumber;k++)
-    {
-      value += persistency*(snoise1(p*frequency));
-      frequency *= FrequencyStep;
-      persistency *= Persistency;
-    }
+  {
+    value += persistency*(snoise1(p*frequency));
+    frequency *= FrequencyStep;
+    persistency *= Persistency;
+  }
 
   //Normalisation parameter for persistency
   float Normalisation = ((1-Persistency)/(1-persistency));
@@ -66,7 +63,7 @@ float perlin::operator()(float const p) const
   return std::max(value*Normalisation,0.0f);
 }
 
-float perlin::operator()(vec2 const& p) const
+float gltkPerlinNoise::operator()(cpe::vec2 const& p) const
 {
   float value = 0.0f;
   double frequency = FrequencyStart;
@@ -74,12 +71,12 @@ float perlin::operator()(vec2 const& p) const
 
   //Add the value of snoise1 for each octave
   for(int k = 0;k < OctaveNumber;k++)
-    {
-      value += persistency*(snoise2(p.x()*frequency,
-                                    p.y()*frequency));
-      frequency *= FrequencyStep;
-      persistency *= Persistency;
-    }
+  {
+    value += persistency*(snoise2(p.x()*frequency,
+                                  p.y()*frequency));
+    frequency *= FrequencyStep;
+    persistency *= Persistency;
+  }
 
   //Normalisation parameter for persistency
   float Normalisation = ((1-Persistency)/(1-persistency));
@@ -88,7 +85,7 @@ float perlin::operator()(vec2 const& p) const
   return std::max(value*Normalisation,0.0f);
 }
 
-float perlin::operator()(vec3 const& p) const
+float gltkPerlinNoise::operator()(cpe::vec3 const& p) const
 {
   float value = 0.0f;
   double frequency = FrequencyStart;
@@ -96,13 +93,13 @@ float perlin::operator()(vec3 const& p) const
 
   //Add the value of snoise1 for each octave
   for(int k = 0;k < OctaveNumber;k++)
-    {
-      value += persistency*(snoise3(p.x()*frequency,
-                                    p.y()*frequency,
-                                    p.z()*frequency));
-      frequency *= FrequencyStep;
-      persistency *= Persistency;
-    }
+  {
+    value += persistency*(snoise3(p.x()*frequency,
+                                  p.y()*frequency,
+                                  p.z()*frequency));
+    frequency *= FrequencyStep;
+    persistency *= Persistency;
+  }
 
   //Normalisation parameter for persistency
   float Normalisation = ((1-Persistency)/(1-persistency));
@@ -111,7 +108,7 @@ float perlin::operator()(vec3 const& p) const
   return std::max(value*Normalisation,0.0f);
 }
 
-float perlin::operator()(vec4 const& p) const
+float gltkPerlinNoise::operator()(cpe::vec4 const& p) const
 {
   float value = 0.0f;
   double frequency = FrequencyStart;
@@ -119,21 +116,18 @@ float perlin::operator()(vec4 const& p) const
 
   //Add the value of snoise1 for each octave
   for(int k = 0;k < OctaveNumber;k++)
-    {
-      value += persistency*(snoise4(p.x()*frequency,
-                                    p.y()*frequency,
-                                    p.z()*frequency,
-                                    p.w()*frequency));
-      frequency *= FrequencyStep;
-      persistency *= Persistency;
-    }
+  {
+    value += persistency*(snoise4(p.x()*frequency,
+                                  p.y()*frequency,
+                                  p.z()*frequency,
+                                  p.w()*frequency));
+    frequency *= FrequencyStep;
+    persistency *= Persistency;
+  }
 
   //Normalisation parameter for persistency
   float Normalisation = ((1-Persistency)/(1-persistency));
 
   //Return the value if > 0 return 0 otherwise
   return std::max(value*Normalisation,0.0f);
-}
-
-
 }
