@@ -1,3 +1,5 @@
+#pragma once
+
 #ifndef GLTK_PROCEDURAL_GRID_HPP
 #define GLTK_PROCEDURAL_GRID_HPP
 
