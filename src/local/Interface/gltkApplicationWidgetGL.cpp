@@ -1,17 +1,16 @@
 #include "gltkApplicationWidgetGL.hpp"
-#include "Project_Config.h"
+#include "ProjectConfig.h"
 
 #include "GL/glew.h"
 #include "GL/gl.h"
+#include <cmath>
+#include <iostream>
+#include <unistd.h>
 
 #include "error_handling.hpp"
 #include "glutils.hpp"
 #include "mat4.hpp"
 #include "mat3.hpp"
-
-#include <cmath>
-#include <iostream>
-#include <unistd.h>
 
 
 gltkApplicationWidgetGL::gltkApplicationWidgetGL(const QGLFormat& format,QGLWidget *parent) :

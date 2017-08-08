@@ -24,7 +24,7 @@
 
 #include <string>
 
-#include "Project_Config.h"
+#include "ProjectConfig.h"
 
 namespace cpe
 {

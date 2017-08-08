@@ -26,7 +26,7 @@
 #include <GL/glew.h>
 #include <GL/gl.h>
 
-#include "Project_Config.h"
+#include "ProjectConfig.h"
 
 /** Macro indicating OpenGL errors (file and line) */
 #define PRINT_OPENGL_ERROR() print_opengl_error(__FILE__, __LINE__)

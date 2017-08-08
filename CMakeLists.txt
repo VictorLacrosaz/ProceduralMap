@@ -14,8 +14,8 @@ set( DATA_DIR "${CMAKE_CURRENT_SOURCE_DIR}/data" )
 set( CMAKE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/CMake" )
 set( SHADER_DIR "${CMAKE_CURRENT_SOURCE_DIR}/shader" )
 
-configure_file( ${CMAKE_DIR}/Project_Config.h.in
-  ${CMAKE_CURRENT_BINARY_DIR}/Project_Config.h @ONLY )
+configure_file( ${CMAKE_DIR}/ProjectConfig.h.in
+  ${CMAKE_CURRENT_BINARY_DIR}/ProjectConfig.h @ONLY )
   
 set( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_DIR} )
 
