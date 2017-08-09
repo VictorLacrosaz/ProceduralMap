@@ -230,6 +230,29 @@ void gltkRenderInteractor::TrackBallZoomWheel()
   focalDist += (std::fabs(focalDist)+1.0f)*fu;
   focalDist = std::min(focalDist,0.0f); //clamp
 
+  // Get the forward direction of the camera
+  cpe::vec3 CameraForward = conjugated(RenderManager.GetCamera().GetOrientation())*
+      cpe::vec3(0.0f,0.0f,-1.0f);
+
+  float posy = RenderManager.GetCamera().GetPosition().y();
+  float fov = RenderManager.GetCamera().GetFieldOfView();
+  float ratio = RenderManager.GetCamera().GetAspectRatio();
+
+  //The real y camera coordinate is actual_postion + focal_distance
+  posy = posy + focalDist;
+
+  // Distance beetwen camera and the ground
+  float dist = posy/CameraForward.y();
+
+  float hfar = std::tan(fov/2) * std::abs(dist);
+  float wfar = hfar * ratio;
+
+  //Updating the radius
+  int radius = 1 + std::ceil(std::max(hfar,wfar) /
+                             RenderManager.GetGrid().GetTileSize());
+  RenderManager.GetGrid().SetRadius(radius);
+
+
   //Update motion factor
   MotionFactor = 0.0001f * (1 + 10 * std::abs(focalDist));
 

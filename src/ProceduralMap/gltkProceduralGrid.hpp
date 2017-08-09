@@ -41,8 +41,13 @@ public:
   /** Access a tile given a world XZ position */
   gltkGridTile const& GetTile(float x, float z) const;
 
+   /** Get/Set the Key for the map generation */
   int GetKeyMap() const;
   void SetKeyMap(int value);
+
+   /** Get/Set the grid radius */
+  int GetRadius() const;
+  void SetRadius(int value);
 
 private:
 

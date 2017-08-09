@@ -128,6 +128,16 @@ void gltkProceduralGrid::Build()
   Mesh = m;
 }
 
+void gltkProceduralGrid::SetRadius(int value)
+{
+  Radius = value;
+}
+
+int gltkProceduralGrid::GetRadius() const
+{
+  return Radius;
+}
+
 cpe::vec2 const& gltkProceduralGrid::GetOrigin() const
 {
   return Origin;
