@@ -19,7 +19,7 @@
 #include "mesh_opengl.hpp"
 
 #include "error_handling.hpp"
-#include "glutils.hpp"
+#include "glUtils.hpp"
 #include "mesh_basic.hpp"
 
 namespace cpe

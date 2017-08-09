@@ -8,7 +8,7 @@
 #include <unistd.h>
 
 #include "error_handling.hpp"
-#include "glutils.hpp"
+#include "glUtils.hpp"
 #include "mat4.hpp"
 #include "mat3.hpp"
 

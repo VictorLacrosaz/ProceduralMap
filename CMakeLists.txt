@@ -35,16 +35,16 @@ file( GLOB_RECURSE source_files
 
 # Include directories
 include(ProjectConfig)
-include_directories( ${APPLICATION_SRC_DIRS} ${LIB_SRC_DIRS} ${CMAKE_CURRENT_BINARY_DIR} ${Boost_INCLUDE_DIRS})
+include_directories(${GLTK_SRC_DIRS} ${Boost_INCLUDE_DIRS} ${CMAKE_CURRENT_BINARY_DIR})
 
 # Specify g++ option
 add_definitions( -Wall -Wextra -std=c++11 -Wno-comment -Wno-unused-parameter -Wno-unused-function -Wno-unused-variable -DCORRECTION)
 
 # UI
-set( UI ${SRC_DIR}/local/Interface/gltkApplicationWindow.ui )
-set( MOC ${SRC_DIR}/local/Interface/gltkApplicationQt.hpp
-         ${SRC_DIR}/local/Interface/gltkApplicationWindow.hpp
-         ${SRC_DIR}/local/Interface/gltkApplicationWidgetGL.hpp)
+set( UI ${SRC_DIR}/Interface/gltkApplicationWindow.ui )
+set( MOC ${SRC_DIR}/Interface/gltkApplicationQt.hpp
+         ${SRC_DIR}/Interface/gltkApplicationWindow.hpp
+         ${SRC_DIR}/Interface/gltkApplicationWidgetGL.hpp)
 
 QT4_WRAP_CPP( MOC_GENERATED ${MOC} )
 QT4_WRAP_UI( UI_GENERATED ${UI} )

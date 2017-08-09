@@ -1,6 +1,6 @@
 #include "gltkRenderManager.hpp"
 
-#include "glutils.hpp"
+#include "glUtils.hpp"
 #include "mesh_io.hpp"
 
 #include <cmath>

@@ -19,11 +19,11 @@
 
 #include "gltkRenderInteractor.hpp"
 
-#include "glutils.hpp"
+#include "gltkGridTile.hpp"
 #include "gltkIntersection.hpp"
+#include "glUtils.hpp"
 #include "mat3.hpp"
 #include "quaternion.hpp"
-#include "gltkGridTile.hpp"
 
 #include <cmath>
 #include <iostream>

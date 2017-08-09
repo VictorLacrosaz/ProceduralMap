@@ -18,7 +18,7 @@
 
 #include "gltkDebugObject.hpp"
 #include "error_handling.hpp"
-#include "glutils.hpp"
+#include "glUtils.hpp"
 #include "mat3.hpp"
 
 

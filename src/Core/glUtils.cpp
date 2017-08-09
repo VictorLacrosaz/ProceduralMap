@@ -16,7 +16,7 @@
 **    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "glutils.hpp"
+#include "glUtils.hpp"
 
 #include <iostream>
 #include <string>
