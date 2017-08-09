@@ -22,8 +22,8 @@
 #define MESH_IO_OBJ_HPP
 
 #include <vector>
-#include "../../3d/vec3.hpp"
-#include "../../3d/vec2.hpp"
+#include "vec3.hpp"
+#include "vec2.hpp"
 
 namespace cpe
 {

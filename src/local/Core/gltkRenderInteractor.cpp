@@ -20,7 +20,7 @@
 #include "gltkRenderInteractor.hpp"
 
 #include "glutils.hpp"
-#include "intersection.hpp"
+#include "gltkIntersection.hpp"
 #include "mat3.hpp"
 #include "quaternion.hpp"
 #include "gltkGridTile.hpp"
@@ -492,9 +492,9 @@ cpe::vec3 gltkRenderInteractor::Pick()
     //Check intersection with the tile triangles
     // Triangle 1 : 0 2 3 - Triangle 2 : 0 3 1
     const cpe::vec3* tilePoints = currentTile.GetPoints();
-    float t1 = intersection::RayTriangle(rayStart, pickPoint-rayStart,
+    float t1 = gltkIntersection::RayTriangle(rayStart, pickPoint-rayStart,
       tilePoints[0], tilePoints[2], tilePoints[3]);
-    float t2 = intersection::RayTriangle(rayStart, pickPoint-rayStart,
+    float t2 = gltkIntersection::RayTriangle(rayStart, pickPoint-rayStart,
       tilePoints[0], tilePoints[1], tilePoints[3]);
 
     //If we intersect one of the triangle
