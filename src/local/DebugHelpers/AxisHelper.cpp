@@ -16,7 +16,7 @@
 **    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "axes_helper.hpp"
+#include "AxisHelper.hpp"
 
 #include "error_handling.hpp"
 #include "glutils.hpp"

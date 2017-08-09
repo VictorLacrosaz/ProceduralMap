@@ -21,7 +21,7 @@
 #ifndef DEBUG_OBJECT_HPP
 #define DEBUG_OBJECT_HPP
 
-#include "axes_helper.hpp"
+#include "AxisHelper.hpp"
 #include "gltkCamera.hpp"
 #include "vec3.hpp"
 
@@ -29,13 +29,13 @@
 #include "GL/gl.h"
 
 /** Enumeration of DebugObject actions*/
-enum DebugAction{DrawPoints = 0, DrawLine, DrawAxis, nbOfDebugActions};
+enum gltkDebugAction{DrawPoints = 0, DrawLine, DrawAxis, nbOfDebugActions};
 
 /** A container class to draw debug information */
-class DebugObject
+class gltkDebugObject
 {
 public:
-  DebugObject();
+  gltkDebugObject();
 
   /** Rendering callback */
   void Render(gltkCamera const& camera) const;
@@ -83,7 +83,7 @@ private:
   void RenderAxis(gltkCamera const& camera) const;
 
   // Internal storing of actions enable states
-  bool ActionState[DebugAction::nbOfDebugActions];
+  bool ActionState[gltkDebugAction::nbOfDebugActions];
 };
 
 #endif

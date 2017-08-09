@@ -21,7 +21,7 @@
 #ifndef GLTK_RENDER_INTERACTOR_HPP
 #define GLTK_RENDER_INTERACTOR_HPP
 
-#include "DebugObject.hpp"
+#include "gltkDebugObject.hpp"
 #include "gltkRenderManager.hpp"
 #include "mat3.hpp"
 #include "trackball.hpp"
@@ -177,7 +177,7 @@ private:
   //  Debug helper object
   //-------------------------------------------------------
   /** Helper class for Debug rendering */
-  DebugObject Debug;
+  gltkDebugObject Debug;
 
 
   /** All the content of the 3D scene */

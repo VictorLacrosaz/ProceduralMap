@@ -16,16 +16,16 @@
 **    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "DebugObject.hpp"
+#include "gltkDebugObject.hpp"
 #include "error_handling.hpp"
 #include "glutils.hpp"
 #include "mat3.hpp"
 
 
-DebugObject::DebugObject()
+gltkDebugObject::gltkDebugObject()
     :vboLine(0),ShaderIDPrimitives(0)
 {
-  for (int i = DebugAction::DrawAxis; i < DebugAction::nbOfDebugActions; i++)
+  for (int i = gltkDebugAction::DrawAxis; i < gltkDebugAction::nbOfDebugActions; i++)
   {
     ActionState[i] = false;
   }
@@ -34,19 +34,19 @@ DebugObject::DebugObject()
 //-------------------------------------------------------
 // Objects rendering callback
 //-------------------------------------------------------
-void DebugObject::Render(gltkCamera const& camera) const
+void gltkDebugObject::Render(gltkCamera const& camera) const
 {
-  if (ActionState[DebugAction::DrawPoints])
+  if (ActionState[gltkDebugAction::DrawPoints])
   {
     this->RenderPoints(camera);
   }
 
-  if (ActionState[DebugAction::DrawLine])
+  if (ActionState[gltkDebugAction::DrawLine])
   {
     this->RenderLine(camera);
   }
 
-  if (ActionState[DebugAction::DrawAxis])
+  if (ActionState[gltkDebugAction::DrawAxis])
   {
     this->RenderAxis(camera);
   }
@@ -55,15 +55,15 @@ void DebugObject::Render(gltkCamera const& camera) const
 //-------------------------------------------------------
 // Toggle drawing of a set of point
 //-------------------------------------------------------
-void DebugObject::DrawPoints(std::vector<cpe::vec3> pts)
+void gltkDebugObject::DrawPoints(std::vector<cpe::vec3> pts)
 {
-  ActionState[DebugAction::DrawPoints] = true;
+  ActionState[gltkDebugAction::DrawPoints] = true;
   InitializePoints(pts);
 }
 
-void DebugObject::DrawPointsOff()
+void gltkDebugObject::DrawPointsOff()
 {
-  ActionState[DebugAction::DrawPoints] = false;
+  ActionState[gltkDebugAction::DrawPoints] = false;
 }
 //-------------------------------------------------------
 
@@ -71,37 +71,37 @@ void DebugObject::DrawPointsOff()
 //-------------------------------------------------------
 // Toggle drawing of a line defined by [p1, p2]
 //-------------------------------------------------------
-void DebugObject::DrawLine(cpe::vec3 p1, cpe::vec3 p2)
+void gltkDebugObject::DrawLine(cpe::vec3 p1, cpe::vec3 p2)
 {
-  ActionState[DebugAction::DrawLine] = true;
+  ActionState[gltkDebugAction::DrawLine] = true;
   InitializeLine(p1, p2);
 }
 
-void DebugObject::DrawLineOff()
+void gltkDebugObject::DrawLineOff()
 {
-  ActionState[DebugAction::DrawLine] = false;
+  ActionState[gltkDebugAction::DrawLine] = false;
 }
 //-------------------------------------------------------
 
 //-------------------------------------------------------
 // Toggle drawing of the world axis
 //-------------------------------------------------------
-void DebugObject::DrawAxis()
+void gltkDebugObject::DrawAxis()
 {
-  ActionState[DebugAction::DrawAxis] = true;
+  ActionState[gltkDebugAction::DrawAxis] = true;
   AxisHelper.init();
 }
 
-void DebugObject::DrawAxisOff()
+void gltkDebugObject::DrawAxisOff()
 {
-  ActionState[DebugAction::DrawAxis] = false;
+  ActionState[gltkDebugAction::DrawAxis] = false;
 }
 //-------------------------------------------------------
 
 //-------------------------------------------------------
 // Internal initialization of points
 //-------------------------------------------------------
-void DebugObject::InitializePoints(std::vector<cpe::vec3> pts)
+void gltkDebugObject::InitializePoints(std::vector<cpe::vec3> pts)
 {
   this->NbPoints = pts.size();
 
@@ -127,7 +127,7 @@ void DebugObject::InitializePoints(std::vector<cpe::vec3> pts)
 //-------------------------------------------------------
 // Points Rendering Callback
 //-------------------------------------------------------
-void  DebugObject::RenderPoints(gltkCamera const& camera) const
+void gltkDebugObject::RenderPoints(gltkCamera const& camera) const
 {
   if(!vboPoints || NbPoints == 0)
   {
@@ -154,7 +154,7 @@ void  DebugObject::RenderPoints(gltkCamera const& camera) const
 //-------------------------------------------------------
 // Internal initialization of a line
 //-------------------------------------------------------
-void DebugObject::InitializeLine(cpe::vec3 p1, cpe::vec3 p2)
+void gltkDebugObject::InitializeLine(cpe::vec3 p1, cpe::vec3 p2)
 {
   //Line data : Position - Color
   float const data[] = {
@@ -178,7 +178,7 @@ void DebugObject::InitializeLine(cpe::vec3 p1, cpe::vec3 p2)
 //-------------------------------------------------------
 // Line Rendering Callback
 //-------------------------------------------------------
-void  DebugObject::RenderLine(gltkCamera const& camera) const
+void gltkDebugObject::RenderLine(gltkCamera const& camera) const
 {
   if(!vboLine)
   {
@@ -208,7 +208,7 @@ void  DebugObject::RenderLine(gltkCamera const& camera) const
 //-------------------------------------------------------
 //  World Axis Rendering Callback
 //-------------------------------------------------------
-void DebugObject::RenderAxis(gltkCamera const& camera) const
+void gltkDebugObject::RenderAxis(gltkCamera const& camera) const
 {
   glUseProgram(AxisHelper.shader_id());
 

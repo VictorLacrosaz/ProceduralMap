@@ -14,7 +14,7 @@
 #include <QtOpenGL/QGLWidget>
 #include <QMouseEvent>
 
-#include "axes_helper.hpp"
+#include "AxisHelper.hpp"
 #include "gltkRenderInteractor.hpp"
 #include "mesh.hpp"
 #include "mesh_opengl.hpp"
