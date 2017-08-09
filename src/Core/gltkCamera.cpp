@@ -52,7 +52,7 @@ void gltkCamera::UpdateMatrixModelView()
 void gltkCamera::UpdateMatrixProjection()
 {
   this->Projection.set_projection_perspective(this->FieldOfView,
-    this->AspectRatio, this->NearDistance, this->FarDistance);
+                                              this->AspectRatio, this->NearDistance, this->FarDistance);
 }
 
 //---------------------------------------------------------------------------
@@ -180,8 +180,8 @@ cpe::quaternion gltkCamera::GetOrientation() const
 void gltkCamera::SetPosition(const cpe::vec3& tr)
 {
   if (tr[0] == this->Position[0] &&
-    tr[1] == this->Position[1] &&
-    tr[2] == this->Position[2])
+      tr[1] == this->Position[1] &&
+      tr[2] == this->Position[2])
   {
     return;
   }

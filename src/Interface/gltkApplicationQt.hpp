@@ -32,8 +32,8 @@ class gltkApplicationQt : public QApplication
 
 public:
 
-    gltkApplicationQt(int& argc,char *argv[]);
-    virtual bool notify(QObject * receiver, QEvent * event);
+  gltkApplicationQt(int& argc,char *argv[]);
+  virtual bool notify(QObject * receiver, QEvent * event);
 
 };
 

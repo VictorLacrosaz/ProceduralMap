@@ -20,7 +20,6 @@
 #include "gltkGridTile.hpp"
 
 
-
 gltkGridTile::gltkGridTile()
 {
   for (int i = 0; i < 4; i++)
@@ -28,7 +27,6 @@ gltkGridTile::gltkGridTile()
     Points[i] = cpe::vec3();
   }
 }
-
 
 void gltkGridTile::SetPoints(cpe::vec3 points[4])
 {

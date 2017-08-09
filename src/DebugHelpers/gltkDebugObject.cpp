@@ -23,7 +23,7 @@
 
 
 gltkDebugObject::gltkDebugObject()
-    :vboLine(0),ShaderIDPrimitives(0)
+  :vboLine(0),ShaderIDPrimitives(0)
 {
   for (int i = gltkDebugAction::DrawAxis; i < gltkDebugAction::nbOfDebugActions; i++)
   {
@@ -112,7 +112,7 @@ void gltkDebugObject::InitializePoints(std::vector<cpe::vec3> pts)
 
   //load shaders
   ShaderIDPrimitives = read_shader("DebugPrimitives.vert",
-                             "DebugPrimitives.frag");
+                                   "DebugPrimitives.frag");
 
   if(vboPoints == 0)
   {
@@ -163,7 +163,7 @@ void gltkDebugObject::InitializeLine(cpe::vec3 p1, cpe::vec3 p2)
 
   //load shaders
   ShaderIDPrimitives = read_shader("DebugPrimitives.vert",
-                             "DebugPrimitives.frag");
+                                   "DebugPrimitives.frag");
 
   if(vboLine==0)
   {
@@ -214,10 +214,10 @@ void gltkDebugObject::RenderAxis(gltkCamera const& camera) const
 
   cpe::mat4 const orientation = cpe::mat4(camera.GetOrientation().to_mat3());
   cpe::mat4 const scaling = cpe::mat4(
-    1.0f, 0.0f, 0.0f, 0.0f,
-    0.0f, camera.GetAspectRatio(), 0.0f, 0.0f,
-    0.0f, 0.0f, 1.0f, 0.0f,
-    0.0f, 0.0f, 0.0f, 1.0f);
+        1.0f, 0.0f, 0.0f, 0.0f,
+        0.0f, camera.GetAspectRatio(), 0.0f, 0.0f,
+        0.0f, 0.0f, 1.0f, 0.0f,
+        0.0f, 0.0f, 0.0f, 1.0f);
 
   glUniformMatrix4fv(get_uni_loc(AxisHelper.shader_id(),"camera_modelview"), 1, false, orientation.pointer()); PRINT_OPENGL_ERROR();
   glUniformMatrix4fv(get_uni_loc(AxisHelper.shader_id(),"camera_projection"), 1, false, scaling.pointer());    PRINT_OPENGL_ERROR();

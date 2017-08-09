@@ -21,24 +21,24 @@ class gltkApplicationWindow: public QMainWindow
 
 public:
 
-    gltkApplicationWindow(QWidget *parent=NULL);
-    ~gltkApplicationWindow();
+  gltkApplicationWindow(QWidget *parent=NULL);
+  ~gltkApplicationWindow();
 
 private slots:
 
-    /** Quit the application */
-    void action_quit();
-    /** Enable the drawing of the meshes */
-    void action_draw();
-    /** Set the Wireframe mode for the meshes */
-    void action_wireframe();
+  /** Quit the application */
+  void action_quit();
+  /** Enable the drawing of the meshes */
+  void action_draw();
+  /** Set the Wireframe mode for the meshes */
+  void action_wireframe();
 
 private:
 
-    /** Layout for the Window */
-    Ui::MainWindow *ui;
-    /** The OpenGL Widget */
-    gltkApplicationWidgetGL *glWidget;
+  /** Layout for the Window */
+  Ui::MainWindow *ui;
+  /** The OpenGL Widget */
+  gltkApplicationWidgetGL *glWidget;
 };
 
 #endif

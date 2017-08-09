@@ -22,33 +22,33 @@
 #include <iostream>
 
 gltkApplicationQt::gltkApplicationQt(int& argc,char *argv[])
-    :QApplication(argc,argv)
+  :QApplication(argc,argv)
 {}
 
 bool gltkApplicationQt::notify(QObject * receiver, QEvent * event)
 {
-    try
-    {
-        return QApplication::notify(receiver, event);
-    }
-    catch(std::string& s)
-    {
-        std::cout<<std::endl;
-        std::cout<< "Exception thrown (string):" << s<<std::endl;
-    }
-    catch(std::exception& e)
-    {
-        std::cout<<std::endl;
-        std::cout<< "Exception thrown (std):" << e.what()<<std::endl;
-    }
-    catch(cpe::exception_cpe& e)
-    {
-        std::cout<<std::endl;
-        std::cout<<e.report_exception()<<std::endl;
-    }
+  try
+  {
+    return QApplication::notify(receiver, event);
+  }
+  catch(std::string& s)
+  {
+    std::cout<<std::endl;
+    std::cout<< "Exception thrown (string):" << s<<std::endl;
+  }
+  catch(std::exception& e)
+  {
+    std::cout<<std::endl;
+    std::cout<< "Exception thrown (std):" << e.what()<<std::endl;
+  }
+  catch(cpe::exception_cpe& e)
+  {
+    std::cout<<std::endl;
+    std::cout<<e.report_exception()<<std::endl;
+  }
 
-    std::cout<<"Abort program"<<std::endl;
-    abort();
-    return false;
+  std::cout<<"Abort program"<<std::endl;
+  abort();
+  return false;
 
 }

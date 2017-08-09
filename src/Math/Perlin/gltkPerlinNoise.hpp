@@ -32,33 +32,33 @@ class gltkPerlinNoise
 {
 public:
 
-    /** Empty constructor with default values */
-    gltkPerlinNoise();
-    /** Provides octave and persistency parameters (persistency=1/attenuation)
+  /** Empty constructor with default values */
+  gltkPerlinNoise();
+  /** Provides octave and persistency parameters (persistency=1/attenuation)
      *
      * octave should be a number >0
      * persistency should be in ]0,1[
     */
-    gltkPerlinNoise(int Octave,float PersistencyData,float Start,float Step);
+  gltkPerlinNoise(int Octave,float PersistencyData,float Start,float Step);
 
-    /** Perlin noise in 1D */
-    float operator()(float p) const;
-    /** Perlin noise in 2D */
-    float operator()(cpe::vec2 const& p) const;
-    /** Perlin noise in 3D */
-    float operator()(cpe::vec3 const& p) const;
-    /** Perlin noise in 4D */
-    float operator()(cpe::vec4 const& p) const;
+  /** Perlin noise in 1D */
+  float operator()(float p) const;
+  /** Perlin noise in 2D */
+  float operator()(cpe::vec2 const& p) const;
+  /** Perlin noise in 3D */
+  float operator()(cpe::vec3 const& p) const;
+  /** Perlin noise in 4D */
+  float operator()(cpe::vec4 const& p) const;
 
 private:
-    /** The number of octave (the number of sumation) */
-    int OctaveNumber;
-    /** The attenuation for each octave */
-    float Persistency;
-    /** The frequency for the first octave*/
-    float FrequencyStart;
-    /** The Frequency step between each ocyave*/
-    float FrequencyStep;
+  /** The number of octave (the number of sumation) */
+  int OctaveNumber;
+  /** The attenuation for each octave */
+  float Persistency;
+  /** The frequency for the first octave*/
+  float FrequencyStart;
+  /** The Frequency step between each ocyave*/
+  float FrequencyStep;
 };
 
 #endif

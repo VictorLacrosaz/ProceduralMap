@@ -14,12 +14,12 @@
 
 
 gltkApplicationWidgetGL::gltkApplicationWidgetGL(const QGLFormat& format,QGLWidget *parent) :
-    QGLWidget(format,parent), DrawState(true)
+  QGLWidget(format,parent), DrawState(true)
 {
-    QWidget::setFocusPolicy(Qt::StrongFocus);
-    setMouseTracking(true);
-    startTimer(25); //start timer every 25ms
-    RenderInteractor = gltkRenderInteractor();
+  QWidget::setFocusPolicy(Qt::StrongFocus);
+  setMouseTracking(true);
+  startTimer(25); //start timer every 25ms
+  RenderInteractor = gltkRenderInteractor();
 }
 
 gltkApplicationWidgetGL::~gltkApplicationWidgetGL()
@@ -49,19 +49,19 @@ void gltkApplicationWidgetGL::paintGL()
 //-------------------------------------------------------
 void gltkApplicationWidgetGL::keyPressEvent(QKeyEvent *event)
 {
-    QString k=event->text();
+  QString k=event->text();
 
-    int current=event->key();
-    Qt::KeyboardModifiers mod=event->modifiers();
+  int current=event->key();
+  Qt::KeyboardModifiers mod=event->modifiers();
 
-    // We can quit the scene with 'Q'
-    if( (mod&Qt::ShiftModifier)!=0 && (current==Qt::Key_Q) )
-    {
-        std::cout<<"\n[EXIT OK]\n\n"<<std::endl;
-        this->window()->close();
-    }
+  // We can quit the scene with 'Q'
+  if( (mod&Qt::ShiftModifier)!=0 && (current==Qt::Key_Q) )
+  {
+    std::cout<<"\n[EXIT OK]\n\n"<<std::endl;
+    this->window()->close();
+  }
 
-    QGLWidget::keyPressEvent(event);
+  QGLWidget::keyPressEvent(event);
 }
 
 
@@ -102,25 +102,25 @@ void gltkApplicationWidgetGL::mouseMoveEvent(QMouseEvent *event)
 
   // Screen boarder Move
   if ((event->x() > 0.95*RenderInteractor.GetWindowSize()[0]
-      || event->x() < 0.05*RenderInteractor.GetWindowSize()[0])
+       || event->x() < 0.05*RenderInteractor.GetWindowSize()[0])
       && !(event->buttons() | Qt::NoButton))
-    {
-      RenderInteractor.MoveXDirectionScreen();
-    }
+  {
+    RenderInteractor.MoveXDirectionScreen();
+  }
   if ((event->y() > 0.95*RenderInteractor.GetWindowSize()[1]
-      || event->y() < 0.05*RenderInteractor.GetWindowSize()[1])
+       || event->y() < 0.05*RenderInteractor.GetWindowSize()[1])
       && !(event->buttons() | Qt::NoButton))
-    {
-      RenderInteractor.MoveZDirectionScreen();
-    }
+  {
+    RenderInteractor.MoveZDirectionScreen();
+  }
 
 
   // Left button controls the translation
   if (!ctrl_pressed && !shift_pressed && (event->buttons() & Qt::LeftButton) )
-    {
-      RenderInteractor.MoveZDirection();
-      RenderInteractor.MoveXDirection();
-    }
+  {
+    RenderInteractor.MoveZDirection();
+    RenderInteractor.MoveXDirection();
+  }
 
   // Right button controls the window rotation
   if (!ctrl_pressed && !shift_pressed && (event->buttons() & Qt::RightButton))
@@ -147,8 +147,8 @@ void gltkApplicationWidgetGL::mouseMoveEvent(QMouseEvent *event)
 
 void gltkApplicationWidgetGL::timerEvent(QTimerEvent *event)
 {
-    event->accept();
-    updateGL(); PRINT_OPENGL_ERROR();
+  event->accept();
+  updateGL(); PRINT_OPENGL_ERROR();
 }
 //-------------------------------------------------------
 
@@ -157,30 +157,30 @@ void gltkApplicationWidgetGL::timerEvent(QTimerEvent *event)
 //-------------------------------------------------------
 void gltkApplicationWidgetGL::initializeGL()
 {
-    //Init OpenGL
-    InitGL();
+  //Init OpenGL
+  InitGL();
 
-    //Init Scene 3D
-    RenderInteractor.Initialize();
+  //Init Scene 3D
+  RenderInteractor.Initialize();
 
-    std::vector <GLuint> Textures;
-    Textures.push_back(LoadTextureFromFile("champ.jpg"));
-    Textures.push_back(LoadTextureFromFile("rock.jpg"));
-    Textures.push_back(LoadTextureFromFile("Grass.jpg"));
-    Textures.push_back(LoadTextureFromFile("Argile.jpeg"));
+  std::vector <GLuint> Textures;
+  Textures.push_back(LoadTextureFromFile("champ.jpg"));
+  Textures.push_back(LoadTextureFromFile("rock.jpg"));
+  Textures.push_back(LoadTextureFromFile("Grass.jpg"));
+  Textures.push_back(LoadTextureFromFile("Argile.jpeg"));
 
-    RenderInteractor.GetRenderManager().SetTextures(Textures);
+  RenderInteractor.GetRenderManager().SetTextures(Textures);
 
-    //Activate depth buffer
-    glEnable(GL_DEPTH_TEST); PRINT_OPENGL_ERROR();
-    //Define provoking vertex for flat shading
-    glProvokingVertex(GL_FIRST_VERTEX_CONVENTION);
+  //Activate depth buffer
+  glEnable(GL_DEPTH_TEST); PRINT_OPENGL_ERROR();
+  //Define provoking vertex for flat shading
+  glProvokingVertex(GL_FIRST_VERTEX_CONVENTION);
 }
 
 void gltkApplicationWidgetGL::resizeGL(int const width,int const height)
 {
-    RenderInteractor.SetWindowSize( width, height );
-    glViewport(0,0, width, height); PRINT_OPENGL_ERROR();
+  RenderInteractor.SetWindowSize( width, height );
+  glViewport(0,0, width, height); PRINT_OPENGL_ERROR();
 }
 //-------------------------------------------------------
 
@@ -205,20 +205,20 @@ void gltkApplicationWidgetGL::InitGlew()
   if (GlewInitResult != GLEW_OK)
   {
     std::cerr << "Error: " << glewGetErrorString(GlewInitResult)
-      << std::endl;
+              << std::endl;
     exit(EXIT_FAILURE);
   }
 
   //Print info
   std::cout << "Glew initialized (" << glewGetString(GLEW_VERSION) << ")"
-    << std::endl;
+            << std::endl;
 }
 
 void gltkApplicationWidgetGL::PrintGLContext() const
 {
   std::cout << "Current OpenGL context: " <<
-    context()->format().majorVersion() << "." <<
-    context()->format().minorVersion() << std::endl;
+               context()->format().majorVersion() << "." <<
+               context()->format().minorVersion() << std::endl;
 }
 //-------------------------------------------------------
 
@@ -227,8 +227,8 @@ void gltkApplicationWidgetGL::PrintGLContext() const
 //-------------------------------------------------------
 void gltkApplicationWidgetGL::ToggleDrawState()
 {
-    DrawState =! DrawState;
-    updateGL();
+  DrawState =! DrawState;
+  updateGL();
 }
 
 void gltkApplicationWidgetGL::SetWireframe(bool const wireframe)
@@ -248,20 +248,20 @@ void gltkApplicationWidgetGL::SetWireframe(bool const wireframe)
 
 GLuint gltkApplicationWidgetGL::LoadTextureFromFile(std::string const& filename)
 {
-    std::string data_dir = DATA_DIR;
-    data_dir.append( "/" );
+  std::string data_dir = DATA_DIR;
+  data_dir.append( "/" );
 
-    if(access((data_dir + filename).data(),F_OK) == -1)
-    {
-        std::cerr<<"Cannot load texture file "<<(data_dir + filename)<<std::endl;
-        std::cerr<<"Wrong path ?"<<std::endl;
-        abort();
-    }
+  if(access((data_dir + filename).data(),F_OK) == -1)
+  {
+    std::cerr<<"Cannot load texture file "<<(data_dir + filename)<<std::endl;
+    std::cerr<<"Wrong path ?"<<std::endl;
+    abort();
+  }
 
-    GLuint const value=this->bindTexture(QString((data_dir +filename).data()), GL_TEXTURE_2D);
+  GLuint const value=this->bindTexture(QString((data_dir +filename).data()), GL_TEXTURE_2D);
 
-    if(value==0)
-        throw cpe::exception_cpe("Failed to load texture "+(data_dir + filename),EXCEPTION_PARAMETERS_CPE);
+  if(value==0)
+    throw cpe::exception_cpe("Failed to load texture "+(data_dir + filename),EXCEPTION_PARAMETERS_CPE);
 
-    return value;
+  return value;
 }

@@ -53,8 +53,8 @@ GLuint read_shader(std::string const&vertex_filename,
                    std::string const&fragment_filename);
 
 GLuint ReadShader(const std::string &vertex_filename,
-                   const std::string &fragment_filename,
-                   const std::vector<std::string> &attributes);
+                  const std::string &fragment_filename,
+                  const std::vector<std::string> &attributes);
 
 /** Offset conversion for the VBO buffer (cast to a pointer) */
 GLubyte* buffer_offset(int offset);

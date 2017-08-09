@@ -31,7 +31,7 @@
 
 gltkRenderInteractor::gltkRenderInteractor()
   :is_left_button(false), is_right_button(false),
-  RenderManager()
+    RenderManager()
 {
   WindowSize[0] = 800;
   WindowSize[1] = 800;
@@ -66,7 +66,7 @@ void gltkRenderInteractor::Initialize()
 
   //Setup motion factor
   MotionFactor =
-    0.0001f * (1 + 10 * std::abs(RenderManager.GetCamera().GetFocalDistance()));
+      0.0001f * (1 + 10 * std::abs(RenderManager.GetCamera().GetFocalDistance()));
 
   //Toggle drawing of world axis
   Debug.DrawAxis();
@@ -102,13 +102,13 @@ void gltkRenderInteractor::MoveZDirectionScreen()
 {
   float dL;
   if(EventPosition[1] < 0.05*WindowSize[1])
-    {
-      dL = MotionFactor * 10;
-    }
+  {
+    dL = MotionFactor * 10;
+  }
   else
-    {
-      dL = -MotionFactor * 10;
-    }
+  {
+    dL = -MotionFactor * 10;
+  }
   gltkCamera& cam = RenderManager.GetCamera();
   cpe::vec3 const z(0.0f,0.0f,1.0f);
   cpe::vec3 cameraPosition = cam.GetPosition();
@@ -143,15 +143,15 @@ void gltkRenderInteractor::MoveXDirection()
 
 void gltkRenderInteractor::MoveXDirectionScreen()
 {
-    float dL;
+  float dL;
   if(EventPosition[0] < 0.05*WindowSize[0])
-    {
-      dL = -MotionFactor * 10;
-    }
+  {
+    dL = -MotionFactor * 10;
+  }
   else
-    {
-      dL = MotionFactor * 10;
-    }
+  {
+    dL = MotionFactor * 10;
+  }
   gltkCamera& cam = RenderManager.GetCamera();
   cpe::vec3 const x(-1.0f,0.0f,0.0f);
   cpe::vec3 cameraPosition = cam.GetPosition();
@@ -293,9 +293,9 @@ std::pair<cpe::vec3,cpe::vec3> gltkRenderInteractor::GetPickingRay()
 
   //Normalized screen coordinates (x[-1;1], y[1;-1])
   float const local_x = (WindowSize[0] - 2.0f * EventPosition[0]) /
-    static_cast<float>(WindowSize[0]);
+      static_cast<float>(WindowSize[0]);
   float const local_y = (2.0f * EventPosition[1] - WindowSize[1]) /
-    static_cast<float>(WindowSize[1]);
+      static_cast<float>(WindowSize[1]);
 
   //Camera projection parameters
   std::vector<float> const cameraParam = cam.GetProjectionParameters();
@@ -319,7 +319,7 @@ std::pair<cpe::vec3,cpe::vec3> gltkRenderInteractor::GetPickingRay()
 
 cpe::vec3 gltkRenderInteractor::Pick()
 {
-//-- Initialization
+  //-- Initialization
 
   //Get pick ray
   std::pair<cpe::vec3,cpe::vec3> rayPair = this->GetPickingRay();
@@ -356,11 +356,11 @@ cpe::vec3 gltkRenderInteractor::Pick()
   float aX = AngleBetweenVectors(X, rayXZ);
   float aZ = AngleBetweenVectors(Z, rayXZ);
 
-  float tileWidth = RenderManager.GetGrid().GetSquareSize();
+  float tileSize = RenderManager.GetGrid().GetTileSize();
 
   //Current tile origin in world space
-  float x_int =tileWidth * floor(pickPoint.x() / tileWidth);
-  float z_int =tileWidth * floor(pickPoint.z() / tileWidth);
+  float x_int =tileSize * floor(pickPoint.x() / tileSize);
+  float z_int =tileSize * floor(pickPoint.z() / tileSize);
 
   //Starting point offset in the tile, relatively to the tile origin.
   float dX = pickPoint.x() - x_int;
@@ -377,16 +377,16 @@ cpe::vec3 gltkRenderInteractor::Pick()
       dLz = dZ / fabs(cos(aZ*M_PI/180.0));
       break;
     case 10:
-      dLx = (tileWidth - dX) / fabs(cos(aX*M_PI/180.0));
+      dLx = (tileSize - dX) / fabs(cos(aX*M_PI/180.0));
       dLz = dZ / fabs(cos(aZ*M_PI/180.0));
       break;
     case 1:
       dLx = dX / fabs(cos(aX*M_PI/180.0));
-      dLz = (tileWidth - dZ) / fabs(cos(aZ*M_PI/180.0));
+      dLz = (tileSize - dZ) / fabs(cos(aZ*M_PI/180.0));
       break;
     case 11:
-      dLx = (tileWidth - dX) / fabs(cos(aX*M_PI/180.0));
-      dLz = (tileWidth - dZ) / fabs(cos(aZ*M_PI/180.0));
+      dLx = (tileSize - dX) / fabs(cos(aX*M_PI/180.0));
+      dLz = (tileSize - dZ) / fabs(cos(aZ*M_PI/180.0));
       break;
     default:
       break;
@@ -394,18 +394,18 @@ cpe::vec3 gltkRenderInteractor::Pick()
 
   //Distance to walk along the ray between to successive intersection with
   //  a tile axis.
-  float stepX = tileWidth / fabs(cos(aX*M_PI/180.0));
-  float stepZ = tileWidth / fabs(cos(aZ*M_PI/180.0));
+  float stepX = tileSize / fabs(cos(aX*M_PI/180.0));
+  float stepZ = tileSize / fabs(cos(aZ*M_PI/180.0));
 
   //Keep track of the number of intersection we found along each axis.
   unsigned int itStepX = 1;
   unsigned int itStepZ = 1;
 
-//*************************************
+  //*************************************
   std::vector<cpe::vec3> dbgPts;
-//*************************************
+  //*************************************
 
-//-- Iterations
+  //-- Iterations
 
   while(norm(pickPoint - rayStart) < RenderManager.GetCamera().GetFarDistance())
   {
@@ -475,11 +475,11 @@ cpe::vec3 gltkRenderInteractor::Pick()
     float dL = dLxz / sin(aY);
 
     //*************************************
-//    cpe::vec3 pXZ = cpe::vec3(rayStart.x() + rayDirection.x(), 0.0f, rayStart.z() + rayDirection.z());
-//    cpe::vec3 p= dLxz * normalized(cpe::vec3(rayXZ.x(), 0.0f, rayXZ.y()));
-//    dbgPts.push_back(pXZ + p);//Draw way points XZ
-//    cpe::vec3 pXZ = cpe::vec3(pickPoint.x(),0.0f, pickPoint.z());
-//    dbgPts.push_back(pickPoint);
+    //    cpe::vec3 pXZ = cpe::vec3(rayStart.x() + rayDirection.x(), 0.0f, rayStart.z() + rayDirection.z());
+    //    cpe::vec3 p= dLxz * normalized(cpe::vec3(rayXZ.x(), 0.0f, rayXZ.y()));
+    //    dbgPts.push_back(pXZ + p);//Draw way points XZ
+    //    cpe::vec3 pXZ = cpe::vec3(pickPoint.x(),0.0f, pickPoint.z());
+    //    dbgPts.push_back(pickPoint);
     //*************************************
 
 
@@ -493,9 +493,9 @@ cpe::vec3 gltkRenderInteractor::Pick()
     // Triangle 1 : 0 2 3 - Triangle 2 : 0 3 1
     const cpe::vec3* tilePoints = currentTile.GetPoints();
     float t1 = gltkIntersection::RayTriangle(rayStart, pickPoint-rayStart,
-      tilePoints[0], tilePoints[2], tilePoints[3]);
+                                             tilePoints[0], tilePoints[2], tilePoints[3]);
     float t2 = gltkIntersection::RayTriangle(rayStart, pickPoint-rayStart,
-      tilePoints[0], tilePoints[1], tilePoints[3]);
+                                             tilePoints[0], tilePoints[1], tilePoints[3]);
 
     //If we intersect one of the triangle
     if(t1 > 0.0f || t2 > 0.0f)

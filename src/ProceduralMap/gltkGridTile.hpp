@@ -32,9 +32,12 @@ class gltkGridTile
 {
 public:
 
-  /** \brief Constructor setting the tile ID */
+  /** Constructor setting the tile ID */
   gltkGridTile();
 
+  /** Get/Set the tile points.
+   * 1st Triangle : 0 2 3 -- 2nd Triangle : 0 3 1
+   */
   void SetPoints(cpe::vec3 points[4]);
   const cpe::vec3* GetPoints() const;
 

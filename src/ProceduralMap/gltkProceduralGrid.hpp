@@ -13,31 +13,40 @@
 #include "mesh.hpp"
 #include "vec2.hpp"
 
+/** \brief
+ * Procedural generation of a terrain tilemap using Perlin noise.
+ */
 class gltkProceduralGrid
 {
 public:
   gltkProceduralGrid();
-  gltkProceduralGrid(int key);
 
+  /** Generation of the map around the origin point */
   void Build(cpe::vec2 origin);
 
-  cpe::mesh GetMeshGrid() const;
-  void SetMeshGrid(const cpe::mesh &value);
+  /** Get/Set the origin */
+  cpe::vec2 const& GetOrigin() const;
+  void SetOrigin(cpe::vec2 origin);
 
-  int GetSquareSize() const;
-  void SetSquareSize(int value);
+  /** Get/Set the grid mesh */
+  cpe::mesh GetMesh() const;
+  void SetMesh(const cpe::mesh &value);
+
+  /** Get/Set the tiles size */
+  int GetTileSize() const;
+  void SetTileSize(int value);
+
+  /** Access a tile given a normalized grid position */
+  gltkGridTile const& GetTile(unsigned int u, unsigned int v) const;
+  /** Access a tile given a world XZ position */
+  gltkGridTile const& GetTile(float x, float z) const;
 
   int GetKeyMap() const;
   void SetKeyMap(int value);
 
-  gltkGridTile const& GetTile(unsigned int u, unsigned int v) const;
-  gltkGridTile const& GetTile(float x, float y) const;
-
-  cpe::vec2 const& GetOrigin() const;
-  void SetOrigin(cpe::vec2 origin);
-
 private:
 
+  //Internal generation of the map
   void Build();
 
   //Perlin noises for the creation of the map
@@ -51,16 +60,19 @@ private:
   //Radius of the circle grid
   int Radius;
 
-  //Size of a square in the grid
-  int SquareSize;
+  //Map origin
+  cpe::vec2 Origin;
 
-  //Mesh for openGL
-  cpe::mesh MeshGrid;
-
-  int KeyMap;
+  //Size of a tile in the grid
+  int TileSize;
 
   //Map Tiles
   std::vector<gltkGridTile> Tiles;
+
+  //Mesh for openGL
+  cpe::mesh Mesh;
+
+  int KeyMap;
 
   //Boost serialize function for data save
   friend class boost::serialization::access;
@@ -69,11 +81,7 @@ private:
   {
       // Simply list all the fields to be serialized/deserialized.
       ar & KeyMap;
-
   }
-
-  //Map origin
-  cpe::vec2 Origin;
 };
 
 #endif // GRID_HPP

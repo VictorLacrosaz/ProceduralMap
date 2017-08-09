@@ -27,6 +27,7 @@
 
 namespace gltkIntersection
 {
+
 /** \brief Compute the intersection between a sphere and a ray
     \return true if there is an intersection, false otherwise.
     The t-value (parameter along the line) at the intersection point
@@ -40,7 +41,7 @@ bool RaySphere(cpe::vec3 const& sphere_center,
                float&      intersection_0,
                float&      intersection_1);
 
-/** \brief Möller–Trumbore ray-triangle intersection algorithm
+/** \brief Möller–Trumbore ray-triangle intersection algorithm.
   orig and dir defines the ray origin and direction. WARNING : dir should not
   be normalized.
   v0, v1, v2 defines the triangle points.
@@ -49,7 +50,7 @@ bool RaySphere(cpe::vec3 const& sphere_center,
 */
 float RayTriangle(const cpe::vec3& orig, const cpe::vec3& dir,
                   const cpe::vec3& v0, const cpe::vec3& v1, const cpe::vec3& v2);
-}
 
+}
 
 #endif
