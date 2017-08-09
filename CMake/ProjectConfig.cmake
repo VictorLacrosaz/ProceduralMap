@@ -1,13 +1,10 @@
 
-set( APPLICATION_SRC_DIRS
-  "${SRC_DIR}/local/Interface"
-  "${SRC_DIR}/local/Core" )
-
-set( LIB_SRC_DIRS
-  "${SRC_DIR}/lib/3d"
-  "${SRC_DIR}/lib/common"
-  "${SRC_DIR}/lib/interface"
-  "${SRC_DIR}/lib/intersection"
-  "${SRC_DIR}/lib/mesh"
-  "${SRC_DIR}/lib/opengl"
-  "${SRC_DIR}/lib/perlin" )
+set( GLTK_SRC_DIRS
+  "${SRC_DIR}/Core"
+  "${SRC_DIR}/DebugHelpers"
+  "${SRC_DIR}/Interface"
+  "${SRC_DIR}/Math"
+  "${SRC_DIR}/Math/3d"
+  "${SRC_DIR}/Math/Perlin"
+  "${SRC_DIR}/Mesh"
+  "${SRC_DIR}/ProceduralMap" )
