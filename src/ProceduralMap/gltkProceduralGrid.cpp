@@ -52,10 +52,17 @@ void gltkProceduralGrid::Build()
     for (int j = Origin.y()-Radius*TileSize;j <= Origin.y()+Radius*TileSize;j += TileSize)
     {
       //Height informations for the square
-      float Height = HeightMax*HeightMap(cpe::vec3(v+Origin.x()/TileSize,u+Origin.y()/TileSize,KeyMap));
-      float HeightN1 = HeightMax*HeightMap(cpe::vec3(v+1+Origin.x()/TileSize,u+Origin.y()/TileSize,KeyMap));
-      float HeightN2 = HeightMax*HeightMap(cpe::vec3(v+Origin.x()/TileSize,u+1+Origin.y()/TileSize,KeyMap));
-      float HeightN3 = HeightMax*HeightMap(cpe::vec3(v+1+Origin.x()/TileSize,u+1+Origin.y()/TileSize,KeyMap));
+      float Height = HeightMax*HeightMap(cpe::vec3(v - Radius + Origin.x()/TileSize,
+                                                   u -Radius+ Origin.y()/TileSize,KeyMap));
+
+      float HeightN1 = HeightMax*HeightMap(cpe::vec3(v -Radius + 1 + Origin.x()/TileSize,
+                                                     u - Radius + Origin.y()/TileSize,KeyMap));
+
+      float HeightN2 = HeightMax*HeightMap(cpe::vec3(v - Radius + Origin.x()/TileSize,
+                                                     u - Radius + 1 + Origin.y()/TileSize,KeyMap));
+
+      float HeightN3 = HeightMax*HeightMap(cpe::vec3(v - Radius + 1 + Origin.x()/TileSize,
+                                                     u - Radius + 1 + Origin.y()/TileSize,KeyMap));
 
 //                //Temperature informations for the square
 //                float Temp = TemperatureMap(cpe::vec3(v+Origin.x(),u+Origin.y(),KeyMap));
