@@ -333,8 +333,7 @@ std::pair<cpe::vec3,cpe::vec3> gltkRenderInteractor::GetPickingRay()
   cpe::mat3 const modelViewInv = transposed(cam.GetOrientation().to_mat3());
   cpe::vec3 const rayDirection = normalized(modelViewInv * rayProjection);
   //Compute ray origin
-  cpe::vec3 cameraZoom(0.0f,0.0f,-cam.GetFocalDistance());
-  cpe::vec3 const rayStart = -cam.GetPosition() + (modelViewInv * cameraZoom);
+  cpe::vec3 const rayStart = cam.GetWorldPosition();
 
   //Return ray origin and direction in world coordinates
   return std::make_pair(rayStart,rayDirection);

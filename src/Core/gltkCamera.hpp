@@ -34,7 +34,10 @@ public:
   void SetOrientation(const cpe::quaternion& ori);
   cpe::quaternion GetOrientation() const;
   void SetPosition(const cpe::vec3& tr);
+  /** Get the absolute Camera position */
   cpe::vec3 GetPosition();
+  /** Get Camera Wordl position including zoom*/
+  cpe::vec3 GetWorldPosition();
   void SetFocalDistance(float d);
   float GetFocalDistance();
 

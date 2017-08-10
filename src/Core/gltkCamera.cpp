@@ -195,6 +195,16 @@ cpe::vec3 gltkCamera::GetPosition()
   return this->Position;
 }
 
+cpe::vec3 gltkCamera::GetWorldPosition()
+{
+
+  cpe::vec3 p = conjugated(this->Orientation) *
+      cpe::vec3(0.0f,0.0f,this->FocalDistance);
+
+  p += this->Position;
+  return -p;
+}
+
 //---------------------------------------------------------------------------
 void gltkCamera::SetFocalDistance(float d)
 {

@@ -42,7 +42,7 @@ void gltkRenderManager::Initialize()
                                "Grid.frag",{"Position","Normal","Color","T_Coord"}));  PRINT_OPENGL_ERROR();
 
   //Build grid
-  cpe::vec3 camPos = -1.0 * Camera.GetPosition();
+  cpe::vec3 camPos = Camera.GetWorldPosition();
   float tileSize = ProceduralGrid.GetTileSize();
   //floor():round down the value
   cpe::vec2 gridOrigin = tileSize * cpe::vec2(std::floor(camPos.x()/tileSize), std::floor(camPos.z()/tileSize));
@@ -58,7 +58,7 @@ void gltkRenderManager::Render()
   SetupShaders();
 
   //Build grid
-  cpe::vec3 camPos = -1.0 * Camera.GetPosition();
+  cpe::vec3 camPos = Camera.GetWorldPosition();
   float tileSize = ProceduralGrid.GetTileSize();
   //floor():round down the value
   cpe::vec2 gridOrigin = tileSize * cpe::vec2(std::floor(camPos.x()/tileSize), std::floor(camPos.z()/tileSize));
