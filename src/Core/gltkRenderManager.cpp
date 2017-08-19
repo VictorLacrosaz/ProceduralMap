@@ -1,25 +1,27 @@
 #include "gltkRenderManager.hpp"
 
 #include "glUtils.hpp"
-#include "mesh_io.hpp"
+#include "gltkGeometryIO.hpp"
 
 #include <cmath>
 #include <string>
 #include <sstream>
 
 
-static cpe::mesh build_ground(float const L,float const h)
+static gltkGeometry build_ground(float const L,float const h)
 {
-  cpe::mesh m;
-  m.add_vertex(cpe::vec3(-L, h,-L));
-  m.add_vertex(cpe::vec3(-L, h, L));
-  m.add_vertex(cpe::vec3( L, h, L));
-  m.add_vertex(cpe::vec3( L, h,-L));
+  gltkGeometry m;
+  m.AddVertex(cpe::vec3(-L, h,-L));
+  m.AddVertex(cpe::vec3(-L, h, L));
+  m.AddVertex(cpe::vec3( L, h, L));
+  m.AddVertex(cpe::vec3( L, h,-L));
 
-  m.add_triangle_index({0, 2, 1});
-  m.add_triangle_index({0, 3, 2});
+  m.AddTriangleIndex(cpe::triangle_index(0, 2, 1));
+  m.AddTriangleIndex(cpe::triangle_index(0, 3, 2));
 
-  m.fill_color(cpe::vec3(0.8, 0.9, 0.8));
+  m.FillColorXYZ();
+
+  m.FillEmptyFields();
 
   return m;
 }
@@ -33,13 +35,13 @@ gltkRenderManager::gltkRenderManager()
 
 void gltkRenderManager::Initialize()
 {
-
   //Preload default structure
   Shaders.push_back(read_shader("Default.vert",
                                 "Default.frag"));  PRINT_OPENGL_ERROR();
   //Preload grid shader
-  Shaders.push_back(ReadShader("Grid.vert",
-                               "Grid.frag",{"Position","Normal","Color","T_Coord"}));  PRINT_OPENGL_ERROR();
+  Shaders.push_back(ReadShader("DefaultMultiMaterial.vert",
+                               "DefaultMultiMaterial.frag",
+  {"Position", "Normal", "Color", "T_Coord"}));  PRINT_OPENGL_ERROR();
 
   //Build grid
   cpe::vec3 camPos = -1.0 * Camera.GetPosition();
@@ -47,7 +49,7 @@ void gltkRenderManager::Initialize()
   //floor():round down the value
   cpe::vec2 gridOrigin = tileSize * cpe::vec2(std::floor(camPos.x()/tileSize), std::floor(camPos.z()/tileSize));
   ProceduralGrid.Build(gridOrigin);
-  proceduralGridMeshOpenGL.fill_vbo(ProceduralGrid.GetMesh());
+  ProceduralGridMeshOpenGL.FillVBO(ProceduralGrid.GetGeometry());
 }
 
 //---------------------------------------------------------------------------
@@ -55,7 +57,7 @@ void gltkRenderManager::Initialize()
 //---------------------------------------------------------------------------
 void gltkRenderManager::Render()
 {
-  SetupShaders();
+  SetupShadersDefault();
 
   //Build grid
   cpe::vec3 camPos = -1.0 * Camera.GetPosition();
@@ -63,17 +65,18 @@ void gltkRenderManager::Render()
   //floor():round down the value
   cpe::vec2 gridOrigin = tileSize * cpe::vec2(std::floor(camPos.x()/tileSize), std::floor(camPos.z()/tileSize));
   ProceduralGrid.Build(gridOrigin);
-  proceduralGridMeshOpenGL.fill_vbo(ProceduralGrid.GetMesh());
+  ProceduralGridMeshOpenGL.FillVBO(ProceduralGrid.GetGeometry());
 
   //Render map
-  proceduralGridMeshOpenGL.Render();
+  SetupMaterials(ProceduralGrid.GetGeometry());
+  ProceduralGridMeshOpenGL.Render();
 }
 
 
 //---------------------------------------------------------------------------
-// Setup default shader for mesh rendering using default texture
+// Setup shader default parameters
 //---------------------------------------------------------------------------
-void gltkRenderManager::SetupShaders()
+void gltkRenderManager::SetupShadersDefault()
 {
   for(unsigned int i = 0; i < Shaders.size(); i++)
   {
@@ -89,21 +92,68 @@ void gltkRenderManager::SetupShaders()
                        Camera.GetMatrixNormal().pointer());                     PRINT_OPENGL_ERROR();
 
     GLint samplerArrayLoc = glGetUniformLocation(Shaders[i], "texture");
-    const GLint samplers[4] = {0,1,2,3};
-    glUniform1iv( samplerArrayLoc, 4, samplers );
-
-  }
-
-  for (unsigned int i = 0; i < Textures.size(); i++)
-  {
-    //load textures
-    glActiveTexture(GL_TEXTURE0 + i);
-    glBindTexture(GL_TEXTURE_2D,Textures[i]);  PRINT_OPENGL_ERROR();
+    const GLint samplers[16] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15};
+    glUniform1iv( samplerArrayLoc, 16, samplers );
   }
 }
 
-void gltkRenderManager::SetTextures(std::vector<GLuint> t)
+//---------------------------------------------------------------------------
+// Setup shader materials parameters
+//---------------------------------------------------------------------------
+void gltkRenderManager::SetupMaterials(gltkGeometry geometry)
 {
-  Textures = t;
+  //Store material uniforms in mat4
+  std::vector<cpe::mat4> MaterialsUniforms;
+  //Store material texture index in sampler
+  std::vector<int> MaterialsTIdx;
+  //Keep track of the number of textured materials
+  int nbTexturedMaterials = 0;
+
+  for(int i = 0; i < geometry.GetNumberOfMaterials(); i++)
+  {
+    // Load uniform shading parameters
+    cpe::mat4 materialUniforms;
+    for(int k = 0; k < 3; k++)
+      materialUniforms(k,0) = geometry.GetMaterials()[i].GetKd()[k];
+    for(int k = 0; k < 3; k++)
+      materialUniforms(k,1) = geometry.GetMaterials()[i].GetKa()[k];
+    //Add uniforms
+    MaterialsUniforms.push_back(materialUniforms);
+
+    // Load textures
+    int textureIdx = -1;//Texture index in sampler. (-1) = No texture
+    std::string textureFilename = geometry.GetMaterials()[i].GetKdTexture();
+    if(textureFilename != "")
+    {
+      //Find texture in texture bank
+      if(TextureBank.find(textureFilename) != TextureBank.end())
+      {
+        GLuint textureID = TextureBank[textureFilename];
+        glActiveTexture(GL_TEXTURE0 + nbTexturedMaterials);
+        glBindTexture(GL_TEXTURE_2D, textureID);  PRINT_OPENGL_ERROR();
+
+        textureIdx = nbTexturedMaterials;
+        nbTexturedMaterials ++;
+      }
+      else
+      {
+        std::cout<<"Material texture not found in texture bank : "
+                <<textureFilename<<std::endl;
+      }
+    }
+    //Add texture index or -1
+    MaterialsTIdx.push_back(textureIdx);
+  }
+
+  //Upload materials uniforms
+  glUniformMatrix4fv(get_uni_loc(Shaders[1], "MaterialsParameters"), geometry.GetMaterials().size(), false,
+      MaterialsUniforms[0].pointer());
+  //Upload materials texture indexes
+  glUniform1iv(get_uni_loc(Shaders[1], "MaterialsTIdx"), geometry.GetMaterials().size(),
+      &MaterialsTIdx[0]);
 }
 
+void gltkRenderManager::SetTextureBank(std::map<std::string, GLuint> tBank)
+{
+  TextureBank = tBank;
+}

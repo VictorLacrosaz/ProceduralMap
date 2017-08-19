@@ -11,8 +11,6 @@
 
 #include "AxisHelper.hpp"
 #include "gltkRenderInteractor.hpp"
-#include "mesh.hpp"
-#include "mesh_opengl.hpp"
 
 /** Qt Widget to render OpenGL scene */
 class gltkApplicationWidgetGL : public QGLWidget

@@ -5,7 +5,7 @@ varying vec4 position_3d_modelview;
 varying vec3 normal;
 varying vec4 color;
 
-uniform sampler2D texture [4];
+uniform sampler2D texture[16];
 
 uniform vec3 light=vec3(0.5,0.3,5.0);
 

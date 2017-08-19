@@ -41,7 +41,7 @@ void gltkProceduralGrid::Build(cpe::vec2 origin)
 
 void gltkProceduralGrid::Build()
 {
-  cpe::mesh m;
+  gltkGeometry m;
 
   int u = 0,v = 0;
   int Size  = 2*Radius+1;
@@ -76,26 +76,26 @@ void gltkProceduralGrid::Build()
 //                float MoistureN2 = MoistureMap(cpe::vec3(v+Origin.x(),u+std::pow(-1,u)+Origin.y(),KeyMap));
 //                float MoistureN3 = MoistureMap(cpe::vec3(v+std::pow(-1,v)+Origin.x(),u+std::pow(-1,u)+Origin.y(),KeyMap));
 
-      m.add_vertex(cpe::vec3(i,Height,j));
-      m.add_texture_coord(cpe::vec2(u,v));
+      m.AddVertex(cpe::vec3(i,Height,j));
+      m.AddTCoord(cpe::vec2(u,v));
 
 
 
       if(Height > 0.7*HeightMax || HeightN1 > 0.7*HeightMax || HeightN2 > 0.7*HeightMax || HeightN3 > 0.7*HeightMax)
       {
-        m.add_color(cpe::vec3(0,0,0));
+        m.AddMaterialIndex(0);
       }
       else if(Height > 0.5*HeightMax || HeightN1 > 0.5*HeightMax || HeightN2 > 0.5*HeightMax || HeightN3 > 0.5*HeightMax)
       {
-        m.add_color(cpe::vec3(0.25,0,0));
+        m.AddMaterialIndex(1);
       }
       else if(Height > 0.3*HeightMax || HeightN1 > 0.3*HeightMax || HeightN2 > 0.3*HeightMax || HeightN3 > 0.3*HeightMax)
       {
-        m.add_color(cpe::vec3(0.5,0,0));
+        m.AddMaterialIndex(2);
       }
       else
       {
-        m.add_color(cpe::vec3(0.75,0,0));
+        m.AddMaterialIndex(3);
       }
 
 //      if(std::pow(i-Origin.x(),2)+std::pow(j-Origin.y(),2) <= std::pow(Radius*TileSize,2))
@@ -103,8 +103,8 @@ void gltkProceduralGrid::Build()
       if(u < Size-1 && v < Size-1)
       {
         //Add triangle index
-        m.add_triangle_index({u+v*Size,(u+1)+v*Size,u+1+(v+1)*Size});
-        m.add_triangle_index({u+v*Size,u+1+(v+1)*Size,u+(v+1)*Size});
+        m.AddTriangleIndex(cpe::triangle_index(u+v*Size,(u+1)+v*Size,u+1+(v+1)*Size));
+        m.AddTriangleIndex(cpe::triangle_index(u+v*Size,u+1+(v+1)*Size,u+(v+1)*Size));
 
         //Push back new tile
         gltkGridTile tile = gltkGridTile();
@@ -122,10 +122,20 @@ void gltkProceduralGrid::Build()
     v++;
   }
 
-  m.fill_normal();
-  m.fill_empty_field_by_default();
+  m.FillNormal();
+  m.FillEmptyFields();
 
-  Mesh = m;
+  gltkMaterial grassMaterial = gltkMaterial("Grass",
+    cpe::vec3(0.0, 0.0, 0.0), cpe::vec3(0.0, 0.0, 0.0), "Grass.jpg");
+  gltkMaterial cropsMaterial = gltkMaterial("Crops",
+    cpe::vec3(0.0, 0.0, 0.0), cpe::vec3(0.0, 0.0, 0.0), "champ.jpg");
+  gltkMaterial argileMaterial = gltkMaterial("Argile",
+    cpe::vec3(0.0, 0.0, 0.0), cpe::vec3(0.0, 0.0, 0.0), "Argile.jpeg");
+  gltkMaterial rockMaterial = gltkMaterial("Rock",
+    cpe::vec3(0.0, 0.0, 0.0), cpe::vec3(0.0, 0.0, 0.0), "rock.jpg");
+  m.SetMaterials({rockMaterial, argileMaterial, cropsMaterial, grassMaterial});
+
+  Geometry = m;
 }
 
 void gltkProceduralGrid::SetRadius(int value)
@@ -147,14 +157,14 @@ void gltkProceduralGrid::SetOrigin(cpe::vec2 origin)
   this->Origin = origin;
 }
 
-cpe::mesh gltkProceduralGrid::GetMesh() const
+gltkGeometry gltkProceduralGrid::GetGeometry() const
 {
-  return Mesh;
+  return Geometry;
 }
 
-void gltkProceduralGrid::SetMesh(const cpe::mesh &value)
+void gltkProceduralGrid::SetGeometry(gltkGeometry const& value)
 {
-  Mesh = value;
+  Geometry = value;
 }
 
 int gltkProceduralGrid::GetTileSize() const

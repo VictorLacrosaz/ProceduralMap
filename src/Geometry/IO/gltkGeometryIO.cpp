@@ -16,12 +16,13 @@
 **    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "mesh_io.hpp"
+#include "gltkGeometryIO.hpp"
+#include "ProjectConfig.h"
 
 #include "error_handling.hpp"
-#include "format/mesh_io_obj.hpp"
-#include "format/mesh_io_off.hpp"
-#include "mesh.hpp"
+#include "gltkGeometry.hpp"
+#include "gltkGeometryReaderOBJ.hpp"
+#include "gltkGeometryReaderOFF.hpp"
 
 #include <iostream>
 #include <fstream>
@@ -32,22 +33,20 @@
 
 #include <map>
 
-namespace cpe
-{
-
-mesh load_mesh_file(std::string const& filename)
+gltkGeometry LoadGeometry(std::string const& filename)
 {
   std::string data_dir = DATA_DIR;
   data_dir.append( "/" );
   
-  if(filename.find(".obj")!=std::string::npos || filename.find(".OBJ")!=std::string::npos)
-    return load_mesh_file_obj( data_dir + filename );
-  else if(filename.find(".off")!=std::string::npos || filename.find(".OFF")!=std::string::npos)
-    return load_mesh_file_off( data_dir + filename );
-  else
-    throw cpe::exception_cpe("Unknown extension for mesh file "+filename,EXCEPTION_PARAMETERS_CPE);
-}
+  if(filename.find(".obj") != std::string::npos || filename.find(".OBJ") != std::string::npos)
+  {
+    return LoadOBJFromFile( data_dir + filename );
+  }
 
+  if(filename.find(".off") != std::string::npos || filename.find(".OFF") != std::string::npos)
+  {
+    return LoadOFFFromFile( data_dir + filename );
+  }
 
-
+  throw cpe::exception_cpe("Unknown extension for mesh file "+filename,EXCEPTION_PARAMETERS_CPE);
 }

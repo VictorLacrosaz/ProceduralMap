@@ -25,7 +25,7 @@
 gltkDebugObject::gltkDebugObject()
   :vboLine(0),ShaderIDPrimitives(0)
 {
-  for (int i = gltkDebugAction::DrawAxis; i < gltkDebugAction::nbOfDebugActions; i++)
+  for (int i = 0; i < gltkDebugAction::nbOfDebugActions; i++)
   {
     ActionState[i] = false;
   }

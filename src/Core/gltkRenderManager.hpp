@@ -7,12 +7,12 @@
 #include <GL/gl.h>
 
 #include "gltkCamera.hpp"
+#include "gltkGeometry.hpp"
+#include "gltkGeometryMapper.hpp"
 #include "gltkProceduralGrid.hpp"
-#include "mesh.hpp"
-#include "mesh_opengl.hpp"
 
 #include <vector>
-
+#include <map>
 
 
 class gltkRenderManager
@@ -27,8 +27,8 @@ public:
   /**  Rendering callback */
   void Render();
 
-  /**  Rendering callback */
-  void SetTextures(std::vector<GLuint> t);
+  /**  Set of available textures */
+  void SetTextureBank(std::map<std::string, GLuint> tBank);
 
   //* Accesors */
   gltkCamera& GetCamera() {return Camera;}
@@ -39,20 +39,23 @@ public:
 
 private:
 
-  /** Setup default shader for mesh rendering using default texture */
-  void SetupShaders ();
+  /** Setup shader default parameters */
+  void SetupShadersDefault();
+
+  void SetupMaterials(gltkGeometry geometry);
 
   /** Vector of shaders ID */
   std::vector<GLuint> Shaders;
 
-  /** Textures ID*/
-  std::vector<GLuint> Textures;
+  /** Textures Bank */
+  std::map<std::string, GLuint> TextureBank;
 
   /** Grid mesh for OpenGL drawing */
-  cpe::mesh_opengl proceduralGridMeshOpenGL;
+  gltkGeometryMapper ProceduralGridMeshOpenGL;
   /** Grid */
   gltkProceduralGrid ProceduralGrid;
 
+  /** Main Camera */
   gltkCamera Camera;
 };
 

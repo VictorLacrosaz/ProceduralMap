@@ -18,47 +18,43 @@
 
 #pragma once
 
-#ifndef MESH_OPENGL_HPP
-#define MESH_OPENGL_HPP
+#ifndef GLTK_GEOMETRY_MAPPER_HPP
+#define GLTK_GEOMETRY_MAPPER_HPP
 
 #include "GL/glew.h"
 #include "GL/gl.h"
 
-namespace cpe
-{
 
-class mesh_basic;
+class gltkGeometry;
 
 /** Class to manipulate meshes to be drawn by opendGL */
-class mesh_opengl
+class gltkGeometryMapper
 {
 public:
 
-    mesh_opengl();
-    ~mesh_opengl();
+    gltkGeometryMapper();
+    ~gltkGeometryMapper();
 
     /** Send the mesh data to the VBO, setup all vbos*/
-    void fill_vbo(mesh_basic const& m);
+    void FillVBO(gltkGeometry const& m);
     /** Ask the GPU to draw the data.
      *  fill_vbo must have been called previously */
-    void draw() const;
-
     void Render() const;
 
 
     /** Update only the vertex on the GPU */
-    void update_vbo_vertex(mesh_basic const& m);
+    void UpdateVertexVBO(gltkGeometry const& m);
     /** Update only the normal on the GPU */
-    void update_vbo_normal(mesh_basic const& m);
+    void UpdateNormalVBO(gltkGeometry const& m);
     /** Update only the color on the GPU */
-    void update_vbo_color(mesh_basic const& m);
+    void UpdateColorVBO(gltkGeometry const& m);
     /** Update only the texture on the GPU */
-    void update_vbo_texture(mesh_basic const& m);
+    void UpdateTCoordVBO(gltkGeometry const& m);
 
 private:
 
     /** Helper function to delete the vbos */
-    void delete_vbo();
+    void DeleteVBOs();
 
     /** VBO for the vertices */
     GLuint vbo_vertex;
@@ -68,13 +64,13 @@ private:
     GLuint vbo_color;
     /** VBO for the texture coords */
     GLuint vbo_texture;
+    /** VBO for the texture coords */
+    GLuint vbo_material_id;
     /** VBO for the triangle index */
     GLuint vbo_index;
 
     /** Store the number of triangles of the mesh */
     unsigned int number_of_triangles;
 };
-
-}
 
 #endif
