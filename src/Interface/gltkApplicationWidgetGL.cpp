@@ -163,13 +163,23 @@ void gltkApplicationWidgetGL::initializeGL()
   //Init Scene 3D
   RenderInteractor.Initialize();
 
-  std::vector <GLuint> Textures;
-  Textures.push_back(LoadTextureFromFile("champ.jpg"));
-  Textures.push_back(LoadTextureFromFile("rock.jpg"));
-  Textures.push_back(LoadTextureFromFile("Grass.jpg"));
-  Textures.push_back(LoadTextureFromFile("Argile.jpeg"));
+  std::map<std::string, GLuint> textureBank;
+  textureBank["white.jpg"] = LoadTextureFromFile("white.jpg");
+  textureBank["hand_mapNew.jpg"] = LoadTextureFromFile("hand_mapNew.jpg");
+  textureBank["rooftiles.jpg"] = LoadTextureFromFile("rooftiles.jpg");
+  textureBank["UvMontantGauche.jpg"] = LoadTextureFromFile("UvMontantGauche.jpg");
+  textureBank["UvMontantPorte.jpg"] = LoadTextureFromFile("UvMontantPorte.jpg");
+  textureBank["UvporteSimple.jpg"] = LoadTextureFromFile("UvporteSimple.jpg");
+  textureBank["Uvpoutres.jpg"] = LoadTextureFromFile("Uvpoutres.jpg");
+  textureBank["UvTuiles.jpg"] = LoadTextureFromFile("UvTuiles.jpg");
+  textureBank["UvWall.jpg"] = LoadTextureFromFile("UvWall.jpg");
+  textureBank["Grass.jpg"] = LoadTextureFromFile("Grass.jpg");
+  textureBank["champ.jpg"] = LoadTextureFromFile("champ.jpg");
+  textureBank["Argile.jpeg"] = LoadTextureFromFile("Argile.jpeg");
+  textureBank["rock.jpg"] = LoadTextureFromFile("rock.jpg");
+  textureBank["stegosaurus.jpg"] = LoadTextureFromFile("stegosaurus.jpg");
 
-  RenderInteractor.GetRenderManager().SetTextures(Textures);
+  RenderInteractor.GetRenderManager().SetTextureBank(textureBank);
 
   //Activate depth buffer
   glEnable(GL_DEPTH_TEST); PRINT_OPENGL_ERROR();

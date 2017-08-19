@@ -24,16 +24,9 @@
 
 #include <string>
 
-#include "ProjectConfig.h"
-
-namespace cpe
-{
-
-class mesh;
+class gltkGeometry;
 
 /** Load a mesh structure from a given file */
-mesh load_mesh_file(std::string const& filename);
-
-}
+gltkGeometry LoadGeometry(std::string const& filename);
 
 #endif

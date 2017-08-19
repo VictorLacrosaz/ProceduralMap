@@ -10,7 +10,7 @@
 
 #include "gltkGridTile.hpp"
 #include "gltkPerlinNoise.hpp"
-#include "mesh.hpp"
+#include "gltkGeometry.hpp"
 #include "vec2.hpp"
 
 /** \brief
@@ -29,8 +29,8 @@ public:
   void SetOrigin(cpe::vec2 origin);
 
   /** Get/Set the grid mesh */
-  cpe::mesh GetMesh() const;
-  void SetMesh(const cpe::mesh &value);
+  gltkGeometry GetGeometry() const;
+  void SetGeometry(gltkGeometry const& value);
 
   /** Get/Set the tiles size */
   int GetTileSize() const;
@@ -75,7 +75,7 @@ private:
   std::vector<gltkGridTile> Tiles;
 
   //Mesh for openGL
-  cpe::mesh Mesh;
+  gltkGeometry Geometry;
 
   int KeyMap;
 

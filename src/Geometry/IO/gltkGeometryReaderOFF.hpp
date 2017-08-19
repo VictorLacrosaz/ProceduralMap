@@ -23,13 +23,9 @@
 
 #include <string>
 
-namespace cpe
-{
-class mesh;
+class gltkGeometry;
 
 /** Load a mesh structure from a OFF file */
-mesh load_mesh_file_off(std::string const& filename);
-
-}
+gltkGeometry LoadOFFFromFile(std::string const& filename);
 
 #endif
