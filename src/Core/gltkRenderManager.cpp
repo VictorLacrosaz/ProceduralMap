@@ -30,7 +30,7 @@ static gltkGeometry build_ground(float const L,float const h)
 // Constructors
 //---------------------------------------------------------------------------
 gltkRenderManager::gltkRenderManager()
-//  :Shaders(0), ProceduralGrid(), Camera()
+  :Shaders(0), ProceduralGrid(), Camera()
 {}
 
 void gltkRenderManager::Initialize()
@@ -50,13 +50,6 @@ void gltkRenderManager::Initialize()
   cpe::vec2 gridOrigin = tileSize * cpe::vec2(std::floor(camPos.x()/tileSize), std::floor(camPos.z()/tileSize));
   ProceduralGrid.Build(gridOrigin);
   ProceduralGridMeshOpenGL.FillVBO(ProceduralGrid.GetGeometry());
-
-//  objMesh = LoadGeometry("stegosaurus.obj");
-//  objMesh.ApplyScale(100.0f);
-//  objMeshOpengl.FillVBO(objMesh);
-
-  objMesh = build_ground(50.0,50.0f);
-  objMeshOpengl.FillVBO(objMesh);
 }
 
 //---------------------------------------------------------------------------

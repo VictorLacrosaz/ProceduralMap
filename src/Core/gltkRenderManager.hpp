@@ -50,15 +50,12 @@ private:
   /** Textures Bank */
   std::map<std::string, GLuint> TextureBank;
 
-
   /** Grid mesh for OpenGL drawing */
   gltkGeometryMapper ProceduralGridMeshOpenGL;
   /** Grid */
   gltkProceduralGrid ProceduralGrid;
 
-  gltkGeometry objMesh;
-  gltkGeometryMapper objMeshOpengl;
-
+  /** Main Camera */
   gltkCamera Camera;
 };
 
