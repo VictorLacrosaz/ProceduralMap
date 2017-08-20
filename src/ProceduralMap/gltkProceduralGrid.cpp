@@ -5,7 +5,8 @@
 #include <iostream>
 #include "limits.h"
 
-gltkProceduralGrid::gltkProceduralGrid()
+gltkProceduralGrid::gltkProceduralGrid(std::string name)
+  : gltkGameObject(name)
 {
   std::random_device rd;
   std::mt19937 gen(rd());
@@ -24,6 +25,18 @@ gltkProceduralGrid::gltkProceduralGrid()
   Radius = 8;
 
   TileSize = 200;
+
+  //floor():round down the value
+  cpe::vec2 gridOrigin = TileSize * cpe::vec2(std::floor(Origin.x()/TileSize), std::floor(Origin.y()/TileSize));
+  this->Build(gridOrigin);
+}
+
+void gltkProceduralGrid::Update(gltkCamera const& cam)
+{
+  cpe::vec3 camPos = -1.0 * cam.GetPosition();
+  cpe::vec2 gridOrigin = TileSize * cpe::vec2(std::floor(camPos.x()/TileSize), std::floor(camPos.z()/TileSize));
+  this->Build(gridOrigin);
+  GeometryMapper.FillVBO(Geometry);
 }
 
 void gltkProceduralGrid::Build(cpe::vec2 origin)
@@ -34,7 +47,6 @@ void gltkProceduralGrid::Build(cpe::vec2 origin)
     Tiles.clear();
   }
   this->Origin = origin;
-
   // Build the map
   this->Build();
 }
@@ -80,7 +92,6 @@ void gltkProceduralGrid::Build()
       m.AddTCoord(cpe::vec2(u,v));
 
 
-
       if(Height > 0.7*HeightMax || HeightN1 > 0.7*HeightMax || HeightN2 > 0.7*HeightMax || HeightN3 > 0.7*HeightMax)
       {
         m.AddMaterialIndex(0);
@@ -122,7 +133,6 @@ void gltkProceduralGrid::Build()
     v++;
   }
 
-  m.FillNormal();
   m.FillEmptyFields();
 
   gltkMaterial grassMaterial = gltkMaterial("Grass",
@@ -155,16 +165,6 @@ cpe::vec2 const& gltkProceduralGrid::GetOrigin() const
 void gltkProceduralGrid::SetOrigin(cpe::vec2 origin)
 {
   this->Origin = origin;
-}
-
-gltkGeometry gltkProceduralGrid::GetGeometry() const
-{
-  return Geometry;
-}
-
-void gltkProceduralGrid::SetGeometry(gltkGeometry const& value)
-{
-  Geometry = value;
 }
 
 int gltkProceduralGrid::GetTileSize() const

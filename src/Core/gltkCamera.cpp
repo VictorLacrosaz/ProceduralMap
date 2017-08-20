@@ -190,7 +190,7 @@ void gltkCamera::SetPosition(const cpe::vec3& tr)
   this->UpdateMatrixModelView();
 }
 
-cpe::vec3 gltkCamera::GetPosition()
+cpe::vec3 gltkCamera::GetPosition() const
 {
   return this->Position;
 }

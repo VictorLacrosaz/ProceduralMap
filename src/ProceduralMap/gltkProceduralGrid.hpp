@@ -10,16 +10,19 @@
 
 #include "gltkGridTile.hpp"
 #include "gltkPerlinNoise.hpp"
-#include "gltkGeometry.hpp"
+#include "gltkGameObject.hpp"
 #include "vec2.hpp"
+
 
 /** \brief
  * Procedural generation of a terrain tilemap using Perlin noise.
  */
-class gltkProceduralGrid
+class gltkProceduralGrid : public gltkGameObject
 {
 public:
-  gltkProceduralGrid();
+  gltkProceduralGrid(std::string name);
+
+  virtual void Update(gltkCamera const& cam);
 
   /** Generation of the map around the origin point */
   void Build(cpe::vec2 origin);
@@ -27,10 +30,6 @@ public:
   /** Get/Set the origin */
   cpe::vec2 const& GetOrigin() const;
   void SetOrigin(cpe::vec2 origin);
-
-  /** Get/Set the grid mesh */
-  gltkGeometry GetGeometry() const;
-  void SetGeometry(gltkGeometry const& value);
 
   /** Get/Set the tiles size */
   int GetTileSize() const;
@@ -73,9 +72,6 @@ private:
 
   //Map Tiles
   std::vector<gltkGridTile> Tiles;
-
-  //Mesh for openGL
-  gltkGeometry Geometry;
 
   int KeyMap;
 

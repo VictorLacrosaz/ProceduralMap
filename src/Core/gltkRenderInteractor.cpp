@@ -21,6 +21,7 @@
 
 #include "gltkGridTile.hpp"
 #include "gltkIntersection.hpp"
+#include "gltkProceduralGrid.hpp"
 #include "glUtils.hpp"
 #include "mat3.hpp"
 #include "quaternion.hpp"
@@ -242,23 +243,26 @@ void gltkRenderInteractor::TrackBallZoomWheel()
   posy = posy + focalDist;
 
   // Distance beetwen camera and the ground
-  float dist = posy/CameraForward.y();
+  float dist = CameraForward.y() > 0.0 ? posy/CameraForward.y() : posy;
 
   float hfar = std::tan(fov/2) * std::abs(dist);
   float wfar = hfar * ratio;
 
   //Updating the radius
-  int radius = 1 + std::ceil(std::max(hfar,wfar) /
-                             RenderManager.GetGrid().GetTileSize());
-  RenderManager.GetGrid().SetRadius(radius);
+  gltkGameObject* GORawPointer = RenderManager.GetGameObject("Grid");
+  gltkProceduralGrid* Grid = static_cast<gltkProceduralGrid*>(GORawPointer);
+  if(!Grid)
+    std::cout<<"Bad Cast"<<std::endl;//WARNING : Improve downcasting in new architecture
 
+  int radius = 1 + std::ceil(std::max(hfar,wfar) / Grid->GetTileSize());
+  Grid->SetRadius(radius);
 
   //Update motion factor
   MotionFactor = 0.0001f * (1 + 10 * std::abs(focalDist));
 
   RenderManager.GetCamera().SetFocalDistance(focalDist);
-
 }
+
 void gltkRenderInteractor::TrackBallZoomMouse()
 {
   //magnification factor
@@ -379,7 +383,13 @@ cpe::vec3 gltkRenderInteractor::Pick()
   float aX = AngleBetweenVectors(X, rayXZ);
   float aZ = AngleBetweenVectors(Z, rayXZ);
 
-  float tileSize = RenderManager.GetGrid().GetTileSize();
+
+  gltkGameObject* GORawPointer = RenderManager.GetGameObject("Grid");
+  gltkProceduralGrid* Grid = static_cast<gltkProceduralGrid*>(GORawPointer);
+  if(!Grid)
+    std::cout<<"Bad Cast"<<std::endl;//WARNING : Improve downcasting in new architecture
+
+  float tileSize = Grid->GetTileSize();
 
   //Current tile origin in world space
   float x_int =tileSize * floor(pickPoint.x() / tileSize);
@@ -507,7 +517,7 @@ cpe::vec3 gltkRenderInteractor::Pick()
 
 
     //Get the tile under the current picked point, before incrementing the ray.
-    gltkGridTile currentTile = RenderManager.GetGrid().GetTile(pickPoint.x(),pickPoint.z());
+    gltkGridTile currentTile = Grid->GetTile(pickPoint.x(),pickPoint.z());
 
     //Increment picked point along ray
     pickPoint = rayStart + dL * rayDirection;
@@ -539,7 +549,7 @@ cpe::vec3 gltkRenderInteractor::Pick()
 
       //*************************************
       dbgPts.push_back(pickPoint);
-      gltkGridTile pickedTile = RenderManager.GetGrid().GetTile(pickPoint.x(),pickPoint.z());
+      gltkGridTile pickedTile = Grid->GetTile(pickPoint.x(),pickPoint.z());
       dbgPts.push_back(pickedTile.GetPoints()[0]);
       dbgPts.push_back(pickedTile.GetPoints()[1]);
       dbgPts.push_back(pickedTile.GetPoints()[2]);
