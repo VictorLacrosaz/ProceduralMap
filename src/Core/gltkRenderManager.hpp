@@ -7,13 +7,10 @@
 #include <GL/gl.h>
 
 #include "gltkCamera.hpp"
-#include "gltkGeometry.hpp"
-#include "gltkGeometryMapper.hpp"
-#include "gltkProceduralGrid.hpp"
+#include "gltkGameObject.hpp"
 
 #include <vector>
 #include <map>
-
 
 class gltkRenderManager
 {
@@ -30,19 +27,23 @@ public:
   /**  Set of available textures */
   void SetTextureBank(std::map<std::string, GLuint> tBank);
 
+  /** Store game object as a unique pointer*/
+  void AddGameObject(gltkGameObject* gameObject);
+
+  /** Get game object raw pointer*/
+  gltkGameObject* GetGameObject(std::string name);
+
   //* Accesors */
   gltkCamera& GetCamera() {return Camera;}
   gltkCamera const& GetCamera() const {return Camera;}
 
-  gltkProceduralGrid& GetGrid() {return ProceduralGrid;}
-  gltkProceduralGrid const& GetGrid() const {return ProceduralGrid;}
 
 private:
 
   /** Setup shader default parameters */
   void SetupShadersDefault();
 
-  void SetupMaterials(gltkGeometry geometry);
+  void SetupMaterials(gltkGeometry const& geometry);
 
   /** Vector of shaders ID */
   std::vector<GLuint> Shaders;
@@ -50,10 +51,8 @@ private:
   /** Textures Bank */
   std::map<std::string, GLuint> TextureBank;
 
-  /** Grid mesh for OpenGL drawing */
-  gltkGeometryMapper ProceduralGridMeshOpenGL;
-  /** Grid */
-  gltkProceduralGrid ProceduralGrid;
+  /** Unique pointers to game objects*/
+  std::vector<gltkGameObjectPointer> GameObjects;
 
   /** Main Camera */
   gltkCamera Camera;

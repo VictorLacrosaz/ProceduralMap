@@ -100,7 +100,7 @@ void gltkApplicationWidgetGL::mouseMoveEvent(QMouseEvent *event)
   int const shift_pressed = (event->modifiers() & Qt::ShiftModifier);
 
 
-  // Screen boarder Move
+  // Screen border Move
   if ((event->x() > 0.95*RenderInteractor.GetWindowSize()[0]
        || event->x() < 0.05*RenderInteractor.GetWindowSize()[0])
       && !(event->buttons() | Qt::NoButton))

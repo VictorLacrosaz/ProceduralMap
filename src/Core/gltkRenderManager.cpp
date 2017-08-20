@@ -1,7 +1,8 @@
 #include "gltkRenderManager.hpp"
 
-#include "glUtils.hpp"
 #include "gltkGeometryIO.hpp"
+#include "gltkProceduralGrid.hpp"
+#include "glUtils.hpp"
 
 #include <cmath>
 #include <string>
@@ -30,7 +31,7 @@ static gltkGeometry build_ground(float const L,float const h)
 // Constructors
 //---------------------------------------------------------------------------
 gltkRenderManager::gltkRenderManager()
-  :Shaders(0), ProceduralGrid(), Camera()
+  :Shaders(0), Camera()
 {}
 
 void gltkRenderManager::Initialize()
@@ -43,13 +44,13 @@ void gltkRenderManager::Initialize()
                                "DefaultMultiMaterial.frag",
   {"Position", "Normal", "Color", "T_Coord"}));  PRINT_OPENGL_ERROR();
 
-  //Build grid
-  cpe::vec3 camPos = -1.0 * Camera.GetPosition();
-  float tileSize = ProceduralGrid.GetTileSize();
-  //floor():round down the value
-  cpe::vec2 gridOrigin = tileSize * cpe::vec2(std::floor(camPos.x()/tileSize), std::floor(camPos.z()/tileSize));
-  ProceduralGrid.Build(gridOrigin);
-  ProceduralGridMeshOpenGL.FillVBO(ProceduralGrid.GetGeometry());
+  //Add grid
+  this->AddGameObject(new gltkProceduralGrid("Grid"));
+
+  for(unsigned int i = 0; i < GameObjects.size(); i++)
+  {
+    GameObjects[i]->Initialize();
+  }
 }
 
 //---------------------------------------------------------------------------
@@ -59,17 +60,13 @@ void gltkRenderManager::Render()
 {
   SetupShadersDefault();
 
-  //Build grid
-  cpe::vec3 camPos = -1.0 * Camera.GetPosition();
-  float tileSize = ProceduralGrid.GetTileSize();
-  //floor():round down the value
-  cpe::vec2 gridOrigin = tileSize * cpe::vec2(std::floor(camPos.x()/tileSize), std::floor(camPos.z()/tileSize));
-  ProceduralGrid.Build(gridOrigin);
-  ProceduralGridMeshOpenGL.FillVBO(ProceduralGrid.GetGeometry());
-
-  //Render map
-  SetupMaterials(ProceduralGrid.GetGeometry());
-  ProceduralGridMeshOpenGL.Render();
+  //Render
+  for(unsigned int i = 0; i < GameObjects.size(); i++)
+  {
+    GameObjects[i]->Update(Camera);//WARNING: Will use RenderState in the future to pass generic informations to all objects.
+    SetupMaterials(GameObjects[i]->GetGeometry());
+    GameObjects[i]->Render();
+  }
 }
 
 
@@ -100,7 +97,7 @@ void gltkRenderManager::SetupShadersDefault()
 //---------------------------------------------------------------------------
 // Setup shader materials parameters
 //---------------------------------------------------------------------------
-void gltkRenderManager::SetupMaterials(gltkGeometry geometry)
+void gltkRenderManager::SetupMaterials(gltkGeometry const& geometry)
 {
   //Store material uniforms in mat4
   std::vector<cpe::mat4> MaterialsUniforms;
@@ -153,7 +150,33 @@ void gltkRenderManager::SetupMaterials(gltkGeometry geometry)
       &MaterialsTIdx[0]);
 }
 
+//---------------------------------------------------------------------------
+// Set texture bank
+//---------------------------------------------------------------------------
 void gltkRenderManager::SetTextureBank(std::map<std::string, GLuint> tBank)
 {
   TextureBank = tBank;
+}
+
+//---------------------------------------------------------------------------
+// Store game object as a unique_ptr
+//---------------------------------------------------------------------------
+void gltkRenderManager::AddGameObject(gltkGameObject* gameObject)
+{
+  GameObjects.push_back(std::move(gltkGameObjectPointer(gameObject)));
+}
+
+//---------------------------------------------------------------------------
+// Get pointer to a game object found by name
+//---------------------------------------------------------------------------
+gltkGameObject* gltkRenderManager::GetGameObject(std::string name)
+{
+  for(unsigned int i = 0; i < GameObjects.size(); i++)
+  {
+    if(GameObjects[i]->GetName() == name)
+    {
+      return GameObjects[i].get();
+    }
+  }
+  return NULL;
 }

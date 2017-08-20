@@ -34,7 +34,7 @@ public:
   void SetOrientation(const cpe::quaternion& ori);
   cpe::quaternion GetOrientation() const;
   void SetPosition(const cpe::vec3& tr);
-  cpe::vec3 GetPosition();
+  cpe::vec3 GetPosition() const;
   void SetFocalDistance(float d);
   float GetFocalDistance();
 
