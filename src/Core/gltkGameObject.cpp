@@ -1,6 +1,7 @@
 #include "gltkGameObject.hpp"
 
 #include "gltkGeometryIO.hpp"
+#include "gltkRenderManager.hpp"
 
 gltkGameObject::gltkGameObject(std::string name)
 {
