@@ -5,10 +5,11 @@
 
 #include "gltkGeometry.hpp"
 #include "gltkGeometryMapper.hpp"
-#include "gltkCamera.hpp"
 
 #include <memory>
 #include <string>
+
+class gltkRenderManager; //Forward declaration workaround for circular dependency
 
 class gltkGameObject
 {
@@ -24,7 +25,7 @@ public:
   virtual void Render();
 
   /** \brief Update callback called before rendering */
-  virtual void Update(gltkCamera const& rm){}
+  virtual void Update(gltkRenderManager const& rm){}
 
   gltkGeometry GetGeometry() const;
   gltkGeometry& GetGeometry();

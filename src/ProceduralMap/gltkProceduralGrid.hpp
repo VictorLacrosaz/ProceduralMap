@@ -13,6 +13,7 @@
 #include "gltkGameObject.hpp"
 #include "vec2.hpp"
 
+class gltkRenderManager;
 
 /** \brief
  * Procedural generation of a terrain tilemap using Perlin noise.
@@ -22,7 +23,7 @@ class gltkProceduralGrid : public gltkGameObject
 public:
   gltkProceduralGrid(std::string name);
 
-  virtual void Update(gltkCamera const& cam);
+  virtual void Update(gltkRenderManager const& rm);
 
   /** Generation of the map around the origin point */
   void Build(cpe::vec2 origin);

@@ -1,6 +1,7 @@
 #include "gltkProceduralGrid.hpp"
 
 #include "error_handling.hpp"
+#include "gltkRenderManager.hpp"
 
 #include <iostream>
 #include "limits.h"
@@ -31,9 +32,9 @@ gltkProceduralGrid::gltkProceduralGrid(std::string name)
   this->Build(gridOrigin);
 }
 
-void gltkProceduralGrid::Update(gltkCamera const& cam)
+void gltkProceduralGrid::Update(gltkRenderManager const& rm)
 {
-  cpe::vec3 camPos = -1.0 * cam.GetPosition();
+  cpe::vec3 camPos = -1.0 * rm.GetCamera().GetPosition();
   cpe::vec2 gridOrigin = TileSize * cpe::vec2(std::floor(camPos.x()/TileSize), std::floor(camPos.z()/TileSize));
   this->Build(gridOrigin);
   GeometryMapper.FillVBO(Geometry);

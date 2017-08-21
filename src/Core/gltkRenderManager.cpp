@@ -1,6 +1,5 @@
 #include "gltkRenderManager.hpp"
 
-#include "gltkGeometryIO.hpp"
 #include "gltkProceduralGrid.hpp"
 #include "glUtils.hpp"
 
@@ -42,7 +41,7 @@ void gltkRenderManager::Initialize()
   //Preload grid shader
   Shaders.push_back(ReadShader("DefaultMultiMaterial.vert",
                                "DefaultMultiMaterial.frag",
-  {"Position", "Normal", "Color", "T_Coord"}));  PRINT_OPENGL_ERROR();
+    {"Position", "Normal", "Color", "T_Coord"}));  PRINT_OPENGL_ERROR();
 
   //Add grid
   this->AddGameObject(new gltkProceduralGrid("Grid"));
@@ -63,7 +62,7 @@ void gltkRenderManager::Render()
   //Render
   for(unsigned int i = 0; i < GameObjects.size(); i++)
   {
-    GameObjects[i]->Update(Camera);//WARNING: Will use RenderState in the future to pass generic informations to all objects.
+    GameObjects[i]->Update(*this);
     SetupMaterials(GameObjects[i]->GetGeometry());
     GameObjects[i]->Render();
   }
