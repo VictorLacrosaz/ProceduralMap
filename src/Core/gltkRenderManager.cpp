@@ -100,11 +100,11 @@ void gltkRenderManager::SetupMaterials(gltkGeometry const& geometry)
 {
   //Store material uniforms in mat4
   std::vector<cpe::mat4> MaterialsUniforms;
+
   //Store material texture index in sampler
   std::vector<int> MaterialsTIdx;
   //Keep track of the number of textured materials
   int nbTexturedMaterials = 0;
-
   for(int i = 0; i < geometry.GetNumberOfMaterials(); i++)
   {
     // Load uniform shading parameters
@@ -115,7 +115,6 @@ void gltkRenderManager::SetupMaterials(gltkGeometry const& geometry)
       materialUniforms(k,1) = geometry.GetMaterials()[i].GetKa()[k];
     //Add uniforms
     MaterialsUniforms.push_back(materialUniforms);
-
     // Load textures
     int textureIdx = -1;//Texture index in sampler. (-1) = No texture
     std::string textureFilename = geometry.GetMaterials()[i].GetKdTexture();

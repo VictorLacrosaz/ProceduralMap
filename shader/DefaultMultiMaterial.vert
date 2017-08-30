@@ -1,4 +1,4 @@
-#version 130
+#version 450
 
 //Input attributes
 in vec3 Position;

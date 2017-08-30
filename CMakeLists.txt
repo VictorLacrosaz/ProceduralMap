@@ -41,7 +41,8 @@ include_directories(${GLTK_SRC_DIRS} ${Boost_INCLUDE_DIRS} ${CMAKE_CURRENT_BINAR
 add_definitions( -Wall -Wextra -std=c++11 -Wno-comment -Wno-unused-parameter -Wno-unused-function -Wno-unused-variable -DCORRECTION)
 
 # UI
-set( UI ${SRC_DIR}/Application/gltkApplicationWindow.ui )
+set( UI ${SRC_DIR}/Application/gltkApplicationWindow.ui
+        ${SRC_DIR}/Application/gltkApplicationWidgetGL.ui )
 set( MOC ${SRC_DIR}/Application/gltkApplicationQt.hpp
          ${SRC_DIR}/Application/gltkApplicationWindow.hpp
          ${SRC_DIR}/Application/gltkApplicationWidgetGL.hpp)

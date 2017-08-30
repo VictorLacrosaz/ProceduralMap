@@ -51,6 +51,9 @@ void axes_helper::init()
     //Send data on the GPU
     glBindBuffer(GL_ARRAY_BUFFER,vbo_data);                               PRINT_OPENGL_ERROR();
     glBufferData(GL_ARRAY_BUFFER,12*3*sizeof(float),data,GL_STATIC_DRAW); PRINT_OPENGL_ERROR();
+
+    //Unbind buffer for 2d Hub drawing
+    glBindBuffer(GL_ARRAY_BUFFER,0); PRINT_OPENGL_ERROR();
 }
 
 void axes_helper::draw() const
@@ -66,6 +69,9 @@ void axes_helper::draw() const
     glColorPointer(3, GL_FLOAT, 2*3*sizeof(float), buffer_offset(3*sizeof(float))); PRINT_OPENGL_ERROR();
 
     glDrawArrays(GL_LINES,0,6);                                                     PRINT_OPENGL_ERROR();
+
+    //Unbind buffer for 2d Hub drawing
+    glBindBuffer(GL_ARRAY_BUFFER,0); PRINT_OPENGL_ERROR();
 }
 
 GLuint axes_helper::shader_id() const

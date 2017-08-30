@@ -3,6 +3,7 @@
 
 #include "GL/glew.h"
 #include "GL/gl.h"
+
 #include <cmath>
 #include <iostream>
 #include <unistd.h>
@@ -14,12 +15,18 @@
 
 
 gltkApplicationWidgetGL::gltkApplicationWidgetGL(const QGLFormat& format,QGLWidget *parent) :
-  QGLWidget(format,parent), DrawState(true)
+  QGLWidget(format,parent),DrawState(true),AimFPS(90),FPS(0),NbFrame(0),Limit(AimFPS/4),ui(new Ui::GLWindow)
 {
   QWidget::setFocusPolicy(Qt::StrongFocus);
   setMouseTracking(true);
-  startTimer(25); //start timer every 25ms
+
+  int TimerCallback = (1.0 / AimFPS) * 1000;
+  startTimer(TimerCallback); //start timer every TimerCallBack overflow to reach AimFPS
   RenderInteractor = gltkRenderInteractor();
+
+  //Setup UI for OpenGL window
+  ui->setupUi(this);
+
 }
 
 gltkApplicationWidgetGL::~gltkApplicationWidgetGL()
@@ -30,6 +37,8 @@ gltkApplicationWidgetGL::~gltkApplicationWidgetGL()
 //-------------------------------------------------------
 void gltkApplicationWidgetGL::paintGL()
 {
+  //Activate depth buffer
+  glEnable(GL_DEPTH_TEST); PRINT_OPENGL_ERROR();
   //clear screen
   int width = RenderInteractor.GetWindowSize()[0];
   int height = RenderInteractor.GetWindowSize()[1];
@@ -42,6 +51,46 @@ void gltkApplicationWidgetGL::paintGL()
   {
     RenderInteractor.Render();
   }
+   //Desactivate depth buffer
+   glDisable(GL_DEPTH_TEST); PRINT_OPENGL_ERROR();
+}
+void gltkApplicationWidgetGL::paintEvent(QPaintEvent* event)
+{
+
+  QPainter  painter(this);
+
+  //FPS Calculation
+  if(NbFrame > Limit)
+  {
+    FPS =  float(NbFrame) / (float(TimeElapsed.elapsed()) / 1000);
+    NbFrame = 0;
+    TimeElapsed.restart();
+
+  }
+  NbFrame++;
+
+
+  /** *** OpenGL render *** **/
+  painter.beginNativePainting();
+  paintGL();
+  painter.endNativePainting();
+  /** ***               *** **/
+
+  //Painter setup
+  QPen myPen(Qt::red);
+  painter.setPen(myPen);
+  int width = RenderInteractor.GetWindowSize()[0];
+  int height = RenderInteractor.GetWindowSize()[1];
+  QFont font=painter.font() ;
+  font.setPointSizeF(20);
+  font.setWeight(QFont::Bold);
+  font.setFamily("tahoma");
+  painter.setFont(font);
+  QString s = QString::number(FPS);
+
+  painter.drawText(QRect(0,0,width/10,height/10),s);
+  painter.end();
+
 }
 
 //-------------------------------------------------------
@@ -148,7 +197,7 @@ void gltkApplicationWidgetGL::mouseMoveEvent(QMouseEvent *event)
 void gltkApplicationWidgetGL::timerEvent(QTimerEvent *event)
 {
   event->accept();
-  updateGL(); PRINT_OPENGL_ERROR();
+  update(); PRINT_OPENGL_ERROR();
 }
 //-------------------------------------------------------
 
@@ -164,20 +213,20 @@ void gltkApplicationWidgetGL::initializeGL()
   RenderInteractor.Initialize();
 
   std::map<std::string, GLuint> textureBank;
-  textureBank["white.jpg"] = LoadTextureFromFile("white.jpg");
-  textureBank["hand_mapNew.jpg"] = LoadTextureFromFile("hand_mapNew.jpg");
-  textureBank["rooftiles.jpg"] = LoadTextureFromFile("rooftiles.jpg");
-  textureBank["UvMontantGauche.jpg"] = LoadTextureFromFile("UvMontantGauche.jpg");
-  textureBank["UvMontantPorte.jpg"] = LoadTextureFromFile("UvMontantPorte.jpg");
-  textureBank["UvporteSimple.jpg"] = LoadTextureFromFile("UvporteSimple.jpg");
-  textureBank["Uvpoutres.jpg"] = LoadTextureFromFile("Uvpoutres.jpg");
-  textureBank["UvTuiles.jpg"] = LoadTextureFromFile("UvTuiles.jpg");
-  textureBank["UvWall.jpg"] = LoadTextureFromFile("UvWall.jpg");
+ // textureBank["white.jpg"] = LoadTextureFromFile("white.jpg");
+  //textureBank["hand_mapNew.jpg"] = LoadTextureFromFile("hand_mapNew.jpg");
+//  textureBank["rooftiles.jpg"] = LoadTextureFromFile("rooftiles.jpg");
+  //textureBank["UvMontantGauche.jpg"] = LoadTextureFromFile("UvMontantGauche.jpg");
+//  textureBank["UvMontantPorte.jpg"] = LoadTextureFromFile("UvMontantPorte.jpg");
+//  textureBank["UvporteSimple.jpg"] = LoadTextureFromFile("UvporteSimple.jpg");
+//  textureBank["Uvpoutres.jpg"] = LoadTextureFromFile("Uvpoutres.jpg");
+//  textureBank["UvTuiles.jpg"] = LoadTextureFromFile("UvTuiles.jpg");
+//  textureBank["UvWall.jpg"] = LoadTextureFromFile("UvWall.jpg");
   textureBank["Grass.jpg"] = LoadTextureFromFile("Grass.jpg");
   textureBank["champ.jpg"] = LoadTextureFromFile("champ.jpg");
   textureBank["Argile.jpeg"] = LoadTextureFromFile("Argile.jpeg");
   textureBank["rock.jpg"] = LoadTextureFromFile("rock.jpg");
-  textureBank["stegosaurus.jpg"] = LoadTextureFromFile("stegosaurus.jpg");
+ // textureBank["stegosaurus.jpg"] = LoadTextureFromFile("stegosaurus.jpg");
 
   RenderInteractor.GetRenderManager().SetTextureBank(textureBank);
 
@@ -185,12 +234,16 @@ void gltkApplicationWidgetGL::initializeGL()
   glEnable(GL_DEPTH_TEST); PRINT_OPENGL_ERROR();
   //Define provoking vertex for flat shading
   glProvokingVertex(GL_FIRST_VERTEX_CONVENTION);
+
+  //Initialize timer
+  TimeElapsed.start();
 }
 
 void gltkApplicationWidgetGL::resizeGL(int const width,int const height)
 {
   RenderInteractor.SetWindowSize( width, height );
   glViewport(0,0, width, height); PRINT_OPENGL_ERROR();
+
 }
 //-------------------------------------------------------
 
@@ -238,7 +291,12 @@ void gltkApplicationWidgetGL::PrintGLContext() const
 void gltkApplicationWidgetGL::ToggleDrawState()
 {
   DrawState =! DrawState;
-  updateGL();
+  update(); PRINT_OPENGL_ERROR();
+}
+void gltkApplicationWidgetGL::Draw()
+{
+  DrawState =! DrawState;
+  update(); PRINT_OPENGL_ERROR();
 }
 
 void gltkApplicationWidgetGL::SetWireframe(bool const wireframe)
@@ -252,7 +310,7 @@ void gltkApplicationWidgetGL::SetWireframe(bool const wireframe)
     glPolygonMode( GL_FRONT_AND_BACK, GL_FILL);    PRINT_OPENGL_ERROR();
   }
 
-  updateGL();
+  update(); PRINT_OPENGL_ERROR();
 }
 //-------------------------------------------------------
 
@@ -275,3 +333,5 @@ GLuint gltkApplicationWidgetGL::LoadTextureFromFile(std::string const& filename)
 
   return value;
 }
+
+

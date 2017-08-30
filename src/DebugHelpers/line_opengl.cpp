@@ -42,6 +42,9 @@ void line_opengl::init()
     glBufferData(GL_ARRAY_BUFFER,6*sizeof(float),&line[0],GL_DYNAMIC_DRAW); PRINT_OPENGL_ERROR();
 
     ASSERT_CPE(glIsBuffer(vbo_data),"Problem creating VBO");
+
+    //Unbind buffer for 2d Hub drawing
+    glBindBuffer(GL_ARRAY_BUFFER,0); PRINT_OPENGL_ERROR();
 }
 
 
@@ -64,6 +67,9 @@ void line_opengl::draw(vec3 const& p0,vec3 const& p1)
     glBufferData(GL_ARRAY_BUFFER,6*sizeof(float),&line[0],GL_DYNAMIC_DRAW); PRINT_OPENGL_ERROR();
     glVertexPointer(3, GL_FLOAT, 0, 0); PRINT_OPENGL_ERROR();
     glDrawArrays(GL_LINES,0,2);
+
+    //Unbind buffer for 2d Hub drawing
+    glBindBuffer(GL_ARRAY_BUFFER,0); PRINT_OPENGL_ERROR();
 }
 
 }

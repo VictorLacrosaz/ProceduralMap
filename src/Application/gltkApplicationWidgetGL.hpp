@@ -8,9 +8,19 @@
 
 #include <QtOpenGL/QGLWidget>
 #include <QMouseEvent>
+#include <QTime>
 
 #include "AxisHelper.hpp"
 #include "gltkRenderInteractor.hpp"
+
+#include <ui_gltkApplicationWidgetGL.h>
+
+
+namespace Ui
+{
+ class GLWindow;
+}
+
 
 /** Qt Widget to render OpenGL scene */
 class gltkApplicationWidgetGL : public QGLWidget
@@ -33,6 +43,12 @@ public:
   /** \brief Load a texture given by its filename */
   GLuint LoadTextureFromFile(std::string const& filename);
 
+private slots:
+
+  /** \brief Toggle drawing of the scene */
+  void Draw();
+
+
 
 protected:
 
@@ -41,8 +57,9 @@ protected:
   //-------------------------------------------------------
   /** Setup the OpenGL rendering mode */
   void initializeGL();
-  /** Rendering callback */
+  /** Rendering callbacks */
   void paintGL();
+  void paintEvent(QPaintEvent* event);
   /** Function called when the window is resized */
   void resizeGL(int width, int height);
 
@@ -76,6 +93,20 @@ private:
 
   /** Handle interactions with the rendering manager */
   gltkRenderInteractor RenderInteractor;
+
+
+  /** FPS Calculation */
+  int AimFPS;
+  QTime TimeElapsed;
+  int FPS;
+  int NbFrame;
+  int Limit;
+
+  /** Layout for the Window */
+  Ui::GLWindow* ui;
+
+
+
 };
 
 #endif

@@ -16,7 +16,7 @@ gltkApplicationWindow::gltkApplicationWindow(QWidget *parent)
 
     //Create openGL context
     QGLFormat qglFormat;
-    qglFormat.setVersion(1,2);
+    qglFormat.setVersion(3,0);
 
     //Create OpenGL Widget renderer
     glWidget=new gltkApplicationWidgetGL(qglFormat);

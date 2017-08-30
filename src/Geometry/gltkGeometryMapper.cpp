@@ -105,6 +105,9 @@ void gltkGeometryMapper::FillVBO(gltkGeometry const& m)
     throw cpe::exception_cpe("vbo_index incorrect",EXCEPTION_PARAMETERS_CPE);
   glBufferData(GL_ELEMENT_ARRAY_BUFFER,3*sizeof(int)*m.GetTriangleCount(),m.GetPointerTriangleIndex(),GL_DYNAMIC_DRAW); PRINT_OPENGL_ERROR();
 
+  //Unbind buffer for 2d Hub drawing
+  glBindBuffer(GL_ARRAY_BUFFER,0);           PRINT_OPENGL_ERROR();
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,0);   PRINT_OPENGL_ERROR();
 }
 
 void gltkGeometryMapper::DeleteVBOs()
@@ -180,6 +183,10 @@ void gltkGeometryMapper::Render() const
   glDisableVertexAttribArray(2);
   glDisableVertexAttribArray(3);
   glDisableVertexAttribArray(4);
+
+  //Unbind buffer for 2d Hub drawing
+  glBindBuffer(GL_ARRAY_BUFFER,0);           PRINT_OPENGL_ERROR();
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,0);   PRINT_OPENGL_ERROR();
 }
 
 
@@ -191,6 +198,8 @@ void gltkGeometryMapper::UpdateVertexVBO(gltkGeometry const& m)
   ASSERT_CPE(glIsBuffer(vbo_vertex),"vbo_buffer incorrect");
 
   glBufferSubData(GL_ARRAY_BUFFER,0,3*sizeof(float)*m.GetVertexCount(),m.GetPointerVertex()); PRINT_OPENGL_ERROR();
+  //Unbind buffer for 2d Hub drawing
+  glBindBuffer(GL_ARRAY_BUFFER,0);           PRINT_OPENGL_ERROR();
 }
 
 void gltkGeometryMapper::UpdateNormalVBO(gltkGeometry const& m)
@@ -200,6 +209,9 @@ void gltkGeometryMapper::UpdateNormalVBO(gltkGeometry const& m)
   ASSERT_CPE(glIsBuffer(vbo_normal),"vbo_buffer incorrect");
 
   glBufferSubData(GL_ARRAY_BUFFER,0,3*sizeof(float)*m.GetNormalCount(),m.GetPointerNormal()); PRINT_OPENGL_ERROR();
+
+  //Unbind buffer for 2d Hub drawing
+  glBindBuffer(GL_ARRAY_BUFFER,0);           PRINT_OPENGL_ERROR();
 }
 
 void gltkGeometryMapper::UpdateColorVBO(gltkGeometry const& m)
@@ -209,6 +221,9 @@ void gltkGeometryMapper::UpdateColorVBO(gltkGeometry const& m)
   ASSERT_CPE(glIsBuffer(vbo_color),"vbo_buffer incorrect");
 
   glBufferSubData(GL_ARRAY_BUFFER,0,3*sizeof(float)*m.GetColorCount(),m.GetPointerColor()); PRINT_OPENGL_ERROR();
+
+  //Unbind buffer for 2d Hub drawing
+  glBindBuffer(GL_ARRAY_BUFFER,0);           PRINT_OPENGL_ERROR();
 }
 
 void gltkGeometryMapper::UpdateTCoordVBO(gltkGeometry const& m)
@@ -218,4 +233,7 @@ void gltkGeometryMapper::UpdateTCoordVBO(gltkGeometry const& m)
   ASSERT_CPE(glIsBuffer(vbo_texture),"vbo_buffer incorrect");
 
   glBufferSubData(GL_ARRAY_BUFFER,0,3*sizeof(float)*m.GetTCoordCount(),m.GetPointerTCoord()); PRINT_OPENGL_ERROR();
+
+  //Unbind buffer for 2d Hub drawing
+  glBindBuffer(GL_ARRAY_BUFFER,0); PRINT_OPENGL_ERROR();
 }

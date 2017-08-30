@@ -122,6 +122,9 @@ void gltkDebugObject::InitializePoints(std::vector<cpe::vec3> pts)
   //Send data on the GPU
   glBindBuffer(GL_ARRAY_BUFFER, vboPoints);                                         PRINT_OPENGL_ERROR();
   glBufferData(GL_ARRAY_BUFFER, pts.size()*3*sizeof(float), pts[0].pointer(), GL_DYNAMIC_DRAW);  PRINT_OPENGL_ERROR();
+
+  //Unbind buffer for 2d Hub drawing
+  glBindBuffer(GL_ARRAY_BUFFER,0); PRINT_OPENGL_ERROR();
 }
 
 //-------------------------------------------------------
@@ -149,6 +152,9 @@ void gltkDebugObject::RenderPoints(gltkCamera const& camera) const
   glPointSize(3.0f);
   glDrawArrays(GL_POINTS, 0, NbPoints);              PRINT_OPENGL_ERROR();
   glPointSize(1.0f);
+
+  //Unbind buffer for 2d Hub drawing
+  glBindBuffer(GL_ARRAY_BUFFER,0); PRINT_OPENGL_ERROR();
 }
 
 //-------------------------------------------------------
@@ -173,6 +179,9 @@ void gltkDebugObject::InitializeLine(cpe::vec3 p1, cpe::vec3 p2)
   //Send data on the GPU
   glBindBuffer(GL_ARRAY_BUFFER,vboLine);                               PRINT_OPENGL_ERROR();
   glBufferData(GL_ARRAY_BUFFER,4*3*sizeof(float),data,GL_DYNAMIC_DRAW); PRINT_OPENGL_ERROR();
+
+  //Unbind buffer for 2d Hub drawing
+  glBindBuffer(GL_ARRAY_BUFFER,0); PRINT_OPENGL_ERROR();
 }
 
 //-------------------------------------------------------
@@ -203,6 +212,9 @@ void gltkDebugObject::RenderLine(gltkCamera const& camera) const
   glLineWidth(3.0f);
   glDrawArrays(GL_LINES, 0, 2);                                                   PRINT_OPENGL_ERROR();
   glLineWidth(1.0f);
+
+  //Unbind buffer for 2d Hub drawing
+  glBindBuffer(GL_ARRAY_BUFFER,0); PRINT_OPENGL_ERROR();
 }
 
 //-------------------------------------------------------
