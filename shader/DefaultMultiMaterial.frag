@@ -1,4 +1,4 @@
-#version 450
+#version 400
 
 //Input attributes
 in vec4 v_PositionLC; //Vertex position in local object coordinates
@@ -44,7 +44,7 @@ void main (void)
     vec4 textureColor = vec4(0.0,0.0,0.0,0.0);
     if(MaterialsTIdx[v_MaterialID] > -1)
     {
-     textureColor = texture2D(texture[MaterialsTIdx[v_MaterialID]], v_TCoord);
+      textureColor = texture2D(texture[MaterialsTIdx[v_MaterialID]], v_TCoord);
     }
 
     Color = Ka + diffuse_term * Kd + specular_term * Ks + textureColor;
